@@ -393,8 +393,8 @@ static const flex_int16_t yy_accept[108] =
        43,   42,   37,   35,    0,    0,   34,   21,   17,   22,
        38,   38,   38,   38,   38,   38,    4,   38,   38,   38,
        38,   24,   45,    0,   37,   42,   35,    0,   37,   36,
-       38,   38,   38,   38,    8,    2,   38,   38,   38,   36,
-       38,   38,    5,   38,   38,    3,   38,    9,   38,    1,
+       38,   38,   38,   38,    8,    1,   38,   38,   38,   36,
+       38,   38,    5,   38,   38,    2,   38,    9,   38,    3,
 
        38,    7,   38,    6,   38,   10,    0
     } ;
@@ -585,7 +585,7 @@ char *yytext;
     SymbolTable table;
 
     void DEBUG_FOR_LAB4(string token, string lexeme, string property=""){
-        fprintf(yyout, "[DEBUG LAB4]: \t%10s%10s%10d%10d%10s\n", 
+        fprintf(yyout, "[DEBUG LAB4]: \t%15s%15s%15d%15d%15s\n", 
         token.c_str(), lexeme.c_str(), yylineno, offset, property.c_str());
     }
 
@@ -884,18 +884,6 @@ case 1:
 YY_RULE_SETUP
 #line 59 "src/lexer.l"
 {
-    #ifdef ONLY_FOR_LEX
-        DEBUG_FOR_LAB4("FLOAT", "float");
-        offset += yyleng;
-    #else
-        return FLOAT;
-    #endif 
-}
-	YY_BREAK
-case 2:
-YY_RULE_SETUP
-#line 67 "src/lexer.l"
-{
     /*
     * Questions: 
     *   Q1: Why we need to return INT in further labs?
@@ -909,15 +897,27 @@ YY_RULE_SETUP
     #endif
 }
 	YY_BREAK
-case 3:
+case 2:
 YY_RULE_SETUP
-#line 80 "src/lexer.l"
+#line 72 "src/lexer.l"
 {
     #ifdef ONLY_FOR_LEX
         DEBUG_FOR_LAB4("VOID", "void");
         offset += yyleng;
     #else
         return VOID;
+    #endif 
+}
+	YY_BREAK
+case 3:
+YY_RULE_SETUP
+#line 80 "src/lexer.l"
+{
+    #ifdef ONLY_FOR_LEX
+        DEBUG_FOR_LAB4("FLOAT", "float");
+        offset += yyleng;
+    #else
+        return FLOAT;
     #endif 
 }
 	YY_BREAK
@@ -2448,7 +2448,7 @@ int main(int argc, char **argv){
     yylineno = 1;
     offset = 0;
 
-    fprintf(yyout, "[DEBUG LAB4]: \t%10s%10s%10s%10s%10s\n", 
+    fprintf(yyout, "[DEBUG LAB4]: \t%15s%15s%15s%15s%15s\n", 
         "token", "lexeme", "yylineno", "offset", "position");
     
     yylex();

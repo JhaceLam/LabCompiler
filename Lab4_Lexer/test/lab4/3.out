@@ -1,176 +1,176 @@
-[DEBUG LAB4]: 	     token    lexeme  yylineno    offset  position
-[DEBUG LAB4]: 	      VOID      void         3         0          
-[DEBUG LAB4]: 	        ID         f         3         5       3:5
-[DEBUG LAB4]: 	    LPAREN         (         3         6          
-[DEBUG LAB4]: 	       INT       int         3         7          
-[DEBUG LAB4]: 	        ID         x         3        11      3:11
-[DEBUG LAB4]: 	    RPAREN         )         3        12          
-[DEBUG LAB4]: 	    LBRACE         {         3        14          
-[DEBUG LAB4]: 	        ID    printf         4         4       4:4
-[DEBUG LAB4]: 	    LPAREN         (         4        10          
-[DEBUG LAB4]: 	STRING_LITERAL    "%d\n"         4        11          
-[DEBUG LAB4]: 	     COMMA         ,         4        17          
-[DEBUG LAB4]: 	        ID         x         4        19      4:19
-[DEBUG LAB4]: 	    RPAREN         )         4        20          
-[DEBUG LAB4]: 	 SEMICOLON         ;         4        21          
-[DEBUG LAB4]: 	        ID    printf         5         4       5:4
-[DEBUG LAB4]: 	    LPAREN         (         5        10          
-[DEBUG LAB4]: 	STRING_LITERAL"HAHAHAHAHAHA"         5        11          
-[DEBUG LAB4]: 	    RPAREN         )         5        25          
-[DEBUG LAB4]: 	 SEMICOLON         ;         5        26          
-[DEBUG LAB4]: 	    RBRACE         }         6         0          
-[DEBUG LAB4]: 	       INT       int         8         0          
-[DEBUG LAB4]: 	        ID      main         8         4       8:4
-[DEBUG LAB4]: 	    LPAREN         (         8         8          
-[DEBUG LAB4]: 	    RPAREN         )         8         9          
-[DEBUG LAB4]: 	    LBRACE         {         8        11          
-[DEBUG LAB4]: 	       INT       int         9         4          
-[DEBUG LAB4]: 	        ID         a         9         8       9:8
-[DEBUG LAB4]: 	   LSQUARE         [         9         9          
-[DEBUG LAB4]: 	  INTCONST        10         9        10          
-[DEBUG LAB4]: 	   RSQUARE         ]         9        12          
-[DEBUG LAB4]: 	 SEMICOLON         ;         9        13          
-[DEBUG LAB4]: 	       INT       int        10         4          
-[DEBUG LAB4]: 	        ID         b        10         8      10:8
-[DEBUG LAB4]: 	   LSQUARE         [        10         9          
-[DEBUG LAB4]: 	  INTCONST        10        10        10          
-[DEBUG LAB4]: 	   RSQUARE         ]        10        12          
-[DEBUG LAB4]: 	   LSQUARE         [        10        13          
-[DEBUG LAB4]: 	  INTCONST        20        10        14          
-[DEBUG LAB4]: 	   RSQUARE         ]        10        16          
-[DEBUG LAB4]: 	 SEMICOLON         ;        10        17          
-[DEBUG LAB4]: 	       INT       int        11         4          
-[DEBUG LAB4]: 	      STAR         *        11         8          
-[DEBUG LAB4]: 	        ID         c        11         9      11:9
-[DEBUG LAB4]: 	 SEMICOLON         ;        11        10          
-[DEBUG LAB4]: 	       INT       int        12         4          
-[DEBUG LAB4]: 	      STAR         *        12         8          
-[DEBUG LAB4]: 	      STAR         *        12         9          
-[DEBUG LAB4]: 	        ID         d        12        10     12:10
-[DEBUG LAB4]: 	 SEMICOLON         ;        12        11          
-[DEBUG LAB4]: 	       INT       int        14         4          
-[DEBUG LAB4]: 	        ID         i        14         8      14:8
-[DEBUG LAB4]: 	    ASSIGN         =        14        10          
-[DEBUG LAB4]: 	  INTCONST         3        14        12          
-[DEBUG LAB4]: 	     COMMA         ,        14        13          
-[DEBUG LAB4]: 	        ID         j        14        15     14:15
-[DEBUG LAB4]: 	    ASSIGN         =        14        17          
-[DEBUG LAB4]: 	  INTCONST         5        14        19          
-[DEBUG LAB4]: 	 SEMICOLON         ;        14        20          
-[DEBUG LAB4]: 	        ID         i        15         4      15:4
-[DEBUG LAB4]: 	    ASSIGN         =        15         6          
-[DEBUG LAB4]: 	        ID         i        15         8      15:8
-[DEBUG LAB4]: 	      STAR         *        15        10          
-[DEBUG LAB4]: 	        ID         j        15        12     15:12
-[DEBUG LAB4]: 	 SEMICOLON         ;        15        13          
-[DEBUG LAB4]: 	        ID         i        16         4      16:4
-[DEBUG LAB4]: 	    ASSIGN         =        16         6          
-[DEBUG LAB4]: 	        ID         i        16         8      16:8
-[DEBUG LAB4]: 	     SLASH         /        16        10          
-[DEBUG LAB4]: 	        ID         j        16        12     16:12
-[DEBUG LAB4]: 	 SEMICOLON         ;        16        13          
-[DEBUG LAB4]: 	        ID         i        17         4      17:4
-[DEBUG LAB4]: 	    ASSIGN         =        17         6          
-[DEBUG LAB4]: 	        ID         i        17         8      17:8
-[DEBUG LAB4]: 	   PERCENT         %        17        10          
-[DEBUG LAB4]: 	        ID         j        17        12     17:12
-[DEBUG LAB4]: 	 SEMICOLON         ;        17        13          
-[DEBUG LAB4]: 	        ID         i        18         4      18:4
-[DEBUG LAB4]: 	    ASSIGN         =        18         6          
-[DEBUG LAB4]: 	        ID         i        18         8      18:8
-[DEBUG LAB4]: 	      PLUS         +        18        10          
-[DEBUG LAB4]: 	        ID         j        18        12     18:12
-[DEBUG LAB4]: 	 SEMICOLON         ;        18        13          
-[DEBUG LAB4]: 	        ID         i        19         4      19:4
-[DEBUG LAB4]: 	    ASSIGN         =        19         6          
-[DEBUG LAB4]: 	        ID         i        19         8      19:8
-[DEBUG LAB4]: 	     MINUS         -        19        10          
-[DEBUG LAB4]: 	        ID         j        19        12     19:12
-[DEBUG LAB4]: 	 SEMICOLON         ;        19        13          
-[DEBUG LAB4]: 	      VOID      void        26         4          
-[DEBUG LAB4]: 	    LPAREN         (        26         9          
-[DEBUG LAB4]: 	      STAR         *        26        10          
-[DEBUG LAB4]: 	        ID         e        26        11     26:11
-[DEBUG LAB4]: 	    RPAREN         )        26        12          
-[DEBUG LAB4]: 	    LPAREN         (        26        14          
-[DEBUG LAB4]: 	       INT       int        26        15          
-[DEBUG LAB4]: 	    RPAREN         )        26        18          
-[DEBUG LAB4]: 	    ASSIGN         =        26        20          
-[DEBUG LAB4]: 	        ID         f        26        22     26:22
-[DEBUG LAB4]: 	 SEMICOLON         ;        26        23          
-[DEBUG LAB4]: 	        ID         e        27         4      27:4
-[DEBUG LAB4]: 	    LPAREN         (        27         5          
-[DEBUG LAB4]: 	  INTCONST         3        27         6          
-[DEBUG LAB4]: 	    RPAREN         )        27         7          
-[DEBUG LAB4]: 	 SEMICOLON         ;        27         8          
-[DEBUG LAB4]: 	     FLOAT     float        29         4          
-[DEBUG LAB4]: 	        ID       fn1        29        10     29:10
-[DEBUG LAB4]: 	    ASSIGN         =        29        14          
-[DEBUG LAB4]: 	     FLOAT      3.14        29        16          
-[DEBUG LAB4]: 	 SEMICOLON         ;        29        20          
-[DEBUG LAB4]: 	     FLOAT     float        30         4          
-[DEBUG LAB4]: 	        ID       fn2        30        10     30:10
-[DEBUG LAB4]: 	    ASSIGN         =        30        14          
-[DEBUG LAB4]: 	     FLOAT      10E2        30        16          
-[DEBUG LAB4]: 	 SEMICOLON         ;        30        20          
-[DEBUG LAB4]: 	     FLOAT     float        31         4          
-[DEBUG LAB4]: 	        ID       fn3        31        10     31:10
-[DEBUG LAB4]: 	    ASSIGN         =        31        14          
-[DEBUG LAB4]: 	     FLOAT  6.23E100        31        16          
-[DEBUG LAB4]: 	 SEMICOLON         ;        31        24          
-[DEBUG LAB4]: 	        IF        if        33         4          
-[DEBUG LAB4]: 	    LPAREN         (        33         7          
-[DEBUG LAB4]: 	  INTCONST         5        33         8          
-[DEBUG LAB4]: 	        EQ        ==        33        10          
-[DEBUG LAB4]: 	  INTCONST         3        33        13          
-[DEBUG LAB4]: 	    RPAREN         )        33        14          
-[DEBUG LAB4]: 	        ID    printf        33        16     33:16
-[DEBUG LAB4]: 	    LPAREN         (        33        22          
-[DEBUG LAB4]: 	STRING_LITERAL       "1"        33        23          
-[DEBUG LAB4]: 	    RPAREN         )        33        26          
-[DEBUG LAB4]: 	 SEMICOLON         ;        33        27          
-[DEBUG LAB4]: 	      ELSE      else        34         4          
-[DEBUG LAB4]: 	        IF        if        34         9          
-[DEBUG LAB4]: 	    LPAREN         (        34        12          
-[DEBUG LAB4]: 	  INTCONST         5        34        13          
-[DEBUG LAB4]: 	   GREATEQ        >=        34        15          
-[DEBUG LAB4]: 	  INTCONST         3        34        18          
-[DEBUG LAB4]: 	    RPAREN         )        34        19          
-[DEBUG LAB4]: 	        ID    printf        34        21     34:21
-[DEBUG LAB4]: 	    LPAREN         (        34        27          
-[DEBUG LAB4]: 	STRING_LITERAL       "2"        34        28          
-[DEBUG LAB4]: 	    RPAREN         )        34        31          
-[DEBUG LAB4]: 	 SEMICOLON         ;        34        32          
-[DEBUG LAB4]: 	      ELSE      else        35         4          
-[DEBUG LAB4]: 	        IF        if        35         9          
-[DEBUG LAB4]: 	    LPAREN         (        35        12          
-[DEBUG LAB4]: 	  INTCONST         5        35        13          
-[DEBUG LAB4]: 	    LESSEQ        <=        35        15          
-[DEBUG LAB4]: 	  INTCONST         3        35        18          
-[DEBUG LAB4]: 	    RPAREN         )        35        19          
-[DEBUG LAB4]: 	        ID    printf        35        21     35:21
-[DEBUG LAB4]: 	    LPAREN         (        35        27          
-[DEBUG LAB4]: 	STRING_LITERAL       "3"        35        28          
-[DEBUG LAB4]: 	    RPAREN         )        35        31          
-[DEBUG LAB4]: 	 SEMICOLON         ;        35        32          
-[DEBUG LAB4]: 	      ELSE      else        36         4          
-[DEBUG LAB4]: 	        IF        if        36         9          
-[DEBUG LAB4]: 	    LPAREN         (        36        12          
-[DEBUG LAB4]: 	  INTCONST         5        36        13          
-[DEBUG LAB4]: 	       NEQ        !=        36        15          
-[DEBUG LAB4]: 	  INTCONST         3        36        18          
-[DEBUG LAB4]: 	    RPAREN         )        36        19          
-[DEBUG LAB4]: 	        ID    printf        36        21     36:21
-[DEBUG LAB4]: 	    LPAREN         (        36        27          
-[DEBUG LAB4]: 	STRING_LITERAL       "4"        36        28          
-[DEBUG LAB4]: 	    RPAREN         )        36        31          
-[DEBUG LAB4]: 	 SEMICOLON         ;        36        32          
-[DEBUG LAB4]: 	        ID      char        38         4      38:4
-[DEBUG LAB4]: 	        ID       str        38         9      38:9
-[DEBUG LAB4]: 	    ASSIGN         =        38        13          
-[DEBUG LAB4]: 	STRING_LITERAL"Hello, world!"        38        15          
-[DEBUG LAB4]: 	 SEMICOLON         ;        38        30          
-[DEBUG LAB4]: 	    RETURN    return        40         4          
-[DEBUG LAB4]: 	  INTCONST         0        40        11          
-[DEBUG LAB4]: 	 SEMICOLON         ;        40        12          
-[DEBUG LAB4]: 	    RBRACE         }        41         0          
+[DEBUG LAB4]: 	          token         lexeme       yylineno         offset       position
+[DEBUG LAB4]: 	           VOID           void              3              0               
+[DEBUG LAB4]: 	             ID              f              3              5            3:5
+[DEBUG LAB4]: 	         LPAREN              (              3              6               
+[DEBUG LAB4]: 	            INT            int              3              7               
+[DEBUG LAB4]: 	             ID              x              3             11           3:11
+[DEBUG LAB4]: 	         RPAREN              )              3             12               
+[DEBUG LAB4]: 	         LBRACE              {              3             14               
+[DEBUG LAB4]: 	             ID         printf              4              4            4:4
+[DEBUG LAB4]: 	         LPAREN              (              4             10               
+[DEBUG LAB4]: 	 STRING_LITERAL         "%d\n"              4             11               
+[DEBUG LAB4]: 	          COMMA              ,              4             17               
+[DEBUG LAB4]: 	             ID              x              4             19           4:19
+[DEBUG LAB4]: 	         RPAREN              )              4             20               
+[DEBUG LAB4]: 	      SEMICOLON              ;              4             21               
+[DEBUG LAB4]: 	             ID         printf              5              4            5:4
+[DEBUG LAB4]: 	         LPAREN              (              5             10               
+[DEBUG LAB4]: 	 STRING_LITERAL "HAHAHAHAHAHA"              5             11               
+[DEBUG LAB4]: 	         RPAREN              )              5             25               
+[DEBUG LAB4]: 	      SEMICOLON              ;              5             26               
+[DEBUG LAB4]: 	         RBRACE              }              6              0               
+[DEBUG LAB4]: 	            INT            int              8              0               
+[DEBUG LAB4]: 	             ID           main              8              4            8:4
+[DEBUG LAB4]: 	         LPAREN              (              8              8               
+[DEBUG LAB4]: 	         RPAREN              )              8              9               
+[DEBUG LAB4]: 	         LBRACE              {              8             11               
+[DEBUG LAB4]: 	            INT            int              9              4               
+[DEBUG LAB4]: 	             ID              a              9              8            9:8
+[DEBUG LAB4]: 	        LSQUARE              [              9              9               
+[DEBUG LAB4]: 	       INTCONST             10              9             10               
+[DEBUG LAB4]: 	        RSQUARE              ]              9             12               
+[DEBUG LAB4]: 	      SEMICOLON              ;              9             13               
+[DEBUG LAB4]: 	            INT            int             10              4               
+[DEBUG LAB4]: 	             ID              b             10              8           10:8
+[DEBUG LAB4]: 	        LSQUARE              [             10              9               
+[DEBUG LAB4]: 	       INTCONST             10             10             10               
+[DEBUG LAB4]: 	        RSQUARE              ]             10             12               
+[DEBUG LAB4]: 	        LSQUARE              [             10             13               
+[DEBUG LAB4]: 	       INTCONST             20             10             14               
+[DEBUG LAB4]: 	        RSQUARE              ]             10             16               
+[DEBUG LAB4]: 	      SEMICOLON              ;             10             17               
+[DEBUG LAB4]: 	            INT            int             11              4               
+[DEBUG LAB4]: 	           STAR              *             11              8               
+[DEBUG LAB4]: 	             ID              c             11              9           11:9
+[DEBUG LAB4]: 	      SEMICOLON              ;             11             10               
+[DEBUG LAB4]: 	            INT            int             12              4               
+[DEBUG LAB4]: 	           STAR              *             12              8               
+[DEBUG LAB4]: 	           STAR              *             12              9               
+[DEBUG LAB4]: 	             ID              d             12             10          12:10
+[DEBUG LAB4]: 	      SEMICOLON              ;             12             11               
+[DEBUG LAB4]: 	            INT            int             14              4               
+[DEBUG LAB4]: 	             ID              i             14              8           14:8
+[DEBUG LAB4]: 	         ASSIGN              =             14             10               
+[DEBUG LAB4]: 	       INTCONST              3             14             12               
+[DEBUG LAB4]: 	          COMMA              ,             14             13               
+[DEBUG LAB4]: 	             ID              j             14             15          14:15
+[DEBUG LAB4]: 	         ASSIGN              =             14             17               
+[DEBUG LAB4]: 	       INTCONST              5             14             19               
+[DEBUG LAB4]: 	      SEMICOLON              ;             14             20               
+[DEBUG LAB4]: 	             ID              i             15              4           15:4
+[DEBUG LAB4]: 	         ASSIGN              =             15              6               
+[DEBUG LAB4]: 	             ID              i             15              8           15:8
+[DEBUG LAB4]: 	           STAR              *             15             10               
+[DEBUG LAB4]: 	             ID              j             15             12          15:12
+[DEBUG LAB4]: 	      SEMICOLON              ;             15             13               
+[DEBUG LAB4]: 	             ID              i             16              4           16:4
+[DEBUG LAB4]: 	         ASSIGN              =             16              6               
+[DEBUG LAB4]: 	             ID              i             16              8           16:8
+[DEBUG LAB4]: 	          SLASH              /             16             10               
+[DEBUG LAB4]: 	             ID              j             16             12          16:12
+[DEBUG LAB4]: 	      SEMICOLON              ;             16             13               
+[DEBUG LAB4]: 	             ID              i             17              4           17:4
+[DEBUG LAB4]: 	         ASSIGN              =             17              6               
+[DEBUG LAB4]: 	             ID              i             17              8           17:8
+[DEBUG LAB4]: 	        PERCENT              %             17             10               
+[DEBUG LAB4]: 	             ID              j             17             12          17:12
+[DEBUG LAB4]: 	      SEMICOLON              ;             17             13               
+[DEBUG LAB4]: 	             ID              i             18              4           18:4
+[DEBUG LAB4]: 	         ASSIGN              =             18              6               
+[DEBUG LAB4]: 	             ID              i             18              8           18:8
+[DEBUG LAB4]: 	           PLUS              +             18             10               
+[DEBUG LAB4]: 	             ID              j             18             12          18:12
+[DEBUG LAB4]: 	      SEMICOLON              ;             18             13               
+[DEBUG LAB4]: 	             ID              i             19              4           19:4
+[DEBUG LAB4]: 	         ASSIGN              =             19              6               
+[DEBUG LAB4]: 	             ID              i             19              8           19:8
+[DEBUG LAB4]: 	          MINUS              -             19             10               
+[DEBUG LAB4]: 	             ID              j             19             12          19:12
+[DEBUG LAB4]: 	      SEMICOLON              ;             19             13               
+[DEBUG LAB4]: 	           VOID           void             26              4               
+[DEBUG LAB4]: 	         LPAREN              (             26              9               
+[DEBUG LAB4]: 	           STAR              *             26             10               
+[DEBUG LAB4]: 	             ID              e             26             11          26:11
+[DEBUG LAB4]: 	         RPAREN              )             26             12               
+[DEBUG LAB4]: 	         LPAREN              (             26             14               
+[DEBUG LAB4]: 	            INT            int             26             15               
+[DEBUG LAB4]: 	         RPAREN              )             26             18               
+[DEBUG LAB4]: 	         ASSIGN              =             26             20               
+[DEBUG LAB4]: 	             ID              f             26             22          26:22
+[DEBUG LAB4]: 	      SEMICOLON              ;             26             23               
+[DEBUG LAB4]: 	             ID              e             27              4           27:4
+[DEBUG LAB4]: 	         LPAREN              (             27              5               
+[DEBUG LAB4]: 	       INTCONST              3             27              6               
+[DEBUG LAB4]: 	         RPAREN              )             27              7               
+[DEBUG LAB4]: 	      SEMICOLON              ;             27              8               
+[DEBUG LAB4]: 	          FLOAT          float             29              4               
+[DEBUG LAB4]: 	             ID            fn1             29             10          29:10
+[DEBUG LAB4]: 	         ASSIGN              =             29             14               
+[DEBUG LAB4]: 	          FLOAT           3.14             29             16               
+[DEBUG LAB4]: 	      SEMICOLON              ;             29             20               
+[DEBUG LAB4]: 	          FLOAT          float             30              4               
+[DEBUG LAB4]: 	             ID            fn2             30             10          30:10
+[DEBUG LAB4]: 	         ASSIGN              =             30             14               
+[DEBUG LAB4]: 	          FLOAT           10E2             30             16               
+[DEBUG LAB4]: 	      SEMICOLON              ;             30             20               
+[DEBUG LAB4]: 	          FLOAT          float             31              4               
+[DEBUG LAB4]: 	             ID            fn3             31             10          31:10
+[DEBUG LAB4]: 	         ASSIGN              =             31             14               
+[DEBUG LAB4]: 	          FLOAT       6.23E100             31             16               
+[DEBUG LAB4]: 	      SEMICOLON              ;             31             24               
+[DEBUG LAB4]: 	             IF             if             33              4               
+[DEBUG LAB4]: 	         LPAREN              (             33              7               
+[DEBUG LAB4]: 	       INTCONST              5             33              8               
+[DEBUG LAB4]: 	             EQ             ==             33             10               
+[DEBUG LAB4]: 	       INTCONST              3             33             13               
+[DEBUG LAB4]: 	         RPAREN              )             33             14               
+[DEBUG LAB4]: 	             ID         printf             33             16          33:16
+[DEBUG LAB4]: 	         LPAREN              (             33             22               
+[DEBUG LAB4]: 	 STRING_LITERAL            "1"             33             23               
+[DEBUG LAB4]: 	         RPAREN              )             33             26               
+[DEBUG LAB4]: 	      SEMICOLON              ;             33             27               
+[DEBUG LAB4]: 	           ELSE           else             34              4               
+[DEBUG LAB4]: 	             IF             if             34              9               
+[DEBUG LAB4]: 	         LPAREN              (             34             12               
+[DEBUG LAB4]: 	       INTCONST              5             34             13               
+[DEBUG LAB4]: 	        GREATEQ             >=             34             15               
+[DEBUG LAB4]: 	       INTCONST              3             34             18               
+[DEBUG LAB4]: 	         RPAREN              )             34             19               
+[DEBUG LAB4]: 	             ID         printf             34             21          34:21
+[DEBUG LAB4]: 	         LPAREN              (             34             27               
+[DEBUG LAB4]: 	 STRING_LITERAL            "2"             34             28               
+[DEBUG LAB4]: 	         RPAREN              )             34             31               
+[DEBUG LAB4]: 	      SEMICOLON              ;             34             32               
+[DEBUG LAB4]: 	           ELSE           else             35              4               
+[DEBUG LAB4]: 	             IF             if             35              9               
+[DEBUG LAB4]: 	         LPAREN              (             35             12               
+[DEBUG LAB4]: 	       INTCONST              5             35             13               
+[DEBUG LAB4]: 	         LESSEQ             <=             35             15               
+[DEBUG LAB4]: 	       INTCONST              3             35             18               
+[DEBUG LAB4]: 	         RPAREN              )             35             19               
+[DEBUG LAB4]: 	             ID         printf             35             21          35:21
+[DEBUG LAB4]: 	         LPAREN              (             35             27               
+[DEBUG LAB4]: 	 STRING_LITERAL            "3"             35             28               
+[DEBUG LAB4]: 	         RPAREN              )             35             31               
+[DEBUG LAB4]: 	      SEMICOLON              ;             35             32               
+[DEBUG LAB4]: 	           ELSE           else             36              4               
+[DEBUG LAB4]: 	             IF             if             36              9               
+[DEBUG LAB4]: 	         LPAREN              (             36             12               
+[DEBUG LAB4]: 	       INTCONST              5             36             13               
+[DEBUG LAB4]: 	            NEQ             !=             36             15               
+[DEBUG LAB4]: 	       INTCONST              3             36             18               
+[DEBUG LAB4]: 	         RPAREN              )             36             19               
+[DEBUG LAB4]: 	             ID         printf             36             21          36:21
+[DEBUG LAB4]: 	         LPAREN              (             36             27               
+[DEBUG LAB4]: 	 STRING_LITERAL            "4"             36             28               
+[DEBUG LAB4]: 	         RPAREN              )             36             31               
+[DEBUG LAB4]: 	      SEMICOLON              ;             36             32               
+[DEBUG LAB4]: 	             ID           char             38              4           38:4
+[DEBUG LAB4]: 	             ID            str             38              9           38:9
+[DEBUG LAB4]: 	         ASSIGN              =             38             13               
+[DEBUG LAB4]: 	 STRING_LITERAL"Hello, world!"             38             15               
+[DEBUG LAB4]: 	      SEMICOLON              ;             38             30               
+[DEBUG LAB4]: 	         RETURN         return             40              4               
+[DEBUG LAB4]: 	       INTCONST              0             40             11               
+[DEBUG LAB4]: 	      SEMICOLON              ;             40             12               
+[DEBUG LAB4]: 	         RBRACE              }             41              0               

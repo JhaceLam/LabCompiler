@@ -28,7 +28,7 @@
     SymbolTable table;
 
     void DEBUG_FOR_LAB4(string token, string lexeme, string property=""){
-        fprintf(yyout, "[DEBUG LAB4]: \t%10s%10s%10d%10d%10s\n", 
+        fprintf(yyout, "[DEBUG LAB4]: \t%15s%15s%15d%15d%15s\n", 
         token.c_str(), lexeme.c_str(), yylineno, offset, property.c_str());
     }
 
@@ -56,14 +56,6 @@ commentend (\*\/)
 
 %%
 
-"float" {
-    #ifdef ONLY_FOR_LEX
-        DEBUG_FOR_LAB4("FLOAT", "float");
-        offset += yyleng;
-    #else
-        return FLOAT;
-    #endif 
-}
 "int" {
     /*
     * Questions: 
@@ -83,6 +75,14 @@ commentend (\*\/)
         offset += yyleng;
     #else
         return VOID;
+    #endif 
+}
+"float" {
+    #ifdef ONLY_FOR_LEX
+        DEBUG_FOR_LAB4("FLOAT", "float");
+        offset += yyleng;
+    #else
+        return FLOAT;
     #endif 
 }
 "if" {
@@ -426,7 +426,7 @@ int main(int argc, char **argv){
     yylineno = 1;
     offset = 0;
 
-    fprintf(yyout, "[DEBUG LAB4]: \t%10s%10s%10s%10s%10s\n", 
+    fprintf(yyout, "[DEBUG LAB4]: \t%15s%15s%15s%15s%15s\n", 
         "token", "lexeme", "yylineno", "offset", "position");
     
     yylex();
