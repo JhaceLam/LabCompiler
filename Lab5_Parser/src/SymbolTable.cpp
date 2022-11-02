@@ -84,7 +84,6 @@ SymbolEntry* SymbolTable::lookup(std::string name)
     } else {
         return findResult->second;
     }
-    
 }
 
 // install the entry into current symbol table.
