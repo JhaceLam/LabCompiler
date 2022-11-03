@@ -1,19 +1,102 @@
 program
     Sequence
-        DeclStmt
-            Id	name: a	scope: 0	type: int
+        Sequence
+            Sequence
+                Sequence
+                    Sequence
+                        Sequence
+                            Sequence
+                                DeclStmt
+                                    DefNode - Const Int 
+                                        Id	name: temp0	scope: 0	type: int
+                                        ConstInitValNode
+                                            IntegerLiteral	value: 1	type: int
+                                DeclStmt
+                                    DefNode - Const Int 
+                                        Id	name: temp1	scope: 0	type: const int array [1 dimensions]
+                                        ConstInitValNode
+                                            ConstInitValNode
+                                                IntegerLiteral	value: 0	type: int
+                                            ConstInitValNode
+                                                IntegerLiteral	value: 1	type: int
+                                            ConstInitValNode
+                                                IntegerLiteral	value: 2	type: int
+                            DeclStmt
+                                DefNode - Int 
+                                    Id	name: a	scope: 0	type: int
+                                    InitValNode
+                                        IntegerLiteral	value: 1	type: int
+                        DeclStmt
+                            DefNode - Int 
+                                Id	name: b	scope: 0	type: int
+                                InitValNode
+                                    IntegerLiteral	value: 2	type: int
+                    DeclStmt
+                        DefNode - Int Array 
+                            Id	name: c	scope: 0	type: int array [1 dimensions]
+                                ConstArrayIndexNode:
+                                    IntegerLiteral	value: 100	type: int
+                            No initial value
+                DeclStmt
+                    DefNode - Int Array 
+                        Id	name: d	scope: 0	type: int array [1 dimensions]
+                            ConstArrayIndexNode:
+                                IntegerLiteral	value: 3	type: int
+                        InitValNode
+                            InitValNode
+                                IntegerLiteral	value: 0	type: int
+                            InitValNode
+                                IntegerLiteral	value: 1	type: int
+                            InitValNode
+                                IntegerLiteral	value: 2	type: int
+            DeclStmt
+                DefNode - Int Array 
+                    Id	name: e	scope: 0	type: int array [2 dimensions]
+                        ConstArrayIndexNode:
+                            IntegerLiteral	value: 2	type: int
+                            IntegerLiteral	value: 3	type: int
+                    InitValNode
+                        InitValNode
+                            InitValNode
+                                Id	name: a	scope: 0	type: int
+                            InitValNode
+                                IntegerLiteral	value: 1	type: int
+                            InitValNode
+                                IntegerLiteral	value: 2	type: int
+                        InitValNode
+                            InitValNode
+                                IntegerLiteral	value: 3	type: int
+                            InitValNode
+                                IntegerLiteral	value: 4	type: int
+                            InitValNode
+                                IntegerLiteral	value: 5	type: int
         FunctionDefine function name: main, type: int()
             CompoundStmt
                 Sequence
                     Sequence
                         Sequence
-                            DeclStmt
-                                Id	name: a	scope: 2	type: int
+                            Sequence
+                                Sequence
+                                    DeclStmt
+                                        DefNode - Int 
+                                            Id	name: a	scope: 2	type: int
+                                            No initial value
+                                    AssignStmt
+                                        Id	name: a	scope: 2	type: int
+                                        ConstBinaryExpr	op: add
+                                            IntegerLiteral	value: 1	type: int
+                                            IntegerLiteral	value: 2	type: int
+                                AssignStmt
+                                    Id	name: d	scope: 0	type: int array [1 dimensions]
+                                        ArrayIndexNode:
+                                            IntegerLiteral	value: 2	type: int
+                                    IntegerLiteral	value: 10	type: int
                             AssignStmt
-                                Id	name: a	scope: 2	type: int
-                                BinaryExpr	op: add
-                                    IntegerLiteral	value: 1	type: int
-                                    IntegerLiteral	value: 2	type: int
+                                Id	name: e	scope: 0	type: int array [2 dimensions]
+                                    ArrayIndexNode:
+                                        IntegerLiteral	value: 0	type: int
+                                        IntegerLiteral	value: 1	type: int
+                                IntegerLiteral	value: 1024	type: int
                         IfStmt
                             BinaryExpr	op: less
                                 Id	name: a	scope: 2	type: int

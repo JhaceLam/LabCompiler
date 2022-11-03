@@ -2,6 +2,7 @@
 #define __AST_H__
 
 #include <fstream>
+#include <vector>
 
 class SymbolEntry;
 
@@ -21,8 +22,13 @@ class ExprNode : public Node
 protected:
     SymbolEntry *symbolEntry;
 public:
-    ExprNode(SymbolEntry *symbolEntry) : symbolEntry(symbolEntry){};
+    bool isConst;
+    ExprNode(SymbolEntry *symbolEntry, bool isConst = false) : 
+        symbolEntry(symbolEntry), isConst(isConst) {};
 };
+
+class StmtNode : public Node
+{};
 
 class BinaryExpr : public ExprNode
 {
@@ -31,26 +37,43 @@ private:
     ExprNode *expr1, *expr2;
 public:
     enum {ADD, SUB, AND, OR, LESS};
-    BinaryExpr(SymbolEntry *se, int op, ExprNode*expr1, ExprNode*expr2) : ExprNode(se), op(op), expr1(expr1), expr2(expr2){};
+    BinaryExpr(SymbolEntry *se, int op, ExprNode*expr1, ExprNode*expr2) : 
+        ExprNode(se, expr1->isConst && expr2->isConst), 
+        op(op), expr1(expr1), expr2(expr2) {};
     void output(int level);
 };
 
 class Constant : public ExprNode
 {
 public:
-    Constant(SymbolEntry *se) : ExprNode(se){};
+    Constant(SymbolEntry *se) : ExprNode(se, true){};
+    void output(int level);
+};
+
+class ArrayIndexNode : public StmtNode
+{
+private:
+    std::vector<ExprNode *> exprList;
+public:
+    bool isConst;
+    ArrayIndexNode(bool isConst = false) : isConst(isConst) {};
+    void append(ExprNode *next);
+    int getDemension();
     void output(int level);
 };
 
 class Id : public ExprNode
 {
+private:
+    ArrayIndexNode *index;
 public:
-    Id(SymbolEntry *se) : ExprNode(se){};
+    Id(SymbolEntry *se, bool isConst = false) : 
+        ExprNode(se, isConst), index(nullptr) {};
+    Id(SymbolEntry *se, ArrayIndexNode *idx, bool isConst = false) : 
+        ExprNode(se, isConst), index(idx) {};
+    bool isArray();
     void output(int level);
 };
-
-class StmtNode : public Node
-{};
 
 class CompoundStmt : public StmtNode
 {
@@ -70,12 +93,40 @@ public:
     void output(int level);
 };
 
-class DeclStmt : public StmtNode
+class InitValNode: public StmtNode
+{
+private:
+    ExprNode *expr;
+    std::vector<InitValNode *> initValList;
+public:
+    bool isConst;
+    InitValNode(ExprNode *expr1 = nullptr, bool isConst = false) : 
+        expr(expr1), isConst(isConst) {};
+    void append(InitValNode *next);
+    void output(int level);
+};
+
+class DefNode : public StmtNode
 {
 private:
     Id *id;
+    InitValNode *initVal;
 public:
-    DeclStmt(Id *id) : id(id){};
+    bool isConst;
+    DefNode(Id *id, InitValNode *initVal, bool isConst = false) : 
+        id(id), initVal(initVal), isConst(isConst) {};
+    bool isArray();
+    void output(int level);
+};
+
+class DeclStmt : public StmtNode
+{
+private:
+    std::vector<DefNode *> varDefList;
+public:
+    bool isConst;
+    DeclStmt(bool isConst = false) : isConst(isConst) {};
+    void append(DefNode *next);
     void output(int level);
 };
 

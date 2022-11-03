@@ -41,6 +41,11 @@ WHITE [\t ]
         DEBUG_FOR_LAB4("VOID\tvoid");
     return VOID;
 }
+"const" {
+    if(dump_tokens)
+        DEBUG_FOR_LAB4("CONST\tif");
+    return CONST;
+}
 "if" {
     if(dump_tokens)
         DEBUG_FOR_LAB4("IF\tif");
@@ -96,6 +101,21 @@ WHITE [\t ]
     if(dump_tokens)
         DEBUG_FOR_LAB4("RBRACE\t}");
     return RBRACE;
+}
+"," {
+    if(dump_tokens)
+        DEBUG_FOR_LAB4("COMMA\t}");
+    return COMMA;
+}
+"[" {
+    if(dump_tokens)
+        DEBUG_FOR_LAB4("LBRACKET\t}");
+    return LBRACKET;
+}
+"]" {
+    if(dump_tokens)
+        DEBUG_FOR_LAB4("RBRACKET\t}");
+    return RBRACKET;
 }
 
 {DECIMIAL} {

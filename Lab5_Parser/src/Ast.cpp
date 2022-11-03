@@ -39,7 +39,11 @@ void BinaryExpr::output(int level)
             op_str = "less";
             break;
     }
-    fprintf(yyout, "%*cBinaryExpr\top: %s\n", level, ' ', op_str.c_str());
+    if (isConst) {
+        fprintf(yyout, "%*cConstBinaryExpr\top: %s\n", level, ' ', op_str.c_str());
+    } else {
+        fprintf(yyout, "%*cBinaryExpr\top: %s\n", level, ' ', op_str.c_str());
+    }
     expr1->output(level + 4);
     expr2->output(level + 4);
 }
@@ -53,6 +57,34 @@ void Constant::output(int level)
             value.c_str(), type.c_str());
 }
 
+void ArrayIndexNode::append(ExprNode *next)
+{
+    exprList.push_back(next);
+}
+
+int ArrayIndexNode::getDemension()
+{
+    return exprList.size();
+}
+
+void ArrayIndexNode::output(int level)
+{
+    if (isConst) {
+        fprintf(yyout, "%*cConstArrayIndexNode:\n", level, ' ');
+    } else {
+        fprintf(yyout, "%*cArrayIndexNode:\n", level, ' ');
+    }
+    for(std::vector<ExprNode *>::iterator iter = exprList.begin(); 
+    iter != exprList.end(); iter++) {
+        (*iter)->output(level + 4);
+    }
+}
+
+bool Id::isArray()
+{
+    return symbolEntry->getType()->isIntArray();
+}
+
 void Id::output(int level)
 {
     std::string name, type;
@@ -62,12 +94,19 @@ void Id::output(int level)
     scope = dynamic_cast<IdentifierSymbolEntry*>(symbolEntry)->getScope();
     fprintf(yyout, "%*cId\tname: %s\tscope: %d\ttype: %s\n", level, ' ',
             name.c_str(), scope, type.c_str());
+    if (isArray() && index != nullptr) {
+        index->output(level + 4);
+    }
 }
 
 void CompoundStmt::output(int level)
 {
     fprintf(yyout, "%*cCompoundStmt\n", level, ' ');
-    stmt->output(level + 4);
+    if (stmt == nullptr) {
+        fprintf(yyout, "%*cNullStmt\n", level + 4, ' ');
+    } else {
+        stmt->output(level + 4);
+    }
 }
 
 void SeqNode::output(int level)
@@ -77,10 +116,58 @@ void SeqNode::output(int level)
     stmt2->output(level + 4);
 }
 
+void InitValNode::append(InitValNode *next)
+{
+    initValList.push_back(next);
+}
+
+void InitValNode::output(int level)
+{
+    if (isConst) {
+        fprintf(yyout, "%*cConstInitValNode\n", level, ' ');
+    } else {
+        fprintf(yyout, "%*cInitValNode\n", level, ' ');
+    }
+    for (std::vector<InitValNode *>::iterator iter = initValList.begin(); 
+    iter != initValList.end(); iter++) {
+        (*iter)->output(level + 4);
+    }
+    if (expr != nullptr) {
+        expr->output(level + 4);
+    }
+}
+
+bool DefNode::isArray()
+{
+    return id->isArray();
+}
+
+void DefNode::output(int level)
+{
+    std::string constStr = isConst ? "Const " : "";
+    std::string arrayStr = isArray() ? "Array " : "";
+    fprintf(yyout, "%*cDefNode - %sInt %s\n", level, ' ', 
+        constStr.c_str(), arrayStr.c_str());
+    id->output(level + 4);
+    if (initVal != nullptr) {
+        initVal->output(level + 4);
+    } else {
+        fprintf(yyout, "%*cNo initial value\n", level + 4, ' ');
+    }
+}
+
+void DeclStmt::append(DefNode *next)
+{
+    varDefList.push_back(next);
+}
+
 void DeclStmt::output(int level)
 {
     fprintf(yyout, "%*cDeclStmt\n", level, ' ');
-    id->output(level + 4);
+    for (std::vector<DefNode *>::iterator iter = varDefList.begin(); 
+    iter != varDefList.end(); iter++) {
+        (*iter)->output(level + 4);
+    }
 }
 
 void IfStmt::output(int level)

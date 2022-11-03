@@ -9,10 +9,10 @@ class Type;
 class SymbolEntry
 {
 private:
-    int kind;
+    int kind; // Type of SymbolEntry
 protected:
     enum {CONSTANT, VARIABLE, TEMPORARY};
-    Type *type;
+    Type *type; // Date type
 
 public:
     SymbolEntry(Type *type, int kind);

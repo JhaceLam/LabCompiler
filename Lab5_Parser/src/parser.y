@@ -5,6 +5,8 @@
     extern Ast ast;
     int yylex();
     int yyerror( char const * );
+
+    Type *declType; // The Type in DeclStmt 
 }
 
 %code requires {
@@ -25,14 +27,17 @@
 %token <strtype> ID 
 %token <itype> INTEGER
 %token IF ELSE
-%token INT VOID
-%token LPAREN RPAREN LBRACE RBRACE SEMICOLON
+%token INT VOID CONST
+%token LPAREN RPAREN LBRACE RBRACE SEMICOLON COMMA LBRACKET RBRACKET
 %token ADD SUB OR AND LESS ASSIGN
 %token RETURN
 
 %nterm <stmttype> Stmts Stmt AssignStmt BlockStmt IfStmt ReturnStmt DeclStmt FuncDef
 %nterm <exprtype> Exp AddExp Cond LOrExp PrimaryExp LVal RelExp LAndExp
+%nterm <exprtype> ConstExp
 %nterm <type> Type
+%nterm <stmttype> VarDefList VarDef ConstArrayIndex InitVal InitValList ArrayIndex
+%nterm <stmttype> ConstDefList ConstDef ConstInitVal ConstInitValList
 
 %precedence THEN
 %precedence ELSE
@@ -69,6 +74,18 @@ LVal
         $$ = new Id(se);
         delete []$1;
     }
+    | ID ArrayIndex {
+        SymbolEntry *se;
+        se = identifiers->lookup($1);
+        if(se == nullptr)
+        {
+            fprintf(stderr, "identifier \"%s\" is undefined\n", (char*)$1);
+            delete [](char*)$1;
+            assert(se != nullptr);
+        }
+        $$ = new Id(se, (ArrayIndexNode *)$2 );
+        delete []$1;
+    }
     ;
 AssignStmt
     :
@@ -86,6 +103,7 @@ BlockStmt
             identifiers = identifiers->getPrev();
             delete top;
         }
+        | LBRACE RBRACE { $$ = new CompoundStmt(nullptr); }
     ;
 IfStmt
     : IF LPAREN Cond RPAREN Stmt %prec THEN {
@@ -165,8 +183,14 @@ LOrExp
         $$ = new BinaryExpr(se, BinaryExpr::OR, $1, $3);
     }
     ;
+ConstExp
+    : AddExp {
+        $$ = $1;
+    }
+    ;
 Type
     : INT {
+        declType = TypeSystem::intType;
         $$ = TypeSystem::intType;
     }
     | VOID {
@@ -175,12 +199,12 @@ Type
     ;
 DeclStmt
     :
-    Type ID SEMICOLON {
-        SymbolEntry *se;
-        se = new IdentifierSymbolEntry($1, $2, identifiers->getLevel());
-        identifiers->install($2, se);
-        $$ = new DeclStmt(new Id(se));
-        delete []$2;
+    Type VarDefList SEMICOLON {
+        $$ = $2;
+    }
+    |
+    CONST Type ConstDefList SEMICOLON {
+        $$ = $3;
     }
     ;
 FuncDef
@@ -203,6 +227,194 @@ FuncDef
         identifiers = identifiers->getPrev();
         delete top;
         delete []$2;
+    }
+    ;
+ConstArrayIndex
+    :
+    ConstArrayIndex LBRACKET ConstExp RBRACKET {
+        ArrayIndexNode *node = (ArrayIndexNode *)$1;
+        node->append( (ExprNode *)$3 );
+        $$ = node;
+    }
+    |
+    LBRACKET ConstExp RBRACKET {
+        ArrayIndexNode *node = new ArrayIndexNode(true);
+        node->append( (ExprNode *)$2 );
+        $$ = node;
+    }
+    ; 
+ArrayIndex
+    : ArrayIndex LBRACKET Exp RBRACKET {
+        ArrayIndexNode *node = (ArrayIndexNode *)$1;
+        node->append( (ExprNode *)$3 );
+        $$ = node;
+    }
+    | LBRACKET Exp RBRACKET {
+        ArrayIndexNode *node = new ArrayIndexNode();
+        node->append( (ExprNode *)$2 );
+        $$ = node;
+    }
+    ;
+InitVal
+    :
+    Exp {
+        InitValNode *node = new InitValNode( (ExprNode *)$1 );
+        $$ = node;
+    }
+    |
+    LBRACE InitValList RBRACE {
+        $$ = $2;
+    }
+    |
+    LBRACE RBRACE {
+        InitValNode *node = new InitValNode();
+        $$ = node;
+    }
+    ;
+InitValList
+    :
+    InitValList COMMA InitVal {
+        InitValNode *node = (InitValNode *)$1;
+        node->append( (InitValNode *)$3 );
+        $$ = node;
+    }
+    |
+    InitVal {
+        InitValNode *node = new InitValNode();
+        node->append( (InitValNode *)$1 );
+        $$ = node;
+    }
+    ;
+VarDef 
+    :
+    ID {
+        SymbolEntry *se;
+        se = new IdentifierSymbolEntry(declType, $1, identifiers->getLevel());
+        identifiers->install($1, se);
+        $$ = new DefNode(new Id(se), nullptr);
+        delete []$1;
+    }
+    |
+    ID ASSIGN InitVal {
+        SymbolEntry *se;
+        se = new IdentifierSymbolEntry(declType, $1, identifiers->getLevel());
+        identifiers->install($1, se);
+        $$ = new DefNode(new Id(se), (InitValNode *)$3 );
+        delete []$1;
+    }
+    |
+    ID ConstArrayIndex {
+        Type *type;
+        if (declType->isInt()) {
+            type = new IntArrayType();
+        }
+        SymbolEntry *se;
+        se = new IdentifierSymbolEntry(type, $1, identifiers->getLevel());
+        identifiers->install($1, se);
+        Id *id = new Id(se, (ArrayIndexNode *)$2 );
+        $$ = new DefNode(id, nullptr);
+
+        if (declType->isInt()) {
+            int demension = ( (ArrayIndexNode *)$2 )->getDemension();
+            ( (IntArrayType *)type )->setDimension(demension);
+        }
+    }
+    |
+    ID ConstArrayIndex ASSIGN InitVal {
+        Type *type;
+        if (declType->isInt()) {
+            type = new IntArrayType();
+        }
+        SymbolEntry *se;
+        se = new IdentifierSymbolEntry(type, $1, identifiers->getLevel());
+        identifiers->install($1, se);
+        Id *id = new Id(se, (ArrayIndexNode *)$2 );
+        $$ = new DefNode(id, (InitValNode *)$4 );
+
+        if (declType->isInt()) {
+            int demension = ( (ArrayIndexNode *)$2 )->getDemension();
+            ( (IntArrayType *)type )->setDimension(demension);
+        }
+    }
+    ;
+VarDefList
+    : VarDefList COMMA VarDef {
+        DeclStmt *node = (DeclStmt *)$1;
+        node->append( (DefNode *)$3 );
+        $$ = node;
+    }
+    |
+    VarDef {
+        DeclStmt *node = new DeclStmt();
+        node->append( (DefNode *)$1 );
+        $$ = node;
+    }
+    ;
+ConstInitVal
+    : ConstExp {
+        InitValNode *node = new InitValNode( (ExprNode *)$1 , true);
+        $$ = node;
+    }
+    |
+    LBRACE ConstInitValList RBRACE {
+        $$ = $2;
+    }
+    |
+    LBRACE RBRACE {
+        InitValNode *node = new InitValNode(nullptr, true);
+        $$ = node;
+    }
+    ;
+ConstInitValList 
+    : ConstInitValList COMMA ConstInitVal {
+        InitValNode *node = (InitValNode *)$1;
+        node->append( (InitValNode *)$3 );
+        $$ = node;
+    }
+    |
+    ConstInitVal {
+        InitValNode *node = new InitValNode(nullptr, true);
+        node->append( (InitValNode *)$1 );
+        $$ = node;
+    }
+    ;
+ConstDef 
+    : ID ASSIGN ConstInitVal {
+        SymbolEntry *se;
+        se = new IdentifierSymbolEntry(declType, $1, identifiers->getLevel());
+        identifiers->install($1, se);
+        $$ = new DefNode(new Id(se), (InitValNode *)$3 , true);
+        delete []$1;
+    }
+    |
+    ID ConstArrayIndex ASSIGN ConstInitVal {
+        Type *type;
+        if (declType->isInt()) {
+            type = new ConstIntArrayType();
+        }
+        SymbolEntry *se;
+        se = new IdentifierSymbolEntry(type, $1, identifiers->getLevel());
+        identifiers->install($1, se);
+        Id *id = new Id(se, (ArrayIndexNode *)$2 , true);
+        $$ = new DefNode(id, (InitValNode *)$4 , true);
+
+        if (declType->isInt()) {
+            int demension = ( (ArrayIndexNode *)$2 )->getDemension();
+            ( (ConstIntArrayType *)type )->setDimension(demension);
+        }
+    }
+    ;
+ConstDefList  
+    :   ConstDefList COMMA ConstDef {
+        DeclStmt *node = (DeclStmt *)$1;
+        node->append( (DefNode *)$3 );
+        $$ = node;
+    }
+    |
+    ConstDef {
+        DeclStmt *node = new DeclStmt(true);
+        node->append( (DefNode *)$1 );
+        $$ = node;
     }
     ;
 %%
