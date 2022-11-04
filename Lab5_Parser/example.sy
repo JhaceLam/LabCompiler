@@ -1,8 +1,25 @@
-int e[2][3] = {{0, 1, 2}, {3, 4, 5}};
+const int temp0 = 1;
 const int temp1[3] = {0, 1, 2};
+
+int a = 1;
+int b = 2;
+int c[100];
+int d[3] = {0, 1, 2};
+int e[2][3] = {{a, 1, 2}, {3, 4, 5}};
 
 int main()
 {
-    int tempX = e[0][1];
-    int tempY = temp1[2];
+    int a;
+    a = 1 + 2;
+    int tempX = temp1[2];
+    e[0][1] = 1024;
+
+    while(a < 10)
+    {
+        a = a + 1;
+    }
+
+    if(a < 5)
+        return 1;
+    return 0;
 }
