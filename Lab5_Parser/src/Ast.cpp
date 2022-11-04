@@ -92,8 +92,9 @@ void Id::output(int level)
     name = symbolEntry->toStr();
     type = symbolEntry->getType()->toStr();
     scope = dynamic_cast<IdentifierSymbolEntry*>(symbolEntry)->getScope();
-    fprintf(yyout, "%*cId\tname: %s\tscope: %d\ttype: %s\n", level, ' ',
-            name.c_str(), scope, type.c_str());
+    std::string constStr = isConst ? "Const " : "";
+    fprintf(yyout, "%*c%sId\tname: %s\tscope: %d\ttype: %s\n", level, ' ',
+        constStr.c_str(), name.c_str(), scope, type.c_str());
     if (isArray() && index != nullptr) {
         index->output(level + 4);
     }
@@ -189,6 +190,13 @@ void ReturnStmt::output(int level)
 {
     fprintf(yyout, "%*cReturnStmt\n", level, ' ');
     retValue->output(level + 4);
+}
+
+void WhileStmt::output(int level)
+{
+    fprintf(yyout, "%*cWhileStmt\n", level, ' ');
+    cond->output(level + 4);
+    loopStmt->output(level + 4);
 }
 
 void AssignStmt::output(int level)

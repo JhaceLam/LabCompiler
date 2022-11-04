@@ -43,7 +43,7 @@ WHITE [\t ]
 }
 "const" {
     if(dump_tokens)
-        DEBUG_FOR_LAB4("CONST\tif");
+        DEBUG_FOR_LAB4("CONST\tconst");
     return CONST;
 }
 "if" {
@@ -61,6 +61,11 @@ WHITE [\t ]
         DEBUG_FOR_LAB4("RETURN\treturn");
     return RETURN;
 }
+"while" {
+    if(dump_tokens)
+        DEBUG_FOR_LAB4("WHILE\twhile");
+    return WHILE;
+};
 
 "=" {
     if(dump_tokens)
@@ -104,17 +109,17 @@ WHITE [\t ]
 }
 "," {
     if(dump_tokens)
-        DEBUG_FOR_LAB4("COMMA\t}");
+        DEBUG_FOR_LAB4("COMMA\t,");
     return COMMA;
 }
 "[" {
     if(dump_tokens)
-        DEBUG_FOR_LAB4("LBRACKET\t}");
+        DEBUG_FOR_LAB4("LBRACKET\t[");
     return LBRACKET;
 }
 "]" {
     if(dump_tokens)
-        DEBUG_FOR_LAB4("RBRACKET\t}");
+        DEBUG_FOR_LAB4("RBRACKET\t]");
     return RBRACKET;
 }
 

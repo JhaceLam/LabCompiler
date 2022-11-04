@@ -61,25 +61,26 @@ extern int yydebug;
     INTEGER = 259,
     IF = 260,
     ELSE = 261,
-    INT = 262,
-    VOID = 263,
-    CONST = 264,
-    LPAREN = 265,
-    RPAREN = 266,
-    LBRACE = 267,
-    RBRACE = 268,
-    SEMICOLON = 269,
-    COMMA = 270,
-    LBRACKET = 271,
-    RBRACKET = 272,
-    ADD = 273,
-    SUB = 274,
-    OR = 275,
-    AND = 276,
-    LESS = 277,
-    ASSIGN = 278,
-    RETURN = 279,
-    THEN = 280
+    WHILE = 262,
+    INT = 263,
+    VOID = 264,
+    CONST = 265,
+    LPAREN = 266,
+    RPAREN = 267,
+    LBRACE = 268,
+    RBRACE = 269,
+    SEMICOLON = 270,
+    COMMA = 271,
+    LBRACKET = 272,
+    RBRACKET = 273,
+    ADD = 274,
+    SUB = 275,
+    OR = 276,
+    AND = 277,
+    LESS = 278,
+    ASSIGN = 279,
+    RETURN = 280,
+    THEN = 281
   };
 #endif
 
@@ -95,7 +96,7 @@ union YYSTYPE
     ExprNode* exprtype;
     Type* type;
 
-#line 99 "include/parser.h"
+#line 100 "include/parser.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

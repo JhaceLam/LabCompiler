@@ -26,7 +26,7 @@
 %start Program
 %token <strtype> ID 
 %token <itype> INTEGER
-%token IF ELSE
+%token IF ELSE WHILE
 %token INT VOID CONST
 %token LPAREN RPAREN LBRACE RBRACE SEMICOLON COMMA LBRACKET RBRACKET
 %token ADD SUB OR AND LESS ASSIGN
@@ -38,6 +38,7 @@
 %nterm <type> Type
 %nterm <stmttype> VarDefList VarDef ConstArrayIndex InitVal InitValList ArrayIndex
 %nterm <stmttype> ConstDefList ConstDef ConstInitVal ConstInitValList
+%nterm <stmttype> WhileStmt
 
 %precedence THEN
 %precedence ELSE
@@ -57,6 +58,7 @@ Stmt
     : AssignStmt {$$=$1;}
     | BlockStmt {$$=$1;}
     | IfStmt {$$=$1;}
+    | WhileStmt {$$=$1;}
     | ReturnStmt {$$=$1;}
     | DeclStmt {$$=$1;}
     | FuncDef {$$=$1;}
@@ -119,6 +121,10 @@ ReturnStmt
         $$ = new ReturnStmt($2);
     }
     ;
+WhileStmt
+    : WHILE LPAREN Cond RPAREN Stmt {
+        $$ = new WhileStmt($3, $5);
+    }
 Exp
     :
     AddExp {$$ = $1;}
@@ -383,7 +389,7 @@ ConstDef
         SymbolEntry *se;
         se = new IdentifierSymbolEntry(declType, $1, identifiers->getLevel());
         identifiers->install($1, se);
-        $$ = new DefNode(new Id(se), (InitValNode *)$3 , true);
+        $$ = new DefNode(new Id(se, true), (InitValNode *)$3 , true);
         delete []$1;
     }
     |
