@@ -19,6 +19,10 @@ public:
     bool isIntArray() const {return kind == INT_ARRAY;};
     bool isConstInt() const {return kind == CONST_INT;};
     bool isConstIntArray() const {return kind == CONST_INT_ARRAY;};
+    
+    bool isArray() const {
+        return kind == INT_ARRAY || kind == CONST_INT_ARRAY;
+    }
 };
 
 class IntType : public Type

@@ -82,7 +82,7 @@ void ArrayIndexNode::output(int level)
 
 bool Id::isArray()
 {
-    return symbolEntry->getType()->isIntArray();
+    return symbolEntry->getType()->isArray();
 }
 
 void Id::output(int level)
