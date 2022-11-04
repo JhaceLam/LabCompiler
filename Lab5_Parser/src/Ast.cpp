@@ -199,6 +199,16 @@ void WhileStmt::output(int level)
     loopStmt->output(level + 4);
 }
 
+void BreakStmt::output(int level)
+{
+    fprintf(yyout, "%*cBreakStmt\n", level, ' ');
+}
+
+void ContinueStmt::output(int level)
+{
+    fprintf(yyout, "%*cContinueStmt\n", level, ' ');
+}
+
 void AssignStmt::output(int level)
 {
     fprintf(yyout, "%*cAssignStmt\n", level, ' ');

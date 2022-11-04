@@ -9,14 +9,20 @@ int e[2][3] = {{a, 1, 2}, {3, 4, 5}};
 
 int main()
 {
+    int tempArrX[0+4][1+2] = {{1, 2, 3}, {}, {}, {}};
+
     int a;
     a = 1 + 2;
     int tempX = temp1[2];
     e[0][1] = 1024;
 
-    while(a < 10)
+    while(a < 100)
     {
         a = a + 1;
+
+        if (a < 10) {
+            continue;
+        }
     }
 
     if(a < 5)

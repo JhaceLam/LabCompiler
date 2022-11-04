@@ -26,7 +26,7 @@
 %start Program
 %token <strtype> ID 
 %token <itype> INTEGER
-%token IF ELSE WHILE
+%token IF ELSE WHILE BREAK CONTINUE
 %token INT VOID CONST
 %token LPAREN RPAREN LBRACE RBRACE SEMICOLON COMMA LBRACKET RBRACKET
 %token ADD SUB OR AND LESS ASSIGN
@@ -38,7 +38,7 @@
 %nterm <type> Type
 %nterm <stmttype> VarDefList VarDef ConstArrayIndex InitVal InitValList ArrayIndex
 %nterm <stmttype> ConstDefList ConstDef ConstInitVal ConstInitValList
-%nterm <stmttype> WhileStmt
+%nterm <stmttype> WhileStmt BreakStmt ContinueStmt
 
 %precedence THEN
 %precedence ELSE
@@ -59,6 +59,8 @@ Stmt
     | BlockStmt {$$=$1;}
     | IfStmt {$$=$1;}
     | WhileStmt {$$=$1;}
+    | BreakStmt {$$=$1;}
+    | ContinueStmt {$$=$1;}
     | ReturnStmt {$$=$1;}
     | DeclStmt {$$=$1;}
     | FuncDef {$$=$1;}
@@ -125,6 +127,16 @@ WhileStmt
     : WHILE LPAREN Cond RPAREN Stmt {
         $$ = new WhileStmt($3, $5);
     }
+BreakStmt
+    : BREAK SEMICOLON {
+        $$ = new BreakStmt();
+    }
+    ;
+ContinueStmt
+    : CONTINUE SEMICOLON {
+        $$ = new ContinueStmt();
+    }
+    ;
 Exp
     :
     AddExp {$$ = $1;}
