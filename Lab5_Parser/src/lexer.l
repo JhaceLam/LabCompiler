@@ -19,6 +19,7 @@
 %}
 
 DECIMIAL ([1-9][0-9]*|0)
+FLOATNUM (([1-9][0-9]*|0)?(\.[0-9]*)((e|E)[+-]?[0-9]+)?)|(([1-9][0-9]*|0)(e|E)[+-]?[0-9]+)
 ID [[:alpha:]_][[:alpha:][:digit:]_]*
 EOL (\r\n|\n|\r)
 WHITE [\t ]
@@ -40,6 +41,11 @@ WHITE [\t ]
     if(dump_tokens)
         DEBUG_FOR_LAB4("VOID\tvoid");
     return VOID;
+}
+"float" {
+    if(dump_tokens)
+        DEBUG_FOR_LAB4("FLOAT\tfloat");
+    return FLOAT;
 }
 "const" {
     if(dump_tokens)
@@ -138,6 +144,13 @@ WHITE [\t ]
         DEBUG_FOR_LAB4(yytext);
     yylval.itype = atoi(yytext);
     return INTEGER;
+}
+
+{FLOATNUM} {
+    if(dump_tokens)
+        DEBUG_FOR_LAB4(yytext);
+    yylval.ftype = strtof(yytext, NULL);
+    return FLOATNUM;
 }
 
 {ID} {

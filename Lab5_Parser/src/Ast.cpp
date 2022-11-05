@@ -18,6 +18,11 @@ void Ast::output()
         root->output(4);
 }
 
+Type* ExprNode::getType()
+{
+    return symbolEntry->getType();
+}
+
 void BinaryExpr::output(int level)
 {
     std::string op_str;
@@ -53,8 +58,10 @@ void Constant::output(int level)
     std::string type, value;
     type = symbolEntry->getType()->toStr();
     value = symbolEntry->toStr();
-    fprintf(yyout, "%*cIntegerLiteral\tvalue: %s\ttype: %s\n", level, ' ',
-            value.c_str(), type.c_str());
+    std::string nodeName = symbolEntry->getType()->isInt() ? 
+        "IntegerLiteral" : "FloatLiteral";
+    fprintf(yyout, "%*c%s\tvalue: %s\ttype: %s\n", level, ' ',
+            nodeName.c_str(), value.c_str(), type.c_str());
 }
 
 void ArrayIndexNode::append(ExprNode *next)
@@ -145,10 +152,11 @@ bool DefNode::isArray()
 
 void DefNode::output(int level)
 {
-    std::string constStr = isConst ? "Const " : "";
-    std::string arrayStr = isArray() ? "Array " : "";
-    fprintf(yyout, "%*cDefNode - %sInt %s\n", level, ' ', 
-        constStr.c_str(), arrayStr.c_str());
+    std::string constStr = isConst ? "Const" : "";
+    std::string arrayStr = isArray() ? "Array" : "";
+    std::string typeStr = id->getType()->isIntFamily() ? "Int" : "Float";
+    fprintf(yyout, "%*cDefNode - %s %s %s \n", level, ' ', 
+        constStr.c_str(), typeStr.c_str(), arrayStr.c_str());
     id->output(level + 4);
     if (initVal != nullptr) {
         initVal->output(level + 4);

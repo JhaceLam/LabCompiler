@@ -17,6 +17,7 @@
 
 %union {
     int itype;
+    float ftype;
     char* strtype;
     StmtNode* stmttype;
     ExprNode* exprtype;
@@ -26,8 +27,9 @@
 %start Program
 %token <strtype> ID 
 %token <itype> INTEGER
+%token <ftype> FLOATNUM
 %token IF ELSE WHILE BREAK CONTINUE
-%token INT VOID CONST
+%token INT VOID CONST FLOAT
 %token LPAREN RPAREN LBRACE RBRACE SEMICOLON COMMA LBRACKET RBRACKET
 %token ADD SUB OR AND LESS ASSIGN
 %token RETURN
@@ -150,8 +152,14 @@ PrimaryExp
     LVal {
         $$ = $1;
     }
-    | INTEGER {
+    |
+    INTEGER {
         SymbolEntry *se = new ConstantSymbolEntry(TypeSystem::intType, $1);
+        $$ = new Constant(se);
+    }
+    |
+    FLOATNUM {
+        SymbolEntry *se = new ConstantSymbolEntry(TypeSystem::floatType, $1);
         $$ = new Constant(se);
     }
     ;
@@ -161,13 +169,25 @@ AddExp
     |
     AddExp ADD PrimaryExp
     {
-        SymbolEntry *se = new TemporarySymbolEntry(TypeSystem::intType, SymbolTable::getLabel());
+        Type *expType;
+        if ($1->getType()->isIntFamily() && $3->getType()->isIntFamily()) {
+            expType = TypeSystem::intType;
+        } else {
+            expType = TypeSystem::floatType;
+        }
+        SymbolEntry *se = new TemporarySymbolEntry(expType, SymbolTable::getLabel());
         $$ = new BinaryExpr(se, BinaryExpr::ADD, $1, $3);
     }
     |
     AddExp SUB PrimaryExp
     {
-        SymbolEntry *se = new TemporarySymbolEntry(TypeSystem::intType, SymbolTable::getLabel());
+        Type *expType;
+        if ($1->getType()->isIntFamily() && $3->getType()->isIntFamily()) {
+            expType = TypeSystem::intType;
+        } else {
+            expType = TypeSystem::floatType;
+        }
+        SymbolEntry *se = new TemporarySymbolEntry(expType, SymbolTable::getLabel());
         $$ = new BinaryExpr(se, BinaryExpr::SUB, $1, $3);
     }
     ;
@@ -207,11 +227,18 @@ ConstExp
     }
     ;
 Type
-    : INT {
+    :
+    INT {
         declType = TypeSystem::intType;
         $$ = TypeSystem::intType;
     }
-    | VOID {
+    |
+    FLOAT {
+        declType = TypeSystem::floatType;
+        $$ = TypeSystem::floatType;
+    }
+    |
+    VOID {
         $$ = TypeSystem::voidType;
     }
     ;
@@ -325,6 +352,8 @@ VarDef
         Type *type;
         if (declType->isInt()) {
             type = new IntArrayType();
+        } else {
+            type = new FloatArrayType();
         }
         SymbolEntry *se;
         se = new IdentifierSymbolEntry(type, $1, identifiers->getLevel());
@@ -332,9 +361,11 @@ VarDef
         Id *id = new Id(se, (ArrayIndexNode *)$2 );
         $$ = new DefNode(id, nullptr);
 
+        int demension = ( (ArrayIndexNode *)$2 )->getDemension();
         if (declType->isInt()) {
-            int demension = ( (ArrayIndexNode *)$2 )->getDemension();
             ( (IntArrayType *)type )->setDimension(demension);
+        } else {
+            ( (FloatArrayType *)type )->setDimension(demension);
         }
     }
     |
@@ -342,6 +373,8 @@ VarDef
         Type *type;
         if (declType->isInt()) {
             type = new IntArrayType();
+        } else {
+            type = new FloatArrayType();
         }
         SymbolEntry *se;
         se = new IdentifierSymbolEntry(type, $1, identifiers->getLevel());
@@ -349,9 +382,11 @@ VarDef
         Id *id = new Id(se, (ArrayIndexNode *)$2 );
         $$ = new DefNode(id, (InitValNode *)$4 );
 
+        int demension = ( (ArrayIndexNode *)$2 )->getDemension();
         if (declType->isInt()) {
-            int demension = ( (ArrayIndexNode *)$2 )->getDemension();
             ( (IntArrayType *)type )->setDimension(demension);
+        } else {
+            ( (FloatArrayType *)type )->setDimension(demension);
         }
     }
     ;
@@ -409,6 +444,8 @@ ConstDef
         Type *type;
         if (declType->isInt()) {
             type = new ConstIntArrayType();
+        } else {
+            type = new ConstFloatArrayType();
         }
         SymbolEntry *se;
         se = new IdentifierSymbolEntry(type, $1, identifiers->getLevel());
@@ -416,9 +453,11 @@ ConstDef
         Id *id = new Id(se, (ArrayIndexNode *)$2 , true);
         $$ = new DefNode(id, (InitValNode *)$4 , true);
 
+        int demension = ( (ArrayIndexNode *)$2 )->getDemension();
         if (declType->isInt()) {
-            int demension = ( (ArrayIndexNode *)$2 )->getDemension();
             ( (ConstIntArrayType *)type )->setDimension(demension);
+        } else {
+            ( (ConstFloatArrayType *)type )->setDimension(demension);
         }
     }
     ;

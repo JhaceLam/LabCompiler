@@ -5,6 +5,7 @@
 #include <vector>
 
 class SymbolEntry;
+class Type;
 
 class Node
 {
@@ -25,6 +26,7 @@ public:
     bool isConst;
     ExprNode(SymbolEntry *symbolEntry, bool isConst = false) : 
         symbolEntry(symbolEntry), isConst(isConst) {};
+    Type* getType();
 };
 
 class StmtNode : public Node
