@@ -23,20 +23,29 @@ int main()
     int a;
     a = 1 + 2;
     int tempX = temp1[2];
-    float tempFloatX = floatA + 10;
-    float tempFloatY = floatB + 20.0;
-    floatArrayA[10] = 3.1415E1 + 31.3E2;
+    float tempFloatX = floatA - 10;
+    float tempFloatY = floatB * 20.0;
+    floatArrayA[10] = 3.1415E1 / 31.3E2;
     float tempFloatZ = floatArrayC[1][0];
     float tempFloatW = floatArrayD[2];
     e[0][1] = 1024;
 
-    while(a < 100)
+    while(a < 10) // Comment line
     {
         a = a + 1;
-
-        if (a < 10) {
-            continue;
-        }
+        if(a % 9 == 0)
+        	break;
+    }
+    /*
+        Comment block
+    */
+    a = -100 + 200;
+    while(a > 50)
+    {
+        if(a>=70)
+            a = a - 2;
+        else
+            a = a - 1;
     }
 
     if(a < 5)

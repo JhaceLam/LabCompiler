@@ -23,9 +23,18 @@ FLOATNUM (([1-9][0-9]*|0)?(\.[0-9]*)((e|E)[+-]?[0-9]+)?)|(([1-9][0-9]*|0)(e|E)[+
 ID [[:alpha:]_][[:alpha:][:digit:]_]*
 EOL (\r\n|\n|\r)
 WHITE [\t ]
+
+LINECOMMENT (\/\/[^\n]*)
+commentbegin (\/\*)
+commentelement (.|\n)
+commentend (\*\/)
 %x BLOCKCOMMENT
 
 %%
+{LINECOMMENT}
+{commentbegin} {BEGIN BLOCKCOMMENT;}
+<BLOCKCOMMENT>{commentelement} {}
+<BLOCKCOMMENT>{commentend} {BEGIN INITIAL;}
 
 "int" {
     /*
@@ -88,16 +97,121 @@ WHITE [\t ]
         DEBUG_FOR_LAB4("ASSIGN\t=");
     return ASSIGN;
 }
-"<" {
-    if(dump_tokens)
-        DEBUG_FOR_LAB4("LESS\t<");
-    return LESS;
-}
 "+" {
-    if(dump_tokens)
-        DEBUG_FOR_LAB4("ADD\t+");
-    return ADD;
+    #ifdef ONLY_FOR_LEX
+        DEBUG_FOR_LAB4("ADD", "+");
+        offset += yyleng;
+    #else
+        return ADD;
+    #endif
 }
+"-" {
+    #ifdef ONLY_FOR_LEX
+        DEBUG_FOR_LAB4("SUB", "-");
+        offset += yyleng;
+    #else
+        return SUB;
+    #endif
+}
+"*" {
+    #ifdef ONLY_FOR_LEX
+        DEBUG_FOR_LAB4("STAR", "*");
+        offset += yyleng;
+    #else
+        return STAR;
+    #endif
+}
+"/" {
+    #ifdef ONLY_FOR_LEX
+        DEBUG_FOR_LAB4("SLASH", "/");
+        offset += yyleng;
+    #else
+        return SLASH;
+    #endif
+}
+"%" {
+    #ifdef ONLY_FOR_LEX
+        DEBUG_FOR_LAB4("PERCENT", "%%");
+        offset += yyleng;
+    #else
+        return PERCENT;
+    #endif
+}
+
+"&&" {
+    #ifdef ONLY_FOR_LEX
+        DEBUG_FOR_LAB4("AND", "&&");
+        offset += yyleng;
+    #else
+        return AND;
+    #endif
+}
+"||" {
+    #ifdef ONLY_FOR_LEX
+        DEBUG_FOR_LAB4("OR", "||");
+        offset += yyleng;
+    #else
+        return OR;
+    #endif
+}
+"!" {
+    #ifdef ONLY_FOR_LEX
+        DEBUG_FOR_LAB4("NOT", "!");
+        offset += yyleng;
+    #else
+        return NOT;
+    #endif
+}
+
+"==" {
+    #ifdef ONLY_FOR_LEX
+        DEBUG_FOR_LAB4("EQ", "==");
+        offset += yyleng;
+    #else
+        return EQ;
+    #endif
+}
+"!=" {
+    #ifdef ONLY_FOR_LEX
+        DEBUG_FOR_LAB4("NEQ", "!=");
+        offset += yyleng;
+    #else
+        return NEQ;
+    #endif
+}
+"<" {
+    #ifdef ONLY_FOR_LEX
+        DEBUG_FOR_LAB4("LESS", "<");
+        offset += yyleng;
+    #else
+        return LESS;
+    #endif
+}
+">" {
+    #ifdef ONLY_FOR_LEX
+        DEBUG_FOR_LAB4("GREAT", ">");
+        offset += yyleng;
+    #else
+        return GREAT;
+    #endif
+}
+"<=" {
+    #ifdef ONLY_FOR_LEX
+        DEBUG_FOR_LAB4("LESSEQ", "<=");
+        offset += yyleng;
+    #else
+        return LESSEQ;
+    #endif
+}
+">=" {
+    #ifdef ONLY_FOR_LEX
+        DEBUG_FOR_LAB4("GREATEQ", ">=");
+        offset += yyleng;
+    #else
+        return GREATEQ;
+    #endif
+}
+
 ";" {
     if(dump_tokens)
         DEBUG_FOR_LAB4("SEMICOLON\t;");

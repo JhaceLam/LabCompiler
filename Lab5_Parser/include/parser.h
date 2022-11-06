@@ -79,12 +79,22 @@ extern int yydebug;
     RBRACKET = 277,
     ADD = 278,
     SUB = 279,
-    OR = 280,
-    AND = 281,
-    LESS = 282,
-    ASSIGN = 283,
-    RETURN = 284,
-    THEN = 285
+    MINUS = 280,
+    STAR = 281,
+    SLASH = 282,
+    PERCENT = 283,
+    AND = 284,
+    OR = 285,
+    NOT = 286,
+    LESS = 287,
+    LESSEQ = 288,
+    GREAT = 289,
+    GREATEQ = 290,
+    EQ = 291,
+    NEQ = 292,
+    ASSIGN = 293,
+    RETURN = 294,
+    THEN = 295
   };
 #endif
 
@@ -101,7 +111,7 @@ union YYSTYPE
     ExprNode* exprtype;
     Type* type;
 
-#line 105 "include/parser.h"
+#line 115 "include/parser.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

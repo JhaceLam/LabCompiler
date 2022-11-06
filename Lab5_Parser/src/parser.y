@@ -31,11 +31,11 @@
 %token IF ELSE WHILE BREAK CONTINUE
 %token INT VOID CONST FLOAT
 %token LPAREN RPAREN LBRACE RBRACE SEMICOLON COMMA LBRACKET RBRACKET
-%token ADD SUB OR AND LESS ASSIGN
+%token ADD SUB MINUS STAR SLASH PERCENT AND OR NOT LESS LESSEQ GREAT GREATEQ EQ NEQ ASSIGN
 %token RETURN
 
 %nterm <stmttype> Stmts Stmt AssignStmt BlockStmt IfStmt ReturnStmt DeclStmt FuncDef
-%nterm <exprtype> Exp AddExp Cond LOrExp PrimaryExp LVal RelExp LAndExp
+%nterm <exprtype> Exp AddExp Cond LOrExp PrimaryExp LVal RelExp LAndExp StarExp UnaryExp
 %nterm <exprtype> ConstExp
 %nterm <type> Type
 %nterm <stmttype> VarDefList VarDef ConstArrayIndex InitVal InitValList ArrayIndex
@@ -154,51 +154,128 @@ PrimaryExp
     }
     |
     INTEGER {
-        SymbolEntry *se = new ConstantSymbolEntry(TypeSystem::intType, $1);
+        SymbolEntry *se = new ConstantSymbolEntry(TypeSystem::constIntType, $1);
         $$ = new Constant(se);
     }
     |
     FLOATNUM {
-        SymbolEntry *se = new ConstantSymbolEntry(TypeSystem::floatType, $1);
+        SymbolEntry *se = new ConstantSymbolEntry(TypeSystem::constFloatType, $1);
         $$ = new Constant(se);
     }
-    ;
-AddExp
-    :
-    PrimaryExp {$$ = $1;}
     |
-    AddExp ADD PrimaryExp
+    LPAREN Exp RPAREN {
+        $$ = $2;
+    }
+    ;
+UnaryExp
+    :
+    PrimaryExp {
+        $$ = $1;
+    }
+    |
+    ADD UnaryExp {
+        $$ = $2;
+    }
+    |   
+    SUB UnaryExp {
+        SymbolEntry *tmp = new TemporarySymbolEntry($2->getType(), 
+            SymbolTable::getLabel());
+        $$ = new OneOpExpr(tmp, OneOpExpr::SUB, $2);
+    }
+    |   
+    NOT UnaryExp {
+        SymbolEntry *tmp = new TemporarySymbolEntry($2->getType(), 
+            SymbolTable::getLabel());
+        $$ = new OneOpExpr(tmp, OneOpExpr::NOT, $2);
+    }
+    ;
+StarExp //乘除取模
+    :   
+    UnaryExp { $$ = $1;}
+    |   
+    StarExp STAR UnaryExp
     {
-        Type *expType;
-        if ($1->getType()->isIntFamily() && $3->getType()->isIntFamily()) {
-            expType = TypeSystem::intType;
-        } else {
-            expType = TypeSystem::floatType;
-        }
+        Type *expType = BinaryExpr::getResultType($1, $3);
+        SymbolEntry *se = new TemporarySymbolEntry(expType, SymbolTable::getLabel());
+        $$ = new BinaryExpr(se, BinaryExpr::STAR, $1, $3);  
+    }
+    |   
+    StarExp SLASH UnaryExp 
+    {
+        Type *expType = BinaryExpr::getResultType($1, $3);
+        SymbolEntry *se = new TemporarySymbolEntry(expType, SymbolTable::getLabel());
+        $$ = new BinaryExpr(se, BinaryExpr::SLASH, $1, $3);
+    }
+    |   
+    StarExp PERCENT UnaryExp 
+    {
+        Type *expType = BinaryExpr::getResultType($1, $3);
+        SymbolEntry *se = new TemporarySymbolEntry(expType, SymbolTable::getLabel());
+        $$ = new BinaryExpr(se, BinaryExpr::PERCENT, $1, $3);
+    }
+    ;
+AddExp //加减法
+    :
+    StarExp {$$ = $1;}
+    |
+    AddExp ADD StarExp
+    {
+        Type *expType = BinaryExpr::getResultType($1, $3);
         SymbolEntry *se = new TemporarySymbolEntry(expType, SymbolTable::getLabel());
         $$ = new BinaryExpr(se, BinaryExpr::ADD, $1, $3);
     }
     |
-    AddExp SUB PrimaryExp
+    AddExp SUB StarExp
     {
-        Type *expType;
-        if ($1->getType()->isIntFamily() && $3->getType()->isIntFamily()) {
-            expType = TypeSystem::intType;
-        } else {
-            expType = TypeSystem::floatType;
-        }
+        Type *expType = BinaryExpr::getResultType($1, $3);
         SymbolEntry *se = new TemporarySymbolEntry(expType, SymbolTable::getLabel());
         $$ = new BinaryExpr(se, BinaryExpr::SUB, $1, $3);
     }
     ;
-RelExp
+RelExp //关系运算
     :
     AddExp {$$ = $1;}
     |
     RelExp LESS AddExp
     {
-        SymbolEntry *se = new TemporarySymbolEntry(TypeSystem::intType, SymbolTable::getLabel());
+        Type *expType = BinaryExpr::getRelResultType($1, $3);
+        SymbolEntry *se = new TemporarySymbolEntry(expType, SymbolTable::getLabel());
         $$ = new BinaryExpr(se, BinaryExpr::LESS, $1, $3);
+    }
+    |
+    RelExp LESSEQ AddExp 
+    {
+        Type *expType = BinaryExpr::getRelResultType($1, $3);
+        SymbolEntry *se = new TemporarySymbolEntry(expType, SymbolTable::getLabel());
+        $$ = new BinaryExpr(se, BinaryExpr::LESSEQ, $1, $3);
+    }
+    |
+    RelExp GREAT AddExp
+    {
+        Type *expType = BinaryExpr::getRelResultType($1, $3);
+        SymbolEntry *se = new TemporarySymbolEntry(expType, SymbolTable::getLabel());
+        $$ = new BinaryExpr(se, BinaryExpr::GREAT, $1, $3);
+    }
+    |
+    RelExp GREATEQ AddExp 
+    {
+        Type *expType = BinaryExpr::getRelResultType($1, $3);
+        SymbolEntry *se = new TemporarySymbolEntry(expType, SymbolTable::getLabel());
+        $$ = new BinaryExpr(se, BinaryExpr::GREATEQ, $1, $3);
+    }
+    |
+    RelExp EQ AddExp
+    {
+        Type *expType = BinaryExpr::getRelResultType($1, $3);
+        SymbolEntry *se = new TemporarySymbolEntry(expType, SymbolTable::getLabel());
+        $$ = new BinaryExpr(se, BinaryExpr::EQ, $1, $3);
+    }
+    |
+    RelExp NEQ AddExp 
+    {
+        Type *expType = BinaryExpr::getRelResultType($1, $3);
+        SymbolEntry *se = new TemporarySymbolEntry(expType, SymbolTable::getLabel());
+        $$ = new BinaryExpr(se, BinaryExpr::NEQ, $1, $3);
     }
     ;
 LAndExp
@@ -207,7 +284,8 @@ LAndExp
     |
     LAndExp AND RelExp
     {
-        SymbolEntry *se = new TemporarySymbolEntry(TypeSystem::intType, SymbolTable::getLabel());
+        Type *expType = BinaryExpr::getRelResultType($1, $3);
+        SymbolEntry *se = new TemporarySymbolEntry(expType, SymbolTable::getLabel());
         $$ = new BinaryExpr(se, BinaryExpr::AND, $1, $3);
     }
     ;
@@ -217,7 +295,8 @@ LOrExp
     |
     LOrExp OR LAndExp
     {
-        SymbolEntry *se = new TemporarySymbolEntry(TypeSystem::intType, SymbolTable::getLabel());
+        Type *expType = BinaryExpr::getRelResultType($1, $3);
+        SymbolEntry *se = new TemporarySymbolEntry(expType, SymbolTable::getLabel());
         $$ = new BinaryExpr(se, BinaryExpr::OR, $1, $3);
     }
     ;

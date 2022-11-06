@@ -32,6 +32,10 @@ public:
         return kind == INT || kind == CONST_INT || 
             kind == INT_ARRAY || kind == CONST_INT_ARRAY;
     }
+    bool isConst() const {
+        return kind == CONST_INT || kind == CONST_INT_ARRAY ||
+            kind == CONST_FLOAT || kind == CONST_FLOAT_ARRAY;
+    }
 };
 
 class IntType : public Type

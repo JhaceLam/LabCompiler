@@ -34,6 +34,15 @@ void BinaryExpr::output(int level)
         case SUB:
             op_str = "sub";
             break;
+        case STAR:
+            op_str = "star";
+            break;
+        case SLASH:
+            op_str = "slash";
+            break;
+        case PERCENT:
+            op_str = "percent";
+            break;
         case AND:
             op_str = "and";
             break;
@@ -43,14 +52,83 @@ void BinaryExpr::output(int level)
         case LESS:
             op_str = "less";
             break;
+        case EQ:
+            op_str = "eq";
+            break;
+        case NEQ:
+            op_str = "neq";
+            break;
+        case GREAT:
+            op_str = "great";
+            break;
+        case GREATEQ:
+            op_str = "greateq";
+            break;
+        case LESSEQ:
+            op_str = "lesseq";
+            break;
     }
+
+    std::string expType = symbolEntry->getType()->toStr();
     if (isConst) {
-        fprintf(yyout, "%*cConstBinaryExpr\top: %s\n", level, ' ', op_str.c_str());
+        fprintf(yyout, "%*cConstBinaryExpr\t op: %s\t DataType: %s\n", 
+            level, ' ', op_str.c_str(), expType.c_str());
     } else {
-        fprintf(yyout, "%*cBinaryExpr\top: %s\n", level, ' ', op_str.c_str());
+        fprintf(yyout, "%*cBinaryExpr\t op: %s\t DataType: %s\n", 
+            level, ' ', op_str.c_str(), expType.c_str());
     }
     expr1->output(level + 4);
     expr2->output(level + 4);
+}
+
+Type* BinaryExpr::getResultType(ExprNode *exp1, ExprNode *exp2) {
+    Type *expType;
+    if (exp1->getType()->isIntFamily() && exp2->getType()->isIntFamily()) {
+        if (exp1->getType()->isConst() && exp2->getType()->isConst()) {
+            expType = TypeSystem::constIntType;
+        } else {
+            expType = TypeSystem::intType;
+        }
+    } else {
+        if (exp1->getType()->isConst() && exp2->getType()->isConst()) {
+            expType = TypeSystem::constFloatType;
+        } else {
+            expType = TypeSystem::floatType;
+        }
+    }
+    return expType;
+}
+
+Type* BinaryExpr::getRelResultType(ExprNode *exp1, ExprNode *exp2) {
+    Type *expType;
+    if (exp1->getType()->isConst() && exp2->getType()->isConst()) {
+        expType = TypeSystem::constIntType;
+    } else {
+        expType = TypeSystem::intType;
+    }
+    return expType;
+}
+
+void OneOpExpr::output(int level) {
+    std::string op_str;
+    switch (op) {
+        case NOT:
+            op_str = "not";
+            break;
+        case SUB:
+            op_str = "minus";
+            break;
+    }
+
+    std::string expType = symbolEntry->getType()->toStr();
+    if (isConst) {
+        fprintf(yyout, "%*cConstOneOpExpr\t op: %s\t DataType: %s\n", 
+            level, ' ', op_str.c_str(), expType.c_str());
+    } else {
+        fprintf(yyout, "%*cOneOpExpr\t op: %s\t DataType: %s\n", 
+            level, ' ', op_str.c_str(), expType.c_str());
+    }
+    expr->output(level + 4);
 }
 
 void Constant::output(int level)

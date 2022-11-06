@@ -38,10 +38,26 @@ private:
     int op;
     ExprNode *expr1, *expr2;
 public:
-    enum {ADD, SUB, AND, OR, LESS};
+    enum {ADD, SUB, STAR, SLASH, PERCENT, 
+        AND, OR, LESS, EQ, NEQ, GREAT, GREATEQ, LESSEQ};
     BinaryExpr(SymbolEntry *se, int op, ExprNode*expr1, ExprNode*expr2) : 
         ExprNode(se, expr1->isConst && expr2->isConst), 
-        op(op), expr1(expr1), expr2(expr2) {};
+        op(op), expr1(expr1), expr2(expr2){};
+    void output(int level);
+
+    static Type *getResultType(ExprNode *exp1, ExprNode *exp2);
+    static Type *getRelResultType(ExprNode *exp1, ExprNode *exp2);
+};
+
+class OneOpExpr : public ExprNode
+{
+private:
+    int op;
+    ExprNode *expr;
+public:
+    enum {SUB, NOT};
+    OneOpExpr(SymbolEntry *se, int op, ExprNode* expr): 
+        ExprNode(se, expr->isConst), op(op), expr(expr){};
     void output(int level);
 };
 
