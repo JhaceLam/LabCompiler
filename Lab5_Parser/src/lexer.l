@@ -253,6 +253,241 @@ commentend (\*\/)
     return RBRACKET;
 }
 
+"getint" {
+    if(dump_tokens)
+        DEBUG_FOR_LAB4("I/O Function: getint()");
+
+    char *lexeme = new char[strlen(yytext) + 1];
+    strcpy(lexeme, yytext);
+    yylval.strtype = lexeme;
+    SymbolTable* globalTable = identifiers;
+    for(; globalTable->getPrev(); globalTable = globalTable->getPrev());
+    // Find the root of SymbolTable *identifiers
+    if(globalTable->lookup(yytext) == nullptr)
+    {
+        // int getint()
+        Type* funcType = new FunctionType(TypeSystem::intType, {});
+        SymbolEntry* entry = new IdentifierSymbolEntry(funcType, yytext, 0); //作用域GLOBAL(0)
+        globalTable->install(yytext, entry);
+    }
+    return ID;
+}
+"getch" {
+    if(dump_tokens)
+        DEBUG_FOR_LAB4("I/O Function: getch()");
+
+    char *lexeme = new char[strlen(yytext) + 1];
+    strcpy(lexeme, yytext);
+    yylval.strtype = lexeme;
+    SymbolTable* globalTable = identifiers;
+    for(; globalTable->getPrev(); globalTable = globalTable->getPrev());
+    // Find the root of SymbolTable *identifiers
+    if(globalTable->lookup(yytext) == nullptr)
+    {
+        // int getch()
+        Type* funcType = new FunctionType(TypeSystem::intType, {});
+        SymbolEntry* entry = new IdentifierSymbolEntry(funcType, yytext, 0); //作用域GLOBAL(0)
+        globalTable->install(yytext, entry);
+    }
+    return ID;
+}
+"getfloat" {
+    if(dump_tokens)
+        DEBUG_FOR_LAB4("I/O Function: getfloat()");
+
+    char *lexeme = new char[strlen(yytext) + 1];
+    strcpy(lexeme, yytext);
+    yylval.strtype = lexeme;
+    SymbolTable* globalTable = identifiers;
+    for(; globalTable->getPrev(); globalTable = globalTable->getPrev());
+    // Find the root of SymbolTable *identifiers
+    if(globalTable->lookup(yytext) == nullptr)
+    {  
+        // float getfloat()
+        Type* funcType = new FunctionType(TypeSystem::floatType, {});
+        SymbolEntry* entry = new IdentifierSymbolEntry(funcType, yytext, 0); //作用域GLOBAL(0)
+        globalTable->install(yytext, entry);
+    }
+    return ID;
+}
+"getarray" {
+    if(dump_tokens)
+        DEBUG_FOR_LAB4("I/O Function: getarray()");
+
+    char *lexeme = new char[strlen(yytext) + 1];
+    strcpy(lexeme, yytext);
+    yylval.strtype = lexeme;
+    SymbolTable* globalTable = identifiers;
+    for(; globalTable->getPrev(); globalTable = globalTable->getPrev());
+    // Find the root of SymbolTable *identifiers
+    if(globalTable->lookup(yytext) == nullptr)
+    {
+        // int getarray(int[])
+		Type *arrayType = new IntArrayType();
+		( (IntArrayType *)arrayType )->setDimension(1);
+		std::vector<Type*> paramsType;
+		paramsType.push_back(arrayType);		
+		FunctionType *funcType = new FunctionType(TypeSystem::intType, paramsType);
+		SymbolEntry *entry = new IdentifierSymbolEntry(funcType, yytext, 0);
+        globalTable->install(yytext, entry);
+    }
+    return ID;
+}
+"getfarray" {
+    if(dump_tokens)
+        DEBUG_FOR_LAB4("I/O Function: getfarray()");
+
+    char *lexeme = new char[strlen(yytext) + 1];
+    strcpy(lexeme, yytext);
+    yylval.strtype = lexeme;
+    SymbolTable* globalTable = identifiers;
+    for(; globalTable->getPrev(); globalTable = globalTable->getPrev());
+    // Find the root of SymbolTable *identifiers
+    if(globalTable->lookup(yytext) == nullptr)
+    {
+        // int getfarray(float[])
+		Type *arrayType = new FloatArrayType();
+		( (FloatArrayType *)arrayType )->setDimension(1);
+		std::vector<Type*> paramsType;
+		paramsType.push_back(arrayType);		
+		FunctionType *funcType = new FunctionType(TypeSystem::intType, paramsType);
+		SymbolEntry *entry = new IdentifierSymbolEntry(funcType, yytext, 0);
+        globalTable->install(yytext, entry);
+    }
+    return ID;
+}
+"putint" {
+    if(dump_tokens)
+        DEBUG_FOR_LAB4("I/O Function: putint()");
+
+    char *lexeme = new char[strlen(yytext) + 1];
+    strcpy(lexeme, yytext);
+    yylval.strtype = lexeme;
+    SymbolTable* globalTable = identifiers;
+    for(; globalTable->getPrev(); globalTable = globalTable->getPrev());
+    // Find the root of SymbolTable *identifiers
+    if(globalTable->lookup(yytext) == nullptr)
+    {
+        // void putint(int)
+		std::vector<Type*> paramsType;
+		paramsType.push_back(TypeSystem::intType);		
+		FunctionType *funcType = new FunctionType(TypeSystem::voidType, paramsType);
+		SymbolEntry *entry = new IdentifierSymbolEntry(funcType, yytext, 0);
+        globalTable->install(yytext, entry);
+    }
+    return ID;
+}
+"putch" {
+    if(dump_tokens)
+        DEBUG_FOR_LAB4("I/O Function: putch()");
+
+    char *lexeme = new char[strlen(yytext) + 1];
+    strcpy(lexeme, yytext);
+    yylval.strtype = lexeme;
+    SymbolTable* globalTable = identifiers;
+    for(; globalTable->getPrev(); globalTable = globalTable->getPrev());
+    // Find the root of SymbolTable *identifiers
+    if(globalTable->lookup(yytext) == nullptr)
+    {
+        // void putch(int)
+		std::vector<Type*> paramsType;
+		paramsType.push_back(TypeSystem::intType);		
+		FunctionType *funcType = new FunctionType(TypeSystem::voidType, paramsType);
+		SymbolEntry *entry = new IdentifierSymbolEntry(funcType, yytext, 0);
+        globalTable->install(yytext, entry);
+    }
+    return ID;
+}
+"putfloat" {
+    if(dump_tokens)
+        DEBUG_FOR_LAB4("I/O Function: putfloat()");
+
+    char *lexeme = new char[strlen(yytext) + 1];
+    strcpy(lexeme, yytext);
+    yylval.strtype = lexeme;
+    SymbolTable* globalTable = identifiers;
+    for(; globalTable->getPrev(); globalTable = globalTable->getPrev());
+    // Find the root of SymbolTable *identifiers
+    if(globalTable->lookup(yytext) == nullptr)
+    {
+        // void putfloat(float)
+		std::vector<Type*> paramsType;
+		paramsType.push_back(TypeSystem::floatType);		
+		FunctionType *funcType = new FunctionType(TypeSystem::voidType, paramsType);
+		SymbolEntry *entry = new IdentifierSymbolEntry(funcType, yytext, 0);
+        globalTable->install(yytext, entry);
+    }
+    return ID;
+}
+"putarray" {
+    if(dump_tokens)
+        DEBUG_FOR_LAB4("I/O Function: putarray()");
+
+    char *lexeme = new char[strlen(yytext) + 1];
+    strcpy(lexeme, yytext);
+    yylval.strtype = lexeme;
+    SymbolTable* globalTable = identifiers;
+    for(; globalTable->getPrev(); globalTable = globalTable->getPrev());
+    // Find the root of SymbolTable *identifiers
+    if(globalTable->lookup(yytext) == nullptr)
+    {
+        // void putarray(int,int[])
+		Type *arrayType = new IntArrayType();
+		( (IntArrayType *)arrayType )->setDimension(1);
+		std::vector<Type*> paramsType;
+		paramsType.push_back(TypeSystem::intType);
+		paramsType.push_back(arrayType);		
+		FunctionType *funcType = new FunctionType(TypeSystem::voidType, paramsType);
+		SymbolEntry *entry = new IdentifierSymbolEntry(funcType, yytext, 0);
+        globalTable->install(yytext, entry);
+    }
+    return ID;
+}
+"putfarray" {
+    if(dump_tokens)
+        DEBUG_FOR_LAB4("I/O Function: putfarray()");
+
+    char *lexeme = new char[strlen(yytext) + 1];
+    strcpy(lexeme, yytext);
+    yylval.strtype = lexeme;
+    SymbolTable* globalTable = identifiers;
+    for(; globalTable->getPrev(); globalTable = globalTable->getPrev());
+    // Find the root of SymbolTable *identifiers
+    if(globalTable->lookup(yytext) == nullptr)
+    {
+        // void putfarray(int,float[])
+		Type *arrayType = new FloatArrayType();
+		( (IntArrayType *)arrayType )->setDimension(1);
+		std::vector<Type*> paramsType;
+		paramsType.push_back(TypeSystem::intType);
+		paramsType.push_back(arrayType);		
+		FunctionType *funcType = new FunctionType(TypeSystem::voidType, paramsType);
+		SymbolEntry *entry = new IdentifierSymbolEntry(funcType, yytext, 0);
+        globalTable->install(yytext, entry);
+    }
+    return ID;
+}
+"putf" {
+    if(dump_tokens)
+        DEBUG_FOR_LAB4("I/O Function: putf()");
+
+    char *lexeme = new char[strlen(yytext) + 1];
+    strcpy(lexeme, yytext);
+    yylval.strtype = lexeme;
+    SymbolTable* globalTable = identifiers;
+    for(; globalTable->getPrev(); globalTable = globalTable->getPrev());
+    // Find the root of SymbolTable *identifiers
+    if(globalTable->lookup(yytext) == nullptr)
+    {
+        // void putf(<FormatString>, int, ...)
+        // TODO	
+		FunctionType *funcType = nullptr;
+		SymbolEntry *entry = new IdentifierSymbolEntry(funcType, yytext, 0);
+        globalTable->install(yytext, entry);
+    }
+    return ID;
+}
+
 {DECIMIAL} {
     if(dump_tokens)
         DEBUG_FOR_LAB4(yytext);

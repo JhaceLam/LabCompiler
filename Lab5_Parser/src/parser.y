@@ -34,7 +34,8 @@
 %token ADD SUB MINUS STAR SLASH PERCENT AND OR NOT LESS LESSEQ GREAT GREATEQ EQ NEQ ASSIGN
 %token RETURN
 
-%nterm <stmttype> Stmts Stmt AssignStmt BlockStmt IfStmt ReturnStmt DeclStmt FuncDef
+%nterm <stmttype> Stmts Stmt AssignStmt BlockStmt IfStmt ReturnStmt DeclStmt
+%nterm <stmttype> FuncDef FuncParams FuncParam FuncRParams
 %nterm <exprtype> Exp AddExp Cond LOrExp PrimaryExp LVal RelExp LAndExp StarExp UnaryExp
 %nterm <exprtype> ConstExp
 %nterm <type> Type
@@ -66,6 +67,7 @@ Stmt
     | ReturnStmt {$$=$1;}
     | DeclStmt {$$=$1;}
     | FuncDef {$$=$1;}
+    | Exp SEMICOLON {$$ = new ExpStmt($1);}
     ;
 LVal
     : ID {
@@ -171,6 +173,20 @@ UnaryExp
     :
     PrimaryExp {
         $$ = $1;
+    }
+    |
+    ID LPAREN FuncRParams RPAREN {
+        SymbolEntry *se;
+        se = identifiers->lookup($1);
+        if(se == nullptr)
+        {
+            fprintf(stderr, "identifier \"%s\" is undefined\n", (char*)$1);
+            delete [](char*)$1;
+            assert(se != nullptr);
+        }
+
+        SymbolEntry *tmp = new TemporarySymbolEntry(se->getType(), SymbolTable::getLabel());
+        $$ = new FuncCallNode(tmp, new Id(se), (FuncCallParamsNode*)$3);
     }
     |
     ADD UnaryExp {
@@ -331,22 +347,33 @@ DeclStmt
         $$ = $3;
     }
     ;
-FuncDef
+FuncDef //函数定义
     :
     Type ID {
         Type *funcType;
-        funcType = new FunctionType($1,{});
+        funcType = new FunctionType($1, {});
         SymbolEntry *se = new IdentifierSymbolEntry(funcType, $2, identifiers->getLevel());
         identifiers->install($2, se);
         identifiers = new SymbolTable(identifiers);
     }
-    LPAREN RPAREN
-    BlockStmt
+    LPAREN FuncParams {
+            SymbolEntry *se;
+            se = identifiers->lookup($2);
+            assert(se != nullptr);
+
+            if($5 != nullptr){
+                FunctionType *funcType = (FunctionType *)(se->getType());
+                std::vector<Type*> paramsType = ( (FuncDefParamsNode *)$5 )->getParamsType();
+                funcType->setparamsType(paramsType);
+            }   
+    }
+    RPAREN BlockStmt
     {
         SymbolEntry *se;
         se = identifiers->lookup($2);
         assert(se != nullptr);
-        $$ = new FunctionDef(se, $6);
+
+        $$ = new FunctionDef(se, (FuncDefParamsNode *)$5, $8); 
         SymbolTable *top = identifiers;
         identifiers = identifiers->getPrev();
         delete top;
@@ -368,12 +395,14 @@ ConstArrayIndex
     }
     ; 
 ArrayIndex
-    : ArrayIndex LBRACKET Exp RBRACKET {
+    :
+    ArrayIndex LBRACKET Exp RBRACKET {
         ArrayIndexNode *node = (ArrayIndexNode *)$1;
         node->append( (ExprNode *)$3 );
         $$ = node;
     }
-    | LBRACKET Exp RBRACKET {
+    |
+    LBRACKET Exp RBRACKET {
         ArrayIndexNode *node = new ArrayIndexNode();
         node->append( (ExprNode *)$2 );
         $$ = node;
@@ -515,7 +544,7 @@ ConstDef
         SymbolEntry *se;
         se = new IdentifierSymbolEntry(declType, $1, identifiers->getLevel());
         identifiers->install($1, se);
-        $$ = new DefNode(new Id(se, true), (InitValNode *)$3 , true);
+        $$ = new DefNode(new Id(se), (InitValNode *)$3 , true);
         delete []$1;
     }
     |
@@ -529,7 +558,7 @@ ConstDef
         SymbolEntry *se;
         se = new IdentifierSymbolEntry(type, $1, identifiers->getLevel());
         identifiers->install($1, se);
-        Id *id = new Id(se, (ArrayIndexNode *)$2 , true);
+        Id *id = new Id(se, (ArrayIndexNode *)$2);
         $$ = new DefNode(id, (InitValNode *)$4 , true);
 
         int demension = ( (ArrayIndexNode *)$2 )->getDemension();
@@ -541,7 +570,8 @@ ConstDef
     }
     ;
 ConstDefList  
-    :   ConstDefList COMMA ConstDef {
+    :
+    ConstDefList COMMA ConstDef {
         DeclStmt *node = (DeclStmt *)$1;
         node->append( (DefNode *)$3 );
         $$ = node;
@@ -551,6 +581,132 @@ ConstDefList
         DeclStmt *node = new DeclStmt(true);
         node->append( (DefNode *)$1 );
         $$ = node;
+    }
+    ;
+FuncParam //函数只有一个参数
+    :
+    Type ID {
+        SymbolEntry *se = new IdentifierSymbolEntry($1, $2, identifiers->getLevel());
+        identifiers->install($2, se);
+        $$ = new DefNode(new Id(se), nullptr, false);
+    }
+    |
+    CONST Type ID {
+        SymbolEntry *se = new IdentifierSymbolEntry($2, $3, identifiers->getLevel());
+        identifiers->install($3, se);
+        $$ = new DefNode(new Id(se), nullptr);
+    }
+    |
+    Type ID LBRACKET RBRACKET {
+        ArrayIndexNode* Index = new ArrayIndexNode();
+        Index->append(nullptr);
+
+        Type *arrayType;
+        if ($1->isIntFamily()) {
+            arrayType = new IntArrayType();
+            ( (IntArrayType *)arrayType )->setDimension(Index->getDemension());
+        } else {
+            arrayType = new FloatArrayType();
+            ( (FloatArrayType *)arrayType )->setDimension(Index->getDemension());
+        }
+
+        SymbolEntry *se = new IdentifierSymbolEntry(arrayType, $2, identifiers->getLevel());
+        identifiers->install($2, se);
+        Id* id = new Id(se, Index);
+        $$ = new DefNode(id, nullptr, false);
+    }
+    |
+    CONST Type ID LBRACKET RBRACKET {
+        ArrayIndexNode* Index = new ArrayIndexNode();
+        Index->append(nullptr);
+
+        Type *arrayType;
+        if ($2->isIntFamily()) {
+            arrayType = new ConstIntArrayType();
+            ( (ConstIntArrayType *)arrayType )->setDimension(Index->getDemension());
+        } else {
+            arrayType = new ConstFloatArrayType();
+            ( (ConstFloatArrayType *)arrayType )->setDimension(Index->getDemension());
+        }
+
+        SymbolEntry *se = new IdentifierSymbolEntry(arrayType, $3, identifiers->getLevel());
+        identifiers->install($3, se);
+        Id* id = new Id(se, Index);
+        $$ = new DefNode(id, nullptr, true);
+    }
+    |
+    Type ID LBRACKET RBRACKET ArrayIndex {
+        ( (ArrayIndexNode *)$5 )->insert(nullptr);
+
+        Type *arrayType;
+        if ($1->isIntFamily()) {
+            arrayType = new IntArrayType();
+            ( (IntArrayType *)arrayType )->setDimension( 
+                ( (ArrayIndexNode *)$5 )->getDemension());
+        } else {
+            arrayType = new FloatArrayType();
+            ( (FloatArrayType *)arrayType )->setDimension( 
+                ( (ArrayIndexNode *)$5 )->getDemension());
+        }
+        SymbolEntry *se = new IdentifierSymbolEntry(arrayType, $2, identifiers->getLevel());
+        identifiers->install($2, se);
+        Id* id = new Id(se, (ArrayIndexNode *)$5);
+        $$ = new DefNode(id, nullptr, false);
+    }
+    |
+    CONST Type ID LBRACKET RBRACKET ArrayIndex {
+        ( (ArrayIndexNode *)$6 )->insert(nullptr);
+
+        Type *arrayType;
+        if ($2->isIntFamily()) {
+            arrayType = new ConstIntArrayType();
+            ( (ConstIntArrayType *)arrayType )->setDimension( 
+                ( (ArrayIndexNode *)$6 )->getDemension());
+        } else {
+            arrayType = new ConstFloatArrayType();
+            ( (ConstFloatArrayType *)arrayType )->setDimension( 
+                ( (ArrayIndexNode *)$6 )->getDemension());
+        }
+        SymbolEntry *se = new IdentifierSymbolEntry(arrayType, $3, identifiers->getLevel());
+        identifiers->install($3, se);
+        Id* id = new Id(se, (ArrayIndexNode *)$6);
+        $$ = new DefNode(id, nullptr, true);
+    }
+    ;
+FuncParams //函数有多个参数
+    :
+    FuncParams COMMA FuncParam {
+        FuncDefParamsNode* node = (FuncDefParamsNode*)$1;
+        node->append( ( (DefNode*)$3 )->getId() );
+        $$ = node;
+    }
+    |
+    FuncParam {
+        FuncDefParamsNode* node = new FuncDefParamsNode();
+        node->append( ( (DefNode*)$1 )->getId() );
+        $$ = node;
+    }
+    |
+    %empty {
+        $$ = nullptr;
+    }
+    ;
+FuncRParams
+    :
+    FuncRParams COMMA Exp {
+        FuncCallParamsNode* node = (FuncCallParamsNode*) $1;
+        node->append($3);
+        $$ = node;
+    }
+    |
+    Exp {
+        FuncCallParamsNode* node = new FuncCallParamsNode();
+        node->append($1);
+        $$ = node;
+    }
+    |
+    %empty {
+        $$ = nullptr;
     }
     ;
 %%

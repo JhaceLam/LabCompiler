@@ -136,7 +136,7 @@ void Constant::output(int level)
     std::string type, value;
     type = symbolEntry->getType()->toStr();
     value = symbolEntry->toStr();
-    std::string nodeName = symbolEntry->getType()->isInt() ? 
+    std::string nodeName = symbolEntry->getType()->isIntFamily() ? 
         "IntegerLiteral" : "FloatLiteral";
     fprintf(yyout, "%*c%s\tvalue: %s\ttype: %s\n", level, ' ',
             nodeName.c_str(), value.c_str(), type.c_str());
@@ -146,6 +146,12 @@ void ArrayIndexNode::append(ExprNode *next)
 {
     exprList.push_back(next);
 }
+
+void ArrayIndexNode::insert(ExprNode *next)
+{
+    exprList.insert(exprList.begin(), next);
+}
+
 
 int ArrayIndexNode::getDemension()
 {
@@ -161,7 +167,12 @@ void ArrayIndexNode::output(int level)
     }
     for(std::vector<ExprNode *>::iterator iter = exprList.begin(); 
     iter != exprList.end(); iter++) {
-        (*iter)->output(level + 4);
+        if ((*iter) == nullptr) {
+            fprintf(yyout, "%*cNot Given\n", 
+            level + 4, ' ');
+        } else {
+            (*iter)->output(level + 4);
+        }
     }
 }
 
@@ -177,6 +188,7 @@ void Id::output(int level)
     name = symbolEntry->toStr();
     type = symbolEntry->getType()->toStr();
     scope = dynamic_cast<IdentifierSymbolEntry*>(symbolEntry)->getScope();
+    // isConst = symbolEntry->getType()->isConst();
     std::string constStr = isConst ? "Const " : "";
     fprintf(yyout, "%*c%sId\tname: %s\tscope: %d\ttype: %s\n", level, ' ',
         constStr.c_str(), name.c_str(), scope, type.c_str());
@@ -302,12 +314,82 @@ void AssignStmt::output(int level)
     expr->output(level + 4);
 }
 
+void FuncDefParamsNode::append(Id* next)
+{
+    paramsList.push_back(next);
+}
+
+std::vector<Type*> FuncDefParamsNode::getParamsType()
+{
+    std::vector<Type*> typeArray;
+    for (std::vector<Id*>::iterator iter = paramsList.begin(); 
+    iter != paramsList.end(); iter++) {
+        typeArray.push_back( (*iter)->getType() );
+    }
+    return typeArray;
+}
+
+void FuncDefParamsNode::output(int level)
+{
+    fprintf(yyout, "%*cFuncDefParamsNode\n", level, ' ');
+    for (std::vector<Id *>::iterator iter = paramsList.begin(); 
+    iter != paramsList.end(); iter++) {
+        (*iter)->output(level + 4);
+    }
+}
+
 void FunctionDef::output(int level)
 {
     std::string name, type;
     name = se->toStr();
     type = se->getType()->toStr();
-    fprintf(yyout, "%*cFunctionDefine function name: %s, type: %s\n", level, ' ', 
+    fprintf(yyout, "%*cFunctionDefine Function name: %s, Paramtype: %s\n", level, ' ', 
             name.c_str(), type.c_str());
+    
+    if(params != nullptr){
+        params->output(level+4);
+    }
+    else{
+        fprintf(yyout, "%*cNo Params\n", level + 4, ' ');
+    }
     stmt->output(level + 4);
+}
+
+void FuncCallParamsNode::append(ExprNode* next)
+{
+    paramsList.push_back(next);
+}
+
+void FuncCallParamsNode::output(int level)
+{
+    fprintf(yyout, "%*cFuncCallParamsNode\n", level, ' ');
+    for (std::vector<ExprNode *>::iterator iter = paramsList.begin(); 
+    iter != paramsList.end(); iter++) {
+        (*iter)->output(level + 4);
+    }
+}
+
+void FuncCallNode::output(int level)
+{
+    std::string name, type;
+    int scope;
+    SymbolEntry* funcEntry = funcId->getSymbolEntry();
+    name = funcEntry->toStr();
+    type = funcEntry->getType()->toStr();
+    scope = dynamic_cast<IdentifierSymbolEntry*>(funcEntry)->getScope();
+    fprintf(yyout, "%*cFuncCallNode\tfuncName: %s\t funcType: %s\tscope: %d\n", 
+            level, ' ', name.c_str(), type.c_str(), scope);
+    
+    if(params != nullptr){
+        params->output(level + 4);
+    }
+    else{
+        fprintf(yyout, "%*cNo Params\n", level + 4, ' ');
+    }
+}
+
+void ExpStmt::output(int level)
+{
+    fprintf(yyout, "%*cExpStmt\n", level, ' ');
+    exp->output(level + 4);
 }

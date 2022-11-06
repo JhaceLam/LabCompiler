@@ -3,6 +3,8 @@
 
 #include <fstream>
 #include <vector>
+#include "SymbolTable.h"
+#include "Type.h"
 
 class SymbolEntry;
 class Type;
@@ -76,6 +78,7 @@ public:
     bool isConst;
     ArrayIndexNode(bool isConst = false) : isConst(isConst) {};
     void append(ExprNode *next);
+    void insert(ExprNode *next);
     int getDemension();
     void output(int level);
 };
@@ -85,11 +88,12 @@ class Id : public ExprNode
 private:
     ArrayIndexNode *index;
 public:
-    Id(SymbolEntry *se, bool isConst = false) : 
-        ExprNode(se, isConst), index(nullptr) {};
-    Id(SymbolEntry *se, ArrayIndexNode *idx, bool isConst = false) : 
-        ExprNode(se, isConst), index(idx) {};
+    Id(SymbolEntry *se) : 
+        ExprNode(se, se->getType()->isConst()), index(nullptr) {};
+    Id(SymbolEntry *se, ArrayIndexNode *idx) : 
+        ExprNode(se, se->getType()->isConst()), index(idx) {};
     bool isArray();
+    SymbolEntry* getSymbolEntry() {return symbolEntry;}
     void output(int level);
 };
 
@@ -134,6 +138,7 @@ public:
     DefNode(Id *id, InitValNode *initVal, bool isConst = false) : 
         id(id), initVal(initVal), isConst(isConst) {};
     bool isArray();
+    Id* getId() {return id;}
     void output(int level);
 };
 
@@ -211,13 +216,56 @@ public:
     void output(int level);
 };
 
+class FuncDefParamsNode : public StmtNode
+{
+private:
+    std::vector<Id*> paramsList;
+public:
+    FuncDefParamsNode() {};
+    void append(Id* next);
+    std::vector<Type*> getParamsType();
+    void output(int level);
+};
+
 class FunctionDef : public StmtNode
 {
 private:
     SymbolEntry *se;
+    FuncDefParamsNode *params;
     StmtNode *stmt;
 public:
-    FunctionDef(SymbolEntry *se, StmtNode *stmt) : se(se), stmt(stmt){};
+    FunctionDef(SymbolEntry *se, FuncDefParamsNode *params, StmtNode *stmt) : 
+        se(se), params(params), stmt(stmt){};
+    void output(int level);
+};
+
+class FuncCallParamsNode : public StmtNode
+{
+private:
+    std::vector<ExprNode *> paramsList;
+public:
+    FuncCallParamsNode(){};
+    void append(ExprNode *next);
+    void output(int level);
+};
+
+class FuncCallNode : public ExprNode
+{
+private:
+    Id* funcId;
+    FuncCallParamsNode* params;
+public:
+    FuncCallNode(SymbolEntry *se, Id* id, FuncCallParamsNode* params) : 
+        ExprNode(se), funcId(id), params(params){};
+    void output(int level);
+};
+
+class ExpStmt : public StmtNode
+{
+private:
+    ExprNode *exp;
+public:
+    ExpStmt(ExprNode *exp1) : exp(exp1) {};
     void output(int level);
 };
 

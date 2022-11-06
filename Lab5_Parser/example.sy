@@ -16,18 +16,36 @@ float floatArrayB[3] = {0, 1, 2};
 float floatArrayC[2][3] = {{floatA, 1.0, 2.1}, {3.2E2, 4E2, 5.932E3}};
 const float floatArrayD[3] = {0, 1, 2};
 
+void funcLeaf()
+{
+    putarray(3, d);
+}
+
+int func0(int a, int b)
+{
+    funcLeaf();
+    return a + b;
+}
+
+float func1(const int a[][3], float b[])
+{
+    b[0] = a[0][2] + 0.2;
+    return b[0];
+}
+
 int main()
 {
     int tempArrX[0+4][1+2] = {{1, 2, 3}, {}, {}, {}};
 
-    int a;
-    a = 1 + 2;
+    int a = getint();
+    int charA = getch();
+    a = 1 + 2 * func0(e[1][2], 6);
     int tempX = temp1[2];
     float tempFloatX = floatA - 10;
     float tempFloatY = floatB * 20.0;
     floatArrayA[10] = 3.1415E1 / 31.3E2;
     float tempFloatZ = floatArrayC[1][0];
-    float tempFloatW = floatArrayD[2];
+    float tempFloatW = floatArrayD[2] / func1(tempArrX, floatArrayA);
     e[0][1] = 1024;
 
     while(a < 10) // Comment line

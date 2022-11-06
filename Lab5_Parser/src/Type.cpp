@@ -28,10 +28,20 @@ std::string FloatType::toStr()
     return "float";
 }
 
+void FunctionType::setparamsType(std::vector<Type*> givenParamsType)
+{
+    paramsType = givenParamsType;
+}
+
 std::string FunctionType::toStr()
 {
     std::ostringstream buffer;
-    buffer << returnType->toStr() << "()";
+    buffer << returnType->toStr() << "(";
+    for (int i = 0; i < (int)paramsType.size(); i++){
+        if (i != 0) buffer << ", ";
+        buffer << paramsType[i]->toStr();
+    }
+    buffer << ")";
     return buffer.str();
 }
 
