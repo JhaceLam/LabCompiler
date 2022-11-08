@@ -20,6 +20,8 @@
 
 DECIMIAL ([1-9][0-9]*|0)
 FLOATNUM (([1-9][0-9]*|0)?(\.[0-9]*)((e|E)[+-]?[0-9]+)?)|(([1-9][0-9]*|0)(e|E)[+-]?[0-9]+)
+OCTAL (0[1-7][0-7]*)
+HEX (0(x|X)[1-9a-fA-F][0-9a-fA-F]*)
 ID [[:alpha:]_][[:alpha:][:digit:]_]*
 EOL (\r\n|\n|\r)
 WHITE [\t ]
@@ -267,7 +269,7 @@ commentend (\*\/)
     {
         // int getint()
         Type* funcType = new FunctionType(TypeSystem::intType, {});
-        SymbolEntry* entry = new IdentifierSymbolEntry(funcType, yytext, 0); //作用域GLOBAL(0)
+        SymbolEntry* entry = new IdentifierSymbolEntry(funcType, yytext, 0); 
         globalTable->install(yytext, entry);
     }
     return ID;
@@ -286,7 +288,7 @@ commentend (\*\/)
     {
         // int getch()
         Type* funcType = new FunctionType(TypeSystem::intType, {});
-        SymbolEntry* entry = new IdentifierSymbolEntry(funcType, yytext, 0); //作用域GLOBAL(0)
+        SymbolEntry* entry = new IdentifierSymbolEntry(funcType, yytext, 0); 
         globalTable->install(yytext, entry);
     }
     return ID;
@@ -305,7 +307,7 @@ commentend (\*\/)
     {  
         // float getfloat()
         Type* funcType = new FunctionType(TypeSystem::floatType, {});
-        SymbolEntry* entry = new IdentifierSymbolEntry(funcType, yytext, 0); //作用域GLOBAL(0)
+        SymbolEntry* entry = new IdentifierSymbolEntry(funcType, yytext, 0); 
         globalTable->install(yytext, entry);
     }
     return ID;
@@ -500,6 +502,22 @@ commentend (\*\/)
         DEBUG_FOR_LAB4(yytext);
     yylval.ftype = strtof(yytext, NULL);
     return FLOATNUM;
+}
+
+{OCTAL} {
+    char *endptr;
+    int decimalVal = strtol(yytext, &endptr, 8);
+    DEBUG_FOR_LAB4(to_string(decimalVal));
+    yylval.itype = atoi(yytext);
+    return INTEGER;
+}
+
+{HEX} {
+    char *endptr;
+    int decimalVal = strtol(yytext, &endptr, 16);
+    DEBUG_FOR_LAB4(to_string(decimalVal));
+    yylval.itype = atoi(yytext);
+    return INTEGER;
 }
 
 {ID} {

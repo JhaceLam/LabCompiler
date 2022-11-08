@@ -8,7 +8,7 @@ class Type
 private:
     int kind;
 protected:
-    enum {INT, VOID, FLOAT, FUNC, INT_ARRAY, CONST_INT, CONST_INT_ARRAY, FLOAT_ARRAY, CONST_FLOAT, CONST_FLOAT_ARRAY};
+    enum {INT, VOID, FLOAT, FUNC, INT_ARRAY, CONST_INT, CONST_INT_ARRAY, FLOAT_ARRAY, CONST_FLOAT, CONST_FLOAT_ARRAY, ANY};
 public:
     Type(int kind) : kind(kind) {};
     virtual ~Type() {};
@@ -23,6 +23,7 @@ public:
     bool isConstIntArray() const {return kind == CONST_INT_ARRAY;};
     bool isConstFloat() const {return kind == CONST_FLOAT;};
     bool isConstFloatArray() const {return kind == CONST_FLOAT_ARRAY;}
+    bool isAny() const {return kind == ANY;}
 
     bool isArray() const {
         return kind == INT_ARRAY || kind == CONST_INT_ARRAY ||
