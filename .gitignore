@@ -1,5 +1,7 @@
 .vscode
 Lab4_Lexer/build
 Lab4_Lexer/myTestFile/
+Lab4_Lexer/test
 Lab5_Parser/build
 Lab5_Parser/myTestFile
+Lab5_Parser/test
