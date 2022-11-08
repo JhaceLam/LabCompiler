@@ -1,0 +1,149 @@
+program
+    FunctionDefine Function name: main, Paramtype: int()
+        No Params
+        CompoundStmt
+            Sequence
+                Sequence
+                    Sequence
+                        Sequence
+                            Sequence
+                                Sequence
+                                    DeclStmt
+                                        DefNode - Const Int Array 
+                                            Const Id	name: a	scope: 2	type: const int array [2 dimensions]
+                                                ConstArrayIndexNode:
+                                                    IntegerLiteral	value: 4	type: const int
+                                                    IntegerLiteral	value: 2	type: const int
+                                            ConstInitValNode
+                                                ConstInitValNode
+                                                    ConstInitValNode
+                                                        IntegerLiteral	value: 1	type: const int
+                                                    ConstInitValNode
+                                                        IntegerLiteral	value: 2	type: const int
+                                                ConstInitValNode
+                                                    ConstInitValNode
+                                                        IntegerLiteral	value: 3	type: const int
+                                                    ConstInitValNode
+                                                        IntegerLiteral	value: 4	type: const int
+                                                ConstInitValNode
+                                                ConstInitValNode
+                                                    IntegerLiteral	value: 7	type: const int
+                                    DeclStmt
+                                        DefNode - Const Int  
+                                            Const Id	name: N	scope: 2	type: const int
+                                            ConstInitValNode
+                                                IntegerLiteral	value: 3	type: const int
+                                DeclStmt
+                                    DefNode -  Int Array 
+                                        Id	name: b	scope: 2	type: int array [2 dimensions]
+                                            ConstArrayIndexNode:
+                                                IntegerLiteral	value: 4	type: const int
+                                                IntegerLiteral	value: 2	type: const int
+                                        InitValNode
+                            DeclStmt
+                                DefNode -  Int Array 
+                                    Id	name: c	scope: 2	type: int array [2 dimensions]
+                                        ConstArrayIndexNode:
+                                            IntegerLiteral	value: 4	type: const int
+                                            IntegerLiteral	value: 2	type: const int
+                                    InitValNode
+                                        InitValNode
+                                            IntegerLiteral	value: 1	type: const int
+                                        InitValNode
+                                            IntegerLiteral	value: 2	type: const int
+                                        InitValNode
+                                            IntegerLiteral	value: 3	type: const int
+                                        InitValNode
+                                            IntegerLiteral	value: 4	type: const int
+                                        InitValNode
+                                            IntegerLiteral	value: 5	type: const int
+                                        InitValNode
+                                            IntegerLiteral	value: 6	type: const int
+                                        InitValNode
+                                            IntegerLiteral	value: 7	type: const int
+                                        InitValNode
+                                            IntegerLiteral	value: 8	type: const int
+                        DeclStmt
+                            DefNode -  Int Array 
+                                Id	name: d	scope: 2	type: int array [2 dimensions]
+                                    ConstArrayIndexNode:
+                                        ConstBinaryExpr	 op: add	 DataType: const int
+                                            Const Id	name: N	scope: 2	type: const int
+                                            IntegerLiteral	value: 1	type: const int
+                                        IntegerLiteral	value: 2	type: const int
+                                InitValNode
+                                    InitValNode
+                                        IntegerLiteral	value: 1	type: const int
+                                    InitValNode
+                                        IntegerLiteral	value: 2	type: const int
+                                    InitValNode
+                                        InitValNode
+                                            IntegerLiteral	value: 3	type: const int
+                                    InitValNode
+                                        InitValNode
+                                            IntegerLiteral	value: 5	type: const int
+                                    InitValNode
+                                        Const Id	name: a	scope: 2	type: const int array [2 dimensions]
+                                            ArrayIndexNode:
+                                                IntegerLiteral	value: 3	type: const int
+                                                IntegerLiteral	value: 0	type: const int
+                                    InitValNode
+                                        IntegerLiteral	value: 8	type: const int
+                    DeclStmt
+                        DefNode -  Int Array 
+                            Id	name: e	scope: 2	type: int array [3 dimensions]
+                                ConstArrayIndexNode:
+                                    IntegerLiteral	value: 4	type: const int
+                                    IntegerLiteral	value: 2	type: const int
+                                    IntegerLiteral	value: 1	type: const int
+                            InitValNode
+                                InitValNode
+                                    InitValNode
+                                        Id	name: d	scope: 2	type: int array [2 dimensions]
+                                            ArrayIndexNode:
+                                                IntegerLiteral	value: 2	type: const int
+                                                IntegerLiteral	value: 1	type: const int
+                                    InitValNode
+                                        InitValNode
+                                            Id	name: c	scope: 2	type: int array [2 dimensions]
+                                                ArrayIndexNode:
+                                                    IntegerLiteral	value: 2	type: const int
+                                                    IntegerLiteral	value: 1	type: const int
+                                InitValNode
+                                    InitValNode
+                                        IntegerLiteral	value: 3	type: const int
+                                    InitValNode
+                                        IntegerLiteral	value: 4	type: const int
+                                InitValNode
+                                    InitValNode
+                                        IntegerLiteral	value: 5	type: const int
+                                    InitValNode
+                                        IntegerLiteral	value: 6	type: const int
+                                InitValNode
+                                    InitValNode
+                                        IntegerLiteral	value: 7	type: const int
+                                    InitValNode
+                                        IntegerLiteral	value: 8	type: const int
+                ReturnStmt
+                    BinaryExpr	 op: add	 DataType: int
+                        BinaryExpr	 op: add	 DataType: int
+                            BinaryExpr	 op: add	 DataType: int
+                                Id	name: e	scope: 2	type: int array [3 dimensions]
+                                    ArrayIndexNode:
+                                        IntegerLiteral	value: 3	type: const int
+                                        IntegerLiteral	value: 1	type: const int
+                                        IntegerLiteral	value: 0	type: const int
+                                Id	name: e	scope: 2	type: int array [3 dimensions]
+                                    ArrayIndexNode:
+                                        IntegerLiteral	value: 0	type: const int
+                                        IntegerLiteral	value: 0	type: const int
+                                        IntegerLiteral	value: 0	type: const int
+                            Id	name: e	scope: 2	type: int array [3 dimensions]
+                                ArrayIndexNode:
+                                    IntegerLiteral	value: 0	type: const int
+                                    IntegerLiteral	value: 1	type: const int
+                                    IntegerLiteral	value: 0	type: const int
+                        Id	name: d	scope: 2	type: int array [2 dimensions]
+                            ArrayIndexNode:
+                                IntegerLiteral	value: 3	type: const int
+                                IntegerLiteral	value: 0	type: const int

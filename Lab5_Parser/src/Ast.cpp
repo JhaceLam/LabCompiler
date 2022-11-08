@@ -287,7 +287,11 @@ void IfElseStmt::output(int level)
 void ReturnStmt::output(int level)
 {
     fprintf(yyout, "%*cReturnStmt\n", level, ' ');
-    retValue->output(level + 4);
+    if (retValue != nullptr)
+        retValue->output(level + 4);
+    else
+        fprintf(yyout, "%*cNo return value\n", level + 4, ' ');
+
 }
 
 void WhileStmt::output(int level)
@@ -392,4 +396,9 @@ void ExpStmt::output(int level)
 {
     fprintf(yyout, "%*cExpStmt\n", level, ' ');
     exp->output(level + 4);
+}
+
+void EmptyStmt::output(int level)
+{
+    fprintf(yyout, "%*cEmptyStmt\n", level, ' ');
 }

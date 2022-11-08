@@ -1,0 +1,31 @@
+program
+    FunctionDefine Function name: main, Paramtype: int()
+        No Params
+        CompoundStmt
+            Sequence
+                Sequence
+                    Sequence
+                        Sequence
+                            DeclStmt
+                                DefNode -  Int  
+                                    Id	name: a	scope: 2	type: int
+                                    No initial value
+                                DefNode -  Int  
+                                    Id	name: b0	scope: 2	type: int
+                                    No initial value
+                                DefNode -  Int  
+                                    Id	name: _c	scope: 2	type: int
+                                    No initial value
+                            AssignStmt
+                                Id	name: a	scope: 2	type: int
+                                IntegerLiteral	value: 1	type: const int
+                        AssignStmt
+                            Id	name: b0	scope: 2	type: int
+                            IntegerLiteral	value: 2	type: const int
+                    AssignStmt
+                        Id	name: _c	scope: 2	type: int
+                        IntegerLiteral	value: 3	type: const int
+                ReturnStmt
+                    BinaryExpr	 op: add	 DataType: int
+                        Id	name: b0	scope: 2	type: int
+                        Id	name: _c	scope: 2	type: int

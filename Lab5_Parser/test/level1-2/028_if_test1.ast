@@ -1,0 +1,37 @@
+program
+    Sequence
+        FunctionDefine Function name: ifElse, Paramtype: int()
+            No Params
+            CompoundStmt
+                Sequence
+                    Sequence
+                        Sequence
+                            DeclStmt
+                                DefNode -  Int  
+                                    Id	name: a	scope: 2	type: int
+                                    No initial value
+                            AssignStmt
+                                Id	name: a	scope: 2	type: int
+                                IntegerLiteral	value: 5	type: const int
+                        IfElseStmt
+                            BinaryExpr	 op: eq	 DataType: int
+                                Id	name: a	scope: 2	type: int
+                                IntegerLiteral	value: 5	type: const int
+                            CompoundStmt
+                                AssignStmt
+                                    Id	name: a	scope: 2	type: int
+                                    IntegerLiteral	value: 25	type: const int
+                            CompoundStmt
+                                AssignStmt
+                                    Id	name: a	scope: 2	type: int
+                                    BinaryExpr	 op: star	 DataType: int
+                                        Id	name: a	scope: 2	type: int
+                                        IntegerLiteral	value: 2	type: const int
+                    ReturnStmt
+                        Id	name: a	scope: 2	type: int
+        FunctionDefine Function name: main, Paramtype: int()
+            No Params
+            CompoundStmt
+                ReturnStmt
+                    FuncCallNode	funcName: ifElse	 funcType: int()	scope: 0
+                        No Params

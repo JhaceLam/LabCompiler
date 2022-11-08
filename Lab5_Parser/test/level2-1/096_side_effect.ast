@@ -1,0 +1,143 @@
+program
+    Sequence
+        Sequence
+            DeclStmt
+                DefNode -  Int  
+                    Id	name: a	scope: 0	type: int
+                    InitValNode
+                        ConstOneOpExpr	 op: minus	 DataType: const int
+                            IntegerLiteral	value: 1	type: const int
+                DefNode -  Int  
+                    Id	name: b	scope: 0	type: int
+                    InitValNode
+                        IntegerLiteral	value: 1	type: const int
+            FunctionDefine Function name: inc_a, Paramtype: int()
+                No Params
+                CompoundStmt
+                    Sequence
+                        Sequence
+                            Sequence
+                                DeclStmt
+                                    DefNode -  Int  
+                                        Id	name: b	scope: 2	type: int
+                                        InitValNode
+                                            Id	name: a	scope: 0	type: int
+                                AssignStmt
+                                    Id	name: b	scope: 2	type: int
+                                    BinaryExpr	 op: add	 DataType: int
+                                        Id	name: b	scope: 2	type: int
+                                        IntegerLiteral	value: 1	type: const int
+                            AssignStmt
+                                Id	name: a	scope: 0	type: int
+                                Id	name: b	scope: 2	type: int
+                        ReturnStmt
+                            Id	name: a	scope: 0	type: int
+        FunctionDefine Function name: main, Paramtype: int()
+            No Params
+            CompoundStmt
+                Sequence
+                    Sequence
+                        Sequence
+                            Sequence
+                                Sequence
+                                    Sequence
+                                        DeclStmt
+                                            DefNode -  Int  
+                                                Id	name: k	scope: 2	type: int
+                                                InitValNode
+                                                    IntegerLiteral	value: 5	type: const int
+                                        WhileStmt
+                                            BinaryExpr	 op: greateq	 DataType: int
+                                                Id	name: k	scope: 2	type: int
+                                                IntegerLiteral	value: 0	type: const int
+                                            CompoundStmt
+                                                Sequence
+                                                    Sequence
+                                                        IfStmt
+                                                            BinaryExpr	 op: and	 DataType: int
+                                                                BinaryExpr	 op: and	 DataType: int
+                                                                    FuncCallNode	funcName: inc_a	 funcType: int()	scope: 0
+                                                                        No Params
+                                                                    FuncCallNode	funcName: inc_a	 funcType: int()	scope: 0
+                                                                        No Params
+                                                                FuncCallNode	funcName: inc_a	 funcType: int()	scope: 0
+                                                                    No Params
+                                                            CompoundStmt
+                                                                Sequence
+                                                                    Sequence
+                                                                        Sequence
+                                                                            ExpStmt
+                                                                                FuncCallNode	funcName: putint	 funcType: void(int)	scope: 0
+                                                                                    FuncCallParamsNode
+                                                                                        Id	name: a	scope: 0	type: int
+                                                                            ExpStmt
+                                                                                FuncCallNode	funcName: putch	 funcType: void(int)	scope: 0
+                                                                                    FuncCallParamsNode
+                                                                                        IntegerLiteral	value: 32	type: const int
+                                                                        ExpStmt
+                                                                            FuncCallNode	funcName: putint	 funcType: void(int)	scope: 0
+                                                                                FuncCallParamsNode
+                                                                                    Id	name: b	scope: 0	type: int
+                                                                    ExpStmt
+                                                                        FuncCallNode	funcName: putch	 funcType: void(int)	scope: 0
+                                                                            FuncCallParamsNode
+                                                                                IntegerLiteral	value: 10	type: const int
+                                                        IfElseStmt
+                                                            BinaryExpr	 op: or	 DataType: int
+                                                                BinaryExpr	 op: less	 DataType: int
+                                                                    FuncCallNode	funcName: inc_a	 funcType: int()	scope: 0
+                                                                        No Params
+                                                                    IntegerLiteral	value: 14	type: const int
+                                                                BinaryExpr	 op: and	 DataType: int
+                                                                    FuncCallNode	funcName: inc_a	 funcType: int()	scope: 0
+                                                                        No Params
+                                                                    BinaryExpr	 op: add	 DataType: float
+                                                                        BinaryExpr	 op: sub	 DataType: float
+                                                                            FuncCallNode	funcName: inc_a	 funcType: int()	scope: 0
+                                                                                No Params
+                                                                            FuncCallNode	funcName: inc_a	 funcType: int()	scope: 0
+                                                                                No Params
+                                                                        IntegerLiteral	value: 1	type: const int
+                                                            CompoundStmt
+                                                                Sequence
+                                                                    Sequence
+                                                                        ExpStmt
+                                                                            FuncCallNode	funcName: putint	 funcType: void(int)	scope: 0
+                                                                                FuncCallParamsNode
+                                                                                    Id	name: a	scope: 0	type: int
+                                                                        ExpStmt
+                                                                            FuncCallNode	funcName: putch	 funcType: void(int)	scope: 0
+                                                                                FuncCallParamsNode
+                                                                                    IntegerLiteral	value: 10	type: const int
+                                                                    AssignStmt
+                                                                        Id	name: b	scope: 0	type: int
+                                                                        BinaryExpr	 op: star	 DataType: int
+                                                                            Id	name: b	scope: 0	type: int
+                                                                            IntegerLiteral	value: 2	type: const int
+                                                            CompoundStmt
+                                                                ExpStmt
+                                                                    FuncCallNode	funcName: inc_a	 funcType: int()	scope: 0
+                                                                        No Params
+                                                    AssignStmt
+                                                        Id	name: k	scope: 2	type: int
+                                                        BinaryExpr	 op: sub	 DataType: int
+                                                            Id	name: k	scope: 2	type: int
+                                                            IntegerLiteral	value: 1	type: const int
+                                    ExpStmt
+                                        FuncCallNode	funcName: putint	 funcType: void(int)	scope: 0
+                                            FuncCallParamsNode
+                                                Id	name: a	scope: 0	type: int
+                                ExpStmt
+                                    FuncCallNode	funcName: putch	 funcType: void(int)	scope: 0
+                                        FuncCallParamsNode
+                                            IntegerLiteral	value: 32	type: const int
+                            ExpStmt
+                                FuncCallNode	funcName: putint	 funcType: void(int)	scope: 0
+                                    FuncCallParamsNode
+                                        Id	name: b	scope: 0	type: int
+                        ExpStmt
+                            FuncCallNode	funcName: putch	 funcType: void(int)	scope: 0
+                                FuncCallParamsNode
+                                    IntegerLiteral	value: 10	type: const int
+                    ReturnStmt
+                        Id	name: a	scope: 0	type: int

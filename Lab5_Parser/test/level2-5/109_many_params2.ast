@@ -1,0 +1,250 @@
+program
+    Sequence
+        FunctionDefine Function name: func, Paramtype: int(int, int array [2 dimensions], int, int array [1 dimensions], int, int, int array [1 dimensions], int, int)
+            FuncDefParamsNode
+                Id	name: a	scope: 1	type: int
+                Id	name: b	scope: 1	type: int array [2 dimensions]
+                    ArrayIndexNode:
+                        Not Given
+                        IntegerLiteral	value: 59	type: const int
+                Id	name: c	scope: 1	type: int
+                Id	name: d	scope: 1	type: int array [1 dimensions]
+                    ArrayIndexNode:
+                        Not Given
+                Id	name: e	scope: 1	type: int
+                Id	name: f	scope: 1	type: int
+                Id	name: g	scope: 1	type: int array [1 dimensions]
+                    ArrayIndexNode:
+                        Not Given
+                Id	name: h	scope: 1	type: int
+                Id	name: i	scope: 1	type: int
+            CompoundStmt
+                Sequence
+                    Sequence
+                        Sequence
+                            Sequence
+                                Sequence
+                                    Sequence
+                                        DeclStmt
+                                            DefNode -  Int  
+                                                Id	name: index	scope: 2	type: int
+                                                InitValNode
+                                                    IntegerLiteral	value: 0	type: const int
+                                        WhileStmt
+                                            BinaryExpr	 op: less	 DataType: int
+                                                Id	name: index	scope: 2	type: int
+                                                IntegerLiteral	value: 10	type: const int
+                                            CompoundStmt
+                                                Sequence
+                                                    ExpStmt
+                                                        FuncCallNode	funcName: putint	 funcType: void(int)	scope: 0
+                                                            FuncCallParamsNode
+                                                                Id	name: b	scope: 1	type: int array [2 dimensions]
+                                                                    ArrayIndexNode:
+                                                                        Id	name: a	scope: 1	type: int
+                                                                        Id	name: index	scope: 2	type: int
+                                                    AssignStmt
+                                                        Id	name: index	scope: 2	type: int
+                                                        BinaryExpr	 op: add	 DataType: int
+                                                            Id	name: index	scope: 2	type: int
+                                                            IntegerLiteral	value: 1	type: const int
+                                    ExpStmt
+                                        FuncCallNode	funcName: putch	 funcType: void(int)	scope: 0
+                                            FuncCallParamsNode
+                                                IntegerLiteral	value: 10	type: const int
+                                ExpStmt
+                                    FuncCallNode	funcName: putint	 funcType: void(int)	scope: 0
+                                        FuncCallParamsNode
+                                            Id	name: d	scope: 1	type: int array [1 dimensions]
+                                                ArrayIndexNode:
+                                                    Id	name: c	scope: 1	type: int
+                            ExpStmt
+                                FuncCallNode	funcName: putch	 funcType: void(int)	scope: 0
+                                    FuncCallParamsNode
+                                        IntegerLiteral	value: 10	type: const int
+                        WhileStmt
+                            BinaryExpr	 op: less	 DataType: int
+                                Id	name: i	scope: 1	type: int
+                                IntegerLiteral	value: 10	type: const int
+                            CompoundStmt
+                                Sequence
+                                    Sequence
+                                        AssignStmt
+                                            Id	name: g	scope: 1	type: int array [1 dimensions]
+                                                ArrayIndexNode:
+                                                    Id	name: i	scope: 1	type: int
+                                            BinaryExpr	 op: percent	 DataType: int
+                                                BinaryExpr	 op: star	 DataType: int
+                                                    Id	name: h	scope: 1	type: int
+                                                    IntegerLiteral	value: 128875	type: const int
+                                                IntegerLiteral	value: 3724	type: const int
+                                        AssignStmt
+                                            Id	name: i	scope: 1	type: int
+                                            BinaryExpr	 op: add	 DataType: int
+                                                Id	name: i	scope: 1	type: int
+                                                IntegerLiteral	value: 1	type: const int
+                                    AssignStmt
+                                        Id	name: h	scope: 1	type: int
+                                        BinaryExpr	 op: add	 DataType: int
+                                            Id	name: h	scope: 1	type: int
+                                            IntegerLiteral	value: 7	type: const int
+                    ReturnStmt
+                        BinaryExpr	 op: add	 DataType: int
+                            Id	name: e	scope: 1	type: int
+                            Id	name: f	scope: 1	type: int
+        FunctionDefine Function name: main, Paramtype: int()
+            No Params
+            CompoundStmt
+                Sequence
+                    Sequence
+                        Sequence
+                            Sequence
+                                Sequence
+                                    Sequence
+                                        Sequence
+                                            Sequence
+                                                Sequence
+                                                    Sequence
+                                                        Sequence
+                                                            Sequence
+                                                                Sequence
+                                                                    Sequence
+                                                                        Sequence
+                                                                            DeclStmt
+                                                                                DefNode -  Int Array 
+                                                                                    Id	name: a	scope: 2	type: int array [2 dimensions]
+                                                                                        ConstArrayIndexNode:
+                                                                                            IntegerLiteral	value: 61	type: const int
+                                                                                            IntegerLiteral	value: 67	type: const int
+                                                                                    InitValNode
+                                                                            DeclStmt
+                                                                                DefNode -  Int Array 
+                                                                                    Id	name: b	scope: 2	type: int array [2 dimensions]
+                                                                                        ConstArrayIndexNode:
+                                                                                            IntegerLiteral	value: 53	type: const int
+                                                                                            IntegerLiteral	value: 59	type: const int
+                                                                                    InitValNode
+                                                                        AssignStmt
+                                                                            Id	name: a	scope: 2	type: int array [2 dimensions]
+                                                                                ArrayIndexNode:
+                                                                                    IntegerLiteral	value: 17	type: const int
+                                                                                    IntegerLiteral	value: 1	type: const int
+                                                                            IntegerLiteral	value: 6	type: const int
+                                                                    AssignStmt
+                                                                        Id	name: a	scope: 2	type: int array [2 dimensions]
+                                                                            ArrayIndexNode:
+                                                                                IntegerLiteral	value: 17	type: const int
+                                                                                IntegerLiteral	value: 3	type: const int
+                                                                        IntegerLiteral	value: 7	type: const int
+                                                                AssignStmt
+                                                                    Id	name: a	scope: 2	type: int array [2 dimensions]
+                                                                        ArrayIndexNode:
+                                                                            IntegerLiteral	value: 17	type: const int
+                                                                            IntegerLiteral	value: 4	type: const int
+                                                                    IntegerLiteral	value: 4	type: const int
+                                                            AssignStmt
+                                                                Id	name: a	scope: 2	type: int array [2 dimensions]
+                                                                    ArrayIndexNode:
+                                                                        IntegerLiteral	value: 17	type: const int
+                                                                        IntegerLiteral	value: 7	type: const int
+                                                                IntegerLiteral	value: 9	type: const int
+                                                        AssignStmt
+                                                            Id	name: a	scope: 2	type: int array [2 dimensions]
+                                                                ArrayIndexNode:
+                                                                    IntegerLiteral	value: 17	type: const int
+                                                                    IntegerLiteral	value: 11	type: const int
+                                                            IntegerLiteral	value: 11	type: const int
+                                                    AssignStmt
+                                                        Id	name: b	scope: 2	type: int array [2 dimensions]
+                                                            ArrayIndexNode:
+                                                                IntegerLiteral	value: 6	type: const int
+                                                                IntegerLiteral	value: 1	type: const int
+                                                        IntegerLiteral	value: 1	type: const int
+                                                AssignStmt
+                                                    Id	name: b	scope: 2	type: int array [2 dimensions]
+                                                        ArrayIndexNode:
+                                                            IntegerLiteral	value: 6	type: const int
+                                                            IntegerLiteral	value: 2	type: const int
+                                                    IntegerLiteral	value: 2	type: const int
+                                            AssignStmt
+                                                Id	name: b	scope: 2	type: int array [2 dimensions]
+                                                    ArrayIndexNode:
+                                                        IntegerLiteral	value: 6	type: const int
+                                                        IntegerLiteral	value: 3	type: const int
+                                                IntegerLiteral	value: 3	type: const int
+                                        AssignStmt
+                                            Id	name: b	scope: 2	type: int array [2 dimensions]
+                                                ArrayIndexNode:
+                                                    IntegerLiteral	value: 6	type: const int
+                                                    IntegerLiteral	value: 9	type: const int
+                                            IntegerLiteral	value: 9	type: const int
+                                    DeclStmt
+                                        DefNode -  Int  
+                                            Id	name: ret	scope: 2	type: int
+                                            No initial value
+                                AssignStmt
+                                    Id	name: ret	scope: 2	type: int
+                                    BinaryExpr	 op: star	 DataType: float
+                                        FuncCallNode	funcName: func	 funcType: int(int, int array [2 dimensions], int, int array [1 dimensions], int, int, int array [1 dimensions], int, int)	scope: 0
+                                            FuncCallParamsNode
+                                                Id	name: a	scope: 2	type: int array [2 dimensions]
+                                                    ArrayIndexNode:
+                                                        IntegerLiteral	value: 17	type: const int
+                                                        IntegerLiteral	value: 1	type: const int
+                                                Id	name: b	scope: 2	type: int array [2 dimensions]
+                                                Id	name: a	scope: 2	type: int array [2 dimensions]
+                                                    ArrayIndexNode:
+                                                        IntegerLiteral	value: 17	type: const int
+                                                        IntegerLiteral	value: 3	type: const int
+                                                Id	name: a	scope: 2	type: int array [2 dimensions]
+                                                    ArrayIndexNode:
+                                                        IntegerLiteral	value: 17	type: const int
+                                                Id	name: b	scope: 2	type: int array [2 dimensions]
+                                                    ArrayIndexNode:
+                                                        IntegerLiteral	value: 6	type: const int
+                                                        IntegerLiteral	value: 3	type: const int
+                                                Id	name: b	scope: 2	type: int array [2 dimensions]
+                                                    ArrayIndexNode:
+                                                        IntegerLiteral	value: 6	type: const int
+                                                        IntegerLiteral	value: 0	type: const int
+                                                Id	name: b	scope: 2	type: int array [2 dimensions]
+                                                    ArrayIndexNode:
+                                                        IntegerLiteral	value: 6	type: const int
+                                                Id	name: b	scope: 2	type: int array [2 dimensions]
+                                                    ArrayIndexNode:
+                                                        IntegerLiteral	value: 34	type: const int
+                                                        IntegerLiteral	value: 4	type: const int
+                                                Id	name: b	scope: 2	type: int array [2 dimensions]
+                                                    ArrayIndexNode:
+                                                        IntegerLiteral	value: 51	type: const int
+                                                        IntegerLiteral	value: 18	type: const int
+                                        IntegerLiteral	value: 3	type: const int
+                            WhileStmt
+                                BinaryExpr	 op: greateq	 DataType: int
+                                    Id	name: ret	scope: 2	type: int
+                                    IntegerLiteral	value: 0	type: const int
+                                CompoundStmt
+                                    Sequence
+                                        Sequence
+                                            ExpStmt
+                                                FuncCallNode	funcName: putint	 funcType: void(int)	scope: 0
+                                                    FuncCallParamsNode
+                                                        Id	name: b	scope: 2	type: int array [2 dimensions]
+                                                            ArrayIndexNode:
+                                                                IntegerLiteral	value: 6	type: const int
+                                                                Id	name: ret	scope: 2	type: int
+                                            ExpStmt
+                                                FuncCallNode	funcName: putch	 funcType: void(int)	scope: 0
+                                                    FuncCallParamsNode
+                                                        IntegerLiteral	value: 32	type: const int
+                                        AssignStmt
+                                            Id	name: ret	scope: 2	type: int
+                                            BinaryExpr	 op: sub	 DataType: int
+                                                Id	name: ret	scope: 2	type: int
+                                                IntegerLiteral	value: 1	type: const int
+                        ExpStmt
+                            FuncCallNode	funcName: putch	 funcType: void(int)	scope: 0
+                                FuncCallParamsNode
+                                    IntegerLiteral	value: 10	type: const int
+                    ReturnStmt
+                        IntegerLiteral	value: 0	type: const int

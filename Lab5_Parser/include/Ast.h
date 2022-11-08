@@ -269,6 +269,13 @@ public:
     void output(int level);
 };
 
+class EmptyStmt : public StmtNode
+{
+public:
+    EmptyStmt(){};
+    void output(int level);
+};
+
 class Ast
 {
 private:

@@ -1,0 +1,14 @@
+program
+    Sequence
+        DeclStmt
+            DefNode - Const Int  
+                Const Id	name: a	scope: 0	type: const int
+                ConstInitValNode
+                    IntegerLiteral	value: 10	type: const int
+        FunctionDefine Function name: main, Paramtype: int()
+            No Params
+            CompoundStmt
+                ReturnStmt
+                    ConstBinaryExpr	 op: add	 DataType: const int
+                        Const Id	name: a	scope: 0	type: const int
+                        IntegerLiteral	value: 5	type: const int

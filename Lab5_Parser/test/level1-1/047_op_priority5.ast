@@ -1,0 +1,86 @@
+program
+    Sequence
+        Sequence
+            Sequence
+                Sequence
+                    Sequence
+                        DeclStmt
+                            DefNode -  Int  
+                                Id	name: a	scope: 0	type: int
+                                InitValNode
+                                    IntegerLiteral	value: 1	type: const int
+                        DeclStmt
+                            DefNode -  Int  
+                                Id	name: b	scope: 0	type: int
+                                InitValNode
+                                    IntegerLiteral	value: 0	type: const int
+                    DeclStmt
+                        DefNode -  Int  
+                            Id	name: c	scope: 0	type: int
+                            InitValNode
+                                IntegerLiteral	value: 1	type: const int
+                DeclStmt
+                    DefNode -  Int  
+                        Id	name: d	scope: 0	type: int
+                        InitValNode
+                            IntegerLiteral	value: 2	type: const int
+            DeclStmt
+                DefNode -  Int  
+                    Id	name: e	scope: 0	type: int
+                    InitValNode
+                        IntegerLiteral	value: 4	type: const int
+        FunctionDefine Function name: main, Paramtype: int()
+            No Params
+            CompoundStmt
+                Sequence
+                    Sequence
+                        Sequence
+                            DeclStmt
+                                DefNode -  Int  
+                                    Id	name: flag	scope: 2	type: int
+                                    InitValNode
+                                        IntegerLiteral	value: 0	type: const int
+                            IfStmt
+                                BinaryExpr	 op: or	 DataType: int
+                                    BinaryExpr	 op: and	 DataType: int
+                                        BinaryExpr	 op: eq	 DataType: int
+                                            BinaryExpr	 op: slash	 DataType: int
+                                                BinaryExpr	 op: star	 DataType: int
+                                                    Id	name: a	scope: 0	type: int
+                                                    Id	name: b	scope: 0	type: int
+                                                Id	name: c	scope: 0	type: int
+                                            BinaryExpr	 op: add	 DataType: int
+                                                Id	name: e	scope: 0	type: int
+                                                Id	name: d	scope: 0	type: int
+                                        BinaryExpr	 op: lesseq	 DataType: int
+                                            BinaryExpr	 op: add	 DataType: int
+                                                BinaryExpr	 op: star	 DataType: int
+                                                    Id	name: a	scope: 0	type: int
+                                                    BinaryExpr	 op: add	 DataType: int
+                                                        Id	name: a	scope: 0	type: int
+                                                        Id	name: b	scope: 0	type: int
+                                                Id	name: c	scope: 0	type: int
+                                            BinaryExpr	 op: add	 DataType: int
+                                                Id	name: d	scope: 0	type: int
+                                                Id	name: e	scope: 0	type: int
+                                    BinaryExpr	 op: eq	 DataType: int
+                                        BinaryExpr	 op: sub	 DataType: int
+                                            Id	name: a	scope: 0	type: int
+                                            BinaryExpr	 op: star	 DataType: int
+                                                Id	name: b	scope: 0	type: int
+                                                Id	name: c	scope: 0	type: int
+                                        BinaryExpr	 op: sub	 DataType: int
+                                            Id	name: d	scope: 0	type: int
+                                            BinaryExpr	 op: slash	 DataType: int
+                                                Id	name: a	scope: 0	type: int
+                                                Id	name: c	scope: 0	type: int
+                                CompoundStmt
+                                    AssignStmt
+                                        Id	name: flag	scope: 2	type: int
+                                        IntegerLiteral	value: 1	type: const int
+                        ExpStmt
+                            FuncCallNode	funcName: putint	 funcType: void(int)	scope: 0
+                                FuncCallParamsNode
+                                    Id	name: flag	scope: 2	type: int
+                    ReturnStmt
+                        Id	name: flag	scope: 2	type: int

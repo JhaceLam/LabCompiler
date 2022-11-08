@@ -1,0 +1,270 @@
+program
+    Sequence
+        Sequence
+            DeclStmt
+                DefNode -  Int Array 
+                    Id	name: V	scope: 0	type: int array [2 dimensions]
+                        ConstArrayIndexNode:
+                            IntegerLiteral	value: 200	type: const int
+                            IntegerLiteral	value: 200	type: const int
+                    InitValNode
+            FunctionDefine Function name: KnapSack, Paramtype: int(int, int array [1 dimensions], int array [1 dimensions], int array [1 dimensions], int)
+                FuncDefParamsNode
+                    Id	name: n	scope: 1	type: int
+                    Id	name: w	scope: 1	type: int array [1 dimensions]
+                        ArrayIndexNode:
+                            Not Given
+                    Id	name: v	scope: 1	type: int array [1 dimensions]
+                        ArrayIndexNode:
+                            Not Given
+                    Id	name: x	scope: 1	type: int array [1 dimensions]
+                        ArrayIndexNode:
+                            Not Given
+                    Id	name: C	scope: 1	type: int
+                CompoundStmt
+                    Sequence
+                        Sequence
+                            Sequence
+                                Sequence
+                                    Sequence
+                                        Sequence
+                                            DeclStmt
+                                                DefNode -  Int  
+                                                    Id	name: i	scope: 2	type: int
+                                                    No initial value
+                                                DefNode -  Int  
+                                                    Id	name: j	scope: 2	type: int
+                                                    No initial value
+                                            AssignStmt
+                                                Id	name: i	scope: 2	type: int
+                                                IntegerLiteral	value: 1	type: const int
+                                        WhileStmt
+                                            BinaryExpr	 op: lesseq	 DataType: int
+                                                Id	name: i	scope: 2	type: int
+                                                Id	name: n	scope: 1	type: int
+                                            CompoundStmt
+                                                Sequence
+                                                    Sequence
+                                                        AssignStmt
+                                                            Id	name: j	scope: 2	type: int
+                                                            IntegerLiteral	value: 0	type: const int
+                                                        WhileStmt
+                                                            BinaryExpr	 op: less	 DataType: int
+                                                                Id	name: j	scope: 2	type: int
+                                                                BinaryExpr	 op: add	 DataType: int
+                                                                    Id	name: C	scope: 1	type: int
+                                                                    IntegerLiteral	value: 1	type: const int
+                                                            CompoundStmt
+                                                                Sequence
+                                                                    IfElseStmt
+                                                                        BinaryExpr	 op: less	 DataType: int
+                                                                            Id	name: j	scope: 2	type: int
+                                                                            Id	name: w	scope: 1	type: int array [1 dimensions]
+                                                                                ArrayIndexNode:
+                                                                                    Id	name: i	scope: 2	type: int
+                                                                        AssignStmt
+                                                                            Id	name: V	scope: 0	type: int array [2 dimensions]
+                                                                                ArrayIndexNode:
+                                                                                    Id	name: i	scope: 2	type: int
+                                                                                    Id	name: j	scope: 2	type: int
+                                                                            Id	name: V	scope: 0	type: int array [2 dimensions]
+                                                                                ArrayIndexNode:
+                                                                                    BinaryExpr	 op: sub	 DataType: int
+                                                                                        Id	name: i	scope: 2	type: int
+                                                                                        IntegerLiteral	value: 1	type: const int
+                                                                                    Id	name: j	scope: 2	type: int
+                                                                        CompoundStmt
+                                                                            Sequence
+                                                                                Sequence
+                                                                                    DeclStmt
+                                                                                        DefNode -  Int  
+                                                                                            Id	name: tmp1	scope: 5	type: int
+                                                                                            InitValNode
+                                                                                                Id	name: V	scope: 0	type: int array [2 dimensions]
+                                                                                                    ArrayIndexNode:
+                                                                                                        BinaryExpr	 op: sub	 DataType: int
+                                                                                                            Id	name: i	scope: 2	type: int
+                                                                                                            IntegerLiteral	value: 1	type: const int
+                                                                                                        Id	name: j	scope: 2	type: int
+                                                                                    DeclStmt
+                                                                                        DefNode -  Int  
+                                                                                            Id	name: tmp2	scope: 5	type: int
+                                                                                            InitValNode
+                                                                                                BinaryExpr	 op: add	 DataType: int
+                                                                                                    Id	name: V	scope: 0	type: int array [2 dimensions]
+                                                                                                        ArrayIndexNode:
+                                                                                                            BinaryExpr	 op: sub	 DataType: int
+                                                                                                                Id	name: i	scope: 2	type: int
+                                                                                                                IntegerLiteral	value: 1	type: const int
+                                                                                                            BinaryExpr	 op: sub	 DataType: int
+                                                                                                                Id	name: j	scope: 2	type: int
+                                                                                                                Id	name: w	scope: 1	type: int array [1 dimensions]
+                                                                                                                    ArrayIndexNode:
+                                                                                                                        Id	name: i	scope: 2	type: int
+                                                                                                    Id	name: v	scope: 1	type: int array [1 dimensions]
+                                                                                                        ArrayIndexNode:
+                                                                                                            Id	name: i	scope: 2	type: int
+                                                                                IfElseStmt
+                                                                                    BinaryExpr	 op: great	 DataType: int
+                                                                                        Id	name: tmp1	scope: 5	type: int
+                                                                                        Id	name: tmp2	scope: 5	type: int
+                                                                                    CompoundStmt
+                                                                                        AssignStmt
+                                                                                            Id	name: V	scope: 0	type: int array [2 dimensions]
+                                                                                                ArrayIndexNode:
+                                                                                                    Id	name: i	scope: 2	type: int
+                                                                                                    Id	name: j	scope: 2	type: int
+                                                                                            Id	name: tmp1	scope: 5	type: int
+                                                                                    CompoundStmt
+                                                                                        AssignStmt
+                                                                                            Id	name: V	scope: 0	type: int array [2 dimensions]
+                                                                                                ArrayIndexNode:
+                                                                                                    Id	name: i	scope: 2	type: int
+                                                                                                    Id	name: j	scope: 2	type: int
+                                                                                            Id	name: tmp2	scope: 5	type: int
+                                                                    AssignStmt
+                                                                        Id	name: j	scope: 2	type: int
+                                                                        BinaryExpr	 op: add	 DataType: int
+                                                                            Id	name: j	scope: 2	type: int
+                                                                            IntegerLiteral	value: 1	type: const int
+                                                    AssignStmt
+                                                        Id	name: i	scope: 2	type: int
+                                                        BinaryExpr	 op: add	 DataType: int
+                                                            Id	name: i	scope: 2	type: int
+                                                            IntegerLiteral	value: 1	type: const int
+                                    AssignStmt
+                                        Id	name: j	scope: 2	type: int
+                                        Id	name: C	scope: 1	type: int
+                                AssignStmt
+                                    Id	name: i	scope: 2	type: int
+                                    Id	name: n	scope: 1	type: int
+                            WhileStmt
+                                BinaryExpr	 op: greateq	 DataType: int
+                                    Id	name: i	scope: 2	type: int
+                                    IntegerLiteral	value: 1	type: const int
+                                CompoundStmt
+                                    Sequence
+                                        IfElseStmt
+                                            BinaryExpr	 op: great	 DataType: int
+                                                Id	name: V	scope: 0	type: int array [2 dimensions]
+                                                    ArrayIndexNode:
+                                                        Id	name: i	scope: 2	type: int
+                                                        Id	name: j	scope: 2	type: int
+                                                Id	name: V	scope: 0	type: int array [2 dimensions]
+                                                    ArrayIndexNode:
+                                                        BinaryExpr	 op: sub	 DataType: int
+                                                            Id	name: i	scope: 2	type: int
+                                                            IntegerLiteral	value: 1	type: const int
+                                                        Id	name: j	scope: 2	type: int
+                                            CompoundStmt
+                                                Sequence
+                                                    AssignStmt
+                                                        Id	name: x	scope: 1	type: int array [1 dimensions]
+                                                            ArrayIndexNode:
+                                                                Id	name: i	scope: 2	type: int
+                                                        IntegerLiteral	value: 1	type: const int
+                                                    AssignStmt
+                                                        Id	name: j	scope: 2	type: int
+                                                        BinaryExpr	 op: sub	 DataType: int
+                                                            Id	name: j	scope: 2	type: int
+                                                            Id	name: w	scope: 1	type: int array [1 dimensions]
+                                                                ArrayIndexNode:
+                                                                    Id	name: i	scope: 2	type: int
+                                            CompoundStmt
+                                                AssignStmt
+                                                    Id	name: x	scope: 1	type: int array [1 dimensions]
+                                                        ArrayIndexNode:
+                                                            Id	name: i	scope: 2	type: int
+                                                    IntegerLiteral	value: 0	type: const int
+                                        AssignStmt
+                                            Id	name: i	scope: 2	type: int
+                                            BinaryExpr	 op: sub	 DataType: int
+                                                Id	name: i	scope: 2	type: int
+                                                IntegerLiteral	value: 1	type: const int
+                        ReturnStmt
+                            Id	name: V	scope: 0	type: int array [2 dimensions]
+                                ArrayIndexNode:
+                                    Id	name: n	scope: 1	type: int
+                                    Id	name: C	scope: 1	type: int
+        FunctionDefine Function name: main, Paramtype: int()
+            No Params
+            CompoundStmt
+                Sequence
+                    Sequence
+                        Sequence
+                            Sequence
+                                Sequence
+                                    Sequence
+                                        Sequence
+                                            Sequence
+                                                DeclStmt
+                                                    DefNode -  Int  
+                                                        Id	name: s	scope: 2	type: int
+                                                        No initial value
+                                                DeclStmt
+                                                    DefNode -  Int Array 
+                                                        Id	name: w	scope: 2	type: int array [1 dimensions]
+                                                            ConstArrayIndexNode:
+                                                                IntegerLiteral	value: 6	type: const int
+                                                        InitValNode
+                                                            InitValNode
+                                                                IntegerLiteral	value: 0	type: const int
+                                                            InitValNode
+                                                                IntegerLiteral	value: 2	type: const int
+                                                            InitValNode
+                                                                IntegerLiteral	value: 2	type: const int
+                                                            InitValNode
+                                                                IntegerLiteral	value: 6	type: const int
+                                                            InitValNode
+                                                                IntegerLiteral	value: 5	type: const int
+                                                            InitValNode
+                                                                IntegerLiteral	value: 4	type: const int
+                                            DeclStmt
+                                                DefNode -  Int Array 
+                                                    Id	name: v	scope: 2	type: int array [1 dimensions]
+                                                        ConstArrayIndexNode:
+                                                            IntegerLiteral	value: 6	type: const int
+                                                    InitValNode
+                                                        InitValNode
+                                                            IntegerLiteral	value: 0	type: const int
+                                                        InitValNode
+                                                            IntegerLiteral	value: 6	type: const int
+                                                        InitValNode
+                                                            IntegerLiteral	value: 3	type: const int
+                                                        InitValNode
+                                                            IntegerLiteral	value: 5	type: const int
+                                                        InitValNode
+                                                            IntegerLiteral	value: 4	type: const int
+                                                        InitValNode
+                                                            IntegerLiteral	value: 6	type: const int
+                                        DeclStmt
+                                            DefNode -  Int Array 
+                                                Id	name: x	scope: 2	type: int array [1 dimensions]
+                                                    ConstArrayIndexNode:
+                                                        IntegerLiteral	value: 6	type: const int
+                                                No initial value
+                                    DeclStmt
+                                        DefNode -  Int  
+                                            Id	name: n	scope: 2	type: int
+                                            InitValNode
+                                                IntegerLiteral	value: 5	type: const int
+                                DeclStmt
+                                    DefNode -  Int  
+                                        Id	name: C	scope: 2	type: int
+                                        InitValNode
+                                            IntegerLiteral	value: 10	type: const int
+                            AssignStmt
+                                Id	name: s	scope: 2	type: int
+                                FuncCallNode	funcName: KnapSack	 funcType: int(int, int array [1 dimensions], int array [1 dimensions], int array [1 dimensions], int)	scope: 0
+                                    FuncCallParamsNode
+                                        Id	name: n	scope: 2	type: int
+                                        Id	name: w	scope: 2	type: int array [1 dimensions]
+                                        Id	name: v	scope: 2	type: int array [1 dimensions]
+                                        Id	name: x	scope: 2	type: int array [1 dimensions]
+                                        Id	name: C	scope: 2	type: int
+                        ExpStmt
+                            FuncCallNode	funcName: putint	 funcType: void(int)	scope: 0
+                                FuncCallParamsNode
+                                    Id	name: s	scope: 2	type: int
+                    ReturnStmt
+                        IntegerLiteral	value: 0	type: const int

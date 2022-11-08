@@ -1,0 +1,452 @@
+program
+    Sequence
+        Sequence
+            Sequence
+                Sequence
+                    Sequence
+                        Sequence
+                            Sequence
+                                DeclStmt
+                                    DefNode - Const Int  
+                                        Const Id	name: maxn	scope: 0	type: const int
+                                        ConstInitValNode
+                                            IntegerLiteral	value: 18	type: const int
+                                DeclStmt
+                                    DefNode - Const Int  
+                                        Const Id	name: mod	scope: 0	type: const int
+                                        ConstInitValNode
+                                            IntegerLiteral	value: 1e+09	type: const int
+                            DeclStmt
+                                DefNode -  Int Array 
+                                    Id	name: dp	scope: 0	type: int array [6 dimensions]
+                                        ConstArrayIndexNode:
+                                            Const Id	name: maxn	scope: 0	type: const int
+                                            Const Id	name: maxn	scope: 0	type: const int
+                                            Const Id	name: maxn	scope: 0	type: const int
+                                            Const Id	name: maxn	scope: 0	type: const int
+                                            Const Id	name: maxn	scope: 0	type: const int
+                                            IntegerLiteral	value: 7	type: const int
+                                    No initial value
+                        DeclStmt
+                            DefNode -  Int Array 
+                                Id	name: list	scope: 0	type: int array [1 dimensions]
+                                    ConstArrayIndexNode:
+                                        IntegerLiteral	value: 200	type: const int
+                                No initial value
+                    FunctionDefine Function name: equal, Paramtype: int(int, int)
+                        FuncDefParamsNode
+                            Id	name: a	scope: 1	type: int
+                            Id	name: b	scope: 1	type: int
+                        CompoundStmt
+                            Sequence
+                                IfStmt
+                                    BinaryExpr	 op: eq	 DataType: int
+                                        Id	name: a	scope: 1	type: int
+                                        Id	name: b	scope: 1	type: int
+                                    ReturnStmt
+                                        IntegerLiteral	value: 1	type: const int
+                                ReturnStmt
+                                    IntegerLiteral	value: 0	type: const int
+                FunctionDefine Function name: dfs, Paramtype: int(int, int, int, int, int, int)
+                    FuncDefParamsNode
+                        Id	name: a	scope: 1	type: int
+                        Id	name: b	scope: 1	type: int
+                        Id	name: c	scope: 1	type: int
+                        Id	name: d	scope: 1	type: int
+                        Id	name: e	scope: 1	type: int
+                        Id	name: last	scope: 1	type: int
+                    CompoundStmt
+                        Sequence
+                            Sequence
+                                Sequence
+                                    Sequence
+                                        Sequence
+                                            Sequence
+                                                Sequence
+                                                    Sequence
+                                                        Sequence
+                                                            IfStmt
+                                                                BinaryExpr	 op: neq	 DataType: int
+                                                                    Id	name: dp	scope: 0	type: int array [6 dimensions]
+                                                                        ArrayIndexNode:
+                                                                            Id	name: a	scope: 1	type: int
+                                                                            Id	name: b	scope: 1	type: int
+                                                                            Id	name: c	scope: 1	type: int
+                                                                            Id	name: d	scope: 1	type: int
+                                                                            Id	name: e	scope: 1	type: int
+                                                                            Id	name: last	scope: 1	type: int
+                                                                    ConstOneOpExpr	 op: minus	 DataType: const int
+                                                                        IntegerLiteral	value: 1	type: const int
+                                                                ReturnStmt
+                                                                    Id	name: dp	scope: 0	type: int array [6 dimensions]
+                                                                        ArrayIndexNode:
+                                                                            Id	name: a	scope: 1	type: int
+                                                                            Id	name: b	scope: 1	type: int
+                                                                            Id	name: c	scope: 1	type: int
+                                                                            Id	name: d	scope: 1	type: int
+                                                                            Id	name: e	scope: 1	type: int
+                                                                            Id	name: last	scope: 1	type: int
+                                                            IfStmt
+                                                                BinaryExpr	 op: eq	 DataType: int
+                                                                    BinaryExpr	 op: add	 DataType: int
+                                                                        BinaryExpr	 op: add	 DataType: int
+                                                                            BinaryExpr	 op: add	 DataType: int
+                                                                                BinaryExpr	 op: add	 DataType: int
+                                                                                    Id	name: a	scope: 1	type: int
+                                                                                    Id	name: b	scope: 1	type: int
+                                                                                Id	name: c	scope: 1	type: int
+                                                                            Id	name: d	scope: 1	type: int
+                                                                        Id	name: e	scope: 1	type: int
+                                                                    IntegerLiteral	value: 0	type: const int
+                                                                ReturnStmt
+                                                                    IntegerLiteral	value: 1	type: const int
+                                                        DeclStmt
+                                                            DefNode -  Int  
+                                                                Id	name: ans	scope: 2	type: int
+                                                                InitValNode
+                                                                    IntegerLiteral	value: 0	type: const int
+                                                    IfStmt
+                                                        Id	name: a	scope: 1	type: int
+                                                        AssignStmt
+                                                            Id	name: ans	scope: 2	type: int
+                                                            BinaryExpr	 op: percent	 DataType: float
+                                                                BinaryExpr	 op: add	 DataType: float
+                                                                    Id	name: ans	scope: 2	type: int
+                                                                    BinaryExpr	 op: star	 DataType: float
+                                                                        BinaryExpr	 op: sub	 DataType: float
+                                                                            Id	name: a	scope: 1	type: int
+                                                                            FuncCallNode	funcName: equal	 funcType: int(int, int)	scope: 0
+                                                                                FuncCallParamsNode
+                                                                                    Id	name: last	scope: 1	type: int
+                                                                                    IntegerLiteral	value: 2	type: const int
+                                                                        FuncCallNode	funcName: dfs	 funcType: int(int, int, int, int, int, int)	scope: 0
+                                                                            FuncCallParamsNode
+                                                                                BinaryExpr	 op: sub	 DataType: int
+                                                                                    Id	name: a	scope: 1	type: int
+                                                                                    IntegerLiteral	value: 1	type: const int
+                                                                                Id	name: b	scope: 1	type: int
+                                                                                Id	name: c	scope: 1	type: int
+                                                                                Id	name: d	scope: 1	type: int
+                                                                                Id	name: e	scope: 1	type: int
+                                                                                IntegerLiteral	value: 1	type: const int
+                                                                Const Id	name: mod	scope: 0	type: const int
+                                                IfStmt
+                                                    Id	name: b	scope: 1	type: int
+                                                    AssignStmt
+                                                        Id	name: ans	scope: 2	type: int
+                                                        BinaryExpr	 op: percent	 DataType: float
+                                                            BinaryExpr	 op: add	 DataType: float
+                                                                Id	name: ans	scope: 2	type: int
+                                                                BinaryExpr	 op: star	 DataType: float
+                                                                    BinaryExpr	 op: sub	 DataType: float
+                                                                        Id	name: b	scope: 1	type: int
+                                                                        FuncCallNode	funcName: equal	 funcType: int(int, int)	scope: 0
+                                                                            FuncCallParamsNode
+                                                                                Id	name: last	scope: 1	type: int
+                                                                                IntegerLiteral	value: 3	type: const int
+                                                                    FuncCallNode	funcName: dfs	 funcType: int(int, int, int, int, int, int)	scope: 0
+                                                                        FuncCallParamsNode
+                                                                            BinaryExpr	 op: add	 DataType: int
+                                                                                Id	name: a	scope: 1	type: int
+                                                                                IntegerLiteral	value: 1	type: const int
+                                                                            BinaryExpr	 op: sub	 DataType: int
+                                                                                Id	name: b	scope: 1	type: int
+                                                                                IntegerLiteral	value: 1	type: const int
+                                                                            Id	name: c	scope: 1	type: int
+                                                                            Id	name: d	scope: 1	type: int
+                                                                            Id	name: e	scope: 1	type: int
+                                                                            IntegerLiteral	value: 2	type: const int
+                                                            Const Id	name: mod	scope: 0	type: const int
+                                            IfStmt
+                                                Id	name: c	scope: 1	type: int
+                                                AssignStmt
+                                                    Id	name: ans	scope: 2	type: int
+                                                    BinaryExpr	 op: percent	 DataType: float
+                                                        BinaryExpr	 op: add	 DataType: float
+                                                            Id	name: ans	scope: 2	type: int
+                                                            BinaryExpr	 op: star	 DataType: float
+                                                                BinaryExpr	 op: sub	 DataType: float
+                                                                    Id	name: c	scope: 1	type: int
+                                                                    FuncCallNode	funcName: equal	 funcType: int(int, int)	scope: 0
+                                                                        FuncCallParamsNode
+                                                                            Id	name: last	scope: 1	type: int
+                                                                            IntegerLiteral	value: 4	type: const int
+                                                                FuncCallNode	funcName: dfs	 funcType: int(int, int, int, int, int, int)	scope: 0
+                                                                    FuncCallParamsNode
+                                                                        Id	name: a	scope: 1	type: int
+                                                                        BinaryExpr	 op: add	 DataType: int
+                                                                            Id	name: b	scope: 1	type: int
+                                                                            IntegerLiteral	value: 1	type: const int
+                                                                        BinaryExpr	 op: sub	 DataType: int
+                                                                            Id	name: c	scope: 1	type: int
+                                                                            IntegerLiteral	value: 1	type: const int
+                                                                        Id	name: d	scope: 1	type: int
+                                                                        Id	name: e	scope: 1	type: int
+                                                                        IntegerLiteral	value: 3	type: const int
+                                                        Const Id	name: mod	scope: 0	type: const int
+                                        IfStmt
+                                            Id	name: d	scope: 1	type: int
+                                            AssignStmt
+                                                Id	name: ans	scope: 2	type: int
+                                                BinaryExpr	 op: percent	 DataType: float
+                                                    BinaryExpr	 op: add	 DataType: float
+                                                        Id	name: ans	scope: 2	type: int
+                                                        BinaryExpr	 op: star	 DataType: float
+                                                            BinaryExpr	 op: sub	 DataType: float
+                                                                Id	name: d	scope: 1	type: int
+                                                                FuncCallNode	funcName: equal	 funcType: int(int, int)	scope: 0
+                                                                    FuncCallParamsNode
+                                                                        Id	name: last	scope: 1	type: int
+                                                                        IntegerLiteral	value: 5	type: const int
+                                                            FuncCallNode	funcName: dfs	 funcType: int(int, int, int, int, int, int)	scope: 0
+                                                                FuncCallParamsNode
+                                                                    Id	name: a	scope: 1	type: int
+                                                                    Id	name: b	scope: 1	type: int
+                                                                    BinaryExpr	 op: add	 DataType: int
+                                                                        Id	name: c	scope: 1	type: int
+                                                                        IntegerLiteral	value: 1	type: const int
+                                                                    BinaryExpr	 op: sub	 DataType: int
+                                                                        Id	name: d	scope: 1	type: int
+                                                                        IntegerLiteral	value: 1	type: const int
+                                                                    Id	name: e	scope: 1	type: int
+                                                                    IntegerLiteral	value: 4	type: const int
+                                                    Const Id	name: mod	scope: 0	type: const int
+                                    IfStmt
+                                        Id	name: e	scope: 1	type: int
+                                        AssignStmt
+                                            Id	name: ans	scope: 2	type: int
+                                            BinaryExpr	 op: percent	 DataType: float
+                                                BinaryExpr	 op: add	 DataType: float
+                                                    Id	name: ans	scope: 2	type: int
+                                                    BinaryExpr	 op: star	 DataType: float
+                                                        Id	name: e	scope: 1	type: int
+                                                        FuncCallNode	funcName: dfs	 funcType: int(int, int, int, int, int, int)	scope: 0
+                                                            FuncCallParamsNode
+                                                                Id	name: a	scope: 1	type: int
+                                                                Id	name: b	scope: 1	type: int
+                                                                Id	name: c	scope: 1	type: int
+                                                                BinaryExpr	 op: add	 DataType: int
+                                                                    Id	name: d	scope: 1	type: int
+                                                                    IntegerLiteral	value: 1	type: const int
+                                                                BinaryExpr	 op: sub	 DataType: int
+                                                                    Id	name: e	scope: 1	type: int
+                                                                    IntegerLiteral	value: 1	type: const int
+                                                                IntegerLiteral	value: 5	type: const int
+                                                Const Id	name: mod	scope: 0	type: const int
+                                AssignStmt
+                                    Id	name: dp	scope: 0	type: int array [6 dimensions]
+                                        ArrayIndexNode:
+                                            Id	name: a	scope: 1	type: int
+                                            Id	name: b	scope: 1	type: int
+                                            Id	name: c	scope: 1	type: int
+                                            Id	name: d	scope: 1	type: int
+                                            Id	name: e	scope: 1	type: int
+                                            Id	name: last	scope: 1	type: int
+                                    BinaryExpr	 op: percent	 DataType: int
+                                        Id	name: ans	scope: 2	type: int
+                                        Const Id	name: mod	scope: 0	type: const int
+                            ReturnStmt
+                                Id	name: dp	scope: 0	type: int array [6 dimensions]
+                                    ArrayIndexNode:
+                                        Id	name: a	scope: 1	type: int
+                                        Id	name: b	scope: 1	type: int
+                                        Id	name: c	scope: 1	type: int
+                                        Id	name: d	scope: 1	type: int
+                                        Id	name: e	scope: 1	type: int
+                                        Id	name: last	scope: 1	type: int
+            DeclStmt
+                DefNode -  Int Array 
+                    Id	name: cns	scope: 0	type: int array [1 dimensions]
+                        ConstArrayIndexNode:
+                            IntegerLiteral	value: 20	type: const int
+                    No initial value
+        FunctionDefine Function name: main, Paramtype: int()
+            No Params
+            CompoundStmt
+                Sequence
+                    Sequence
+                        Sequence
+                            Sequence
+                                Sequence
+                                    Sequence
+                                        Sequence
+                                            DeclStmt
+                                                DefNode -  Int  
+                                                    Id	name: n	scope: 2	type: int
+                                                    InitValNode
+                                                        FuncCallNode	funcName: getint	 funcType: int()	scope: 0
+                                                            No Params
+                                            DeclStmt
+                                                DefNode -  Int  
+                                                    Id	name: i	scope: 2	type: int
+                                                    InitValNode
+                                                        IntegerLiteral	value: 0	type: const int
+                                        WhileStmt
+                                            BinaryExpr	 op: less	 DataType: int
+                                                Id	name: i	scope: 2	type: int
+                                                Const Id	name: maxn	scope: 0	type: const int
+                                            CompoundStmt
+                                                Sequence
+                                                    Sequence
+                                                        DeclStmt
+                                                            DefNode -  Int  
+                                                                Id	name: j	scope: 3	type: int
+                                                                InitValNode
+                                                                    IntegerLiteral	value: 0	type: const int
+                                                        WhileStmt
+                                                            BinaryExpr	 op: less	 DataType: int
+                                                                Id	name: j	scope: 3	type: int
+                                                                Const Id	name: maxn	scope: 0	type: const int
+                                                            CompoundStmt
+                                                                Sequence
+                                                                    Sequence
+                                                                        DeclStmt
+                                                                            DefNode -  Int  
+                                                                                Id	name: k	scope: 4	type: int
+                                                                                InitValNode
+                                                                                    IntegerLiteral	value: 0	type: const int
+                                                                        WhileStmt
+                                                                            BinaryExpr	 op: less	 DataType: int
+                                                                                Id	name: k	scope: 4	type: int
+                                                                                Const Id	name: maxn	scope: 0	type: const int
+                                                                            CompoundStmt
+                                                                                Sequence
+                                                                                    Sequence
+                                                                                        DeclStmt
+                                                                                            DefNode -  Int  
+                                                                                                Id	name: l	scope: 5	type: int
+                                                                                                InitValNode
+                                                                                                    IntegerLiteral	value: 0	type: const int
+                                                                                        WhileStmt
+                                                                                            BinaryExpr	 op: less	 DataType: int
+                                                                                                Id	name: l	scope: 5	type: int
+                                                                                                Const Id	name: maxn	scope: 0	type: const int
+                                                                                            CompoundStmt
+                                                                                                Sequence
+                                                                                                    Sequence
+                                                                                                        DeclStmt
+                                                                                                            DefNode -  Int  
+                                                                                                                Id	name: m	scope: 6	type: int
+                                                                                                                InitValNode
+                                                                                                                    IntegerLiteral	value: 0	type: const int
+                                                                                                        WhileStmt
+                                                                                                            BinaryExpr	 op: less	 DataType: int
+                                                                                                                Id	name: m	scope: 6	type: int
+                                                                                                                Const Id	name: maxn	scope: 0	type: const int
+                                                                                                            CompoundStmt
+                                                                                                                Sequence
+                                                                                                                    Sequence
+                                                                                                                        DeclStmt
+                                                                                                                            DefNode -  Int  
+                                                                                                                                Id	name: h	scope: 7	type: int
+                                                                                                                                InitValNode
+                                                                                                                                    IntegerLiteral	value: 0	type: const int
+                                                                                                                        WhileStmt
+                                                                                                                            BinaryExpr	 op: less	 DataType: int
+                                                                                                                                Id	name: h	scope: 7	type: int
+                                                                                                                                IntegerLiteral	value: 7	type: const int
+                                                                                                                            CompoundStmt
+                                                                                                                                Sequence
+                                                                                                                                    AssignStmt
+                                                                                                                                        Id	name: dp	scope: 0	type: int array [6 dimensions]
+                                                                                                                                            ArrayIndexNode:
+                                                                                                                                                Id	name: i	scope: 2	type: int
+                                                                                                                                                Id	name: j	scope: 3	type: int
+                                                                                                                                                Id	name: k	scope: 4	type: int
+                                                                                                                                                Id	name: l	scope: 5	type: int
+                                                                                                                                                Id	name: m	scope: 6	type: int
+                                                                                                                                                Id	name: h	scope: 7	type: int
+                                                                                                                                        ConstOneOpExpr	 op: minus	 DataType: const int
+                                                                                                                                            IntegerLiteral	value: 1	type: const int
+                                                                                                                                    AssignStmt
+                                                                                                                                        Id	name: h	scope: 7	type: int
+                                                                                                                                        BinaryExpr	 op: add	 DataType: int
+                                                                                                                                            Id	name: h	scope: 7	type: int
+                                                                                                                                            IntegerLiteral	value: 1	type: const int
+                                                                                                                    AssignStmt
+                                                                                                                        Id	name: m	scope: 6	type: int
+                                                                                                                        BinaryExpr	 op: add	 DataType: int
+                                                                                                                            Id	name: m	scope: 6	type: int
+                                                                                                                            IntegerLiteral	value: 1	type: const int
+                                                                                                    AssignStmt
+                                                                                                        Id	name: l	scope: 5	type: int
+                                                                                                        BinaryExpr	 op: add	 DataType: int
+                                                                                                            Id	name: l	scope: 5	type: int
+                                                                                                            IntegerLiteral	value: 1	type: const int
+                                                                                    AssignStmt
+                                                                                        Id	name: k	scope: 4	type: int
+                                                                                        BinaryExpr	 op: add	 DataType: int
+                                                                                            Id	name: k	scope: 4	type: int
+                                                                                            IntegerLiteral	value: 1	type: const int
+                                                                    AssignStmt
+                                                                        Id	name: j	scope: 3	type: int
+                                                                        BinaryExpr	 op: add	 DataType: int
+                                                                            Id	name: j	scope: 3	type: int
+                                                                            IntegerLiteral	value: 1	type: const int
+                                                    AssignStmt
+                                                        Id	name: i	scope: 2	type: int
+                                                        BinaryExpr	 op: add	 DataType: int
+                                                            Id	name: i	scope: 2	type: int
+                                                            IntegerLiteral	value: 1	type: const int
+                                    AssignStmt
+                                        Id	name: i	scope: 2	type: int
+                                        IntegerLiteral	value: 0	type: const int
+                                WhileStmt
+                                    BinaryExpr	 op: less	 DataType: int
+                                        Id	name: i	scope: 2	type: int
+                                        Id	name: n	scope: 2	type: int
+                                    CompoundStmt
+                                        Sequence
+                                            Sequence
+                                                AssignStmt
+                                                    Id	name: list	scope: 0	type: int array [1 dimensions]
+                                                        ArrayIndexNode:
+                                                            Id	name: i	scope: 2	type: int
+                                                    FuncCallNode	funcName: getint	 funcType: int()	scope: 0
+                                                        No Params
+                                                AssignStmt
+                                                    Id	name: cns	scope: 0	type: int array [1 dimensions]
+                                                        ArrayIndexNode:
+                                                            Id	name: list	scope: 0	type: int array [1 dimensions]
+                                                                ArrayIndexNode:
+                                                                    Id	name: i	scope: 2	type: int
+                                                    BinaryExpr	 op: add	 DataType: int
+                                                        Id	name: cns	scope: 0	type: int array [1 dimensions]
+                                                            ArrayIndexNode:
+                                                                Id	name: list	scope: 0	type: int array [1 dimensions]
+                                                                    ArrayIndexNode:
+                                                                        Id	name: i	scope: 2	type: int
+                                                        IntegerLiteral	value: 1	type: const int
+                                            AssignStmt
+                                                Id	name: i	scope: 2	type: int
+                                                BinaryExpr	 op: add	 DataType: int
+                                                    Id	name: i	scope: 2	type: int
+                                                    IntegerLiteral	value: 1	type: const int
+                            DeclStmt
+                                DefNode -  Int  
+                                    Id	name: ans	scope: 2	type: int
+                                    InitValNode
+                                        FuncCallNode	funcName: dfs	 funcType: int(int, int, int, int, int, int)	scope: 0
+                                            FuncCallParamsNode
+                                                Id	name: cns	scope: 0	type: int array [1 dimensions]
+                                                    ArrayIndexNode:
+                                                        IntegerLiteral	value: 1	type: const int
+                                                Id	name: cns	scope: 0	type: int array [1 dimensions]
+                                                    ArrayIndexNode:
+                                                        IntegerLiteral	value: 2	type: const int
+                                                Id	name: cns	scope: 0	type: int array [1 dimensions]
+                                                    ArrayIndexNode:
+                                                        IntegerLiteral	value: 3	type: const int
+                                                Id	name: cns	scope: 0	type: int array [1 dimensions]
+                                                    ArrayIndexNode:
+                                                        IntegerLiteral	value: 4	type: const int
+                                                Id	name: cns	scope: 0	type: int array [1 dimensions]
+                                                    ArrayIndexNode:
+                                                        IntegerLiteral	value: 5	type: const int
+                                                IntegerLiteral	value: 0	type: const int
+                        ExpStmt
+                            FuncCallNode	funcName: putint	 funcType: void(int)	scope: 0
+                                FuncCallParamsNode
+                                    Id	name: ans	scope: 2	type: int
+                    ReturnStmt
+                        Id	name: ans	scope: 2	type: int

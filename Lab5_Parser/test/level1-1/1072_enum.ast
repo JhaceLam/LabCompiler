@@ -1,0 +1,109 @@
+program
+    FunctionDefine Function name: main, Paramtype: int()
+        No Params
+        CompoundStmt
+            Sequence
+                Sequence
+                    Sequence
+                        Sequence
+                            Sequence
+                                Sequence
+                                    Sequence
+                                        Sequence
+                                            DeclStmt
+                                                DefNode -  Int  
+                                                    Id	name: i	scope: 2	type: int
+                                                    No initial value
+                                            DeclStmt
+                                                DefNode -  Int  
+                                                    Id	name: j	scope: 2	type: int
+                                                    No initial value
+                                        DeclStmt
+                                            DefNode -  Int  
+                                                Id	name: k	scope: 2	type: int
+                                                No initial value
+                                    DeclStmt
+                                        DefNode -  Int  
+                                            Id	name: t	scope: 2	type: int
+                                            No initial value
+                                AssignStmt
+                                    Id	name: i	scope: 2	type: int
+                                    IntegerLiteral	value: 0	type: const int
+                            AssignStmt
+                                Id	name: j	scope: 2	type: int
+                                IntegerLiteral	value: 0	type: const int
+                        AssignStmt
+                            Id	name: k	scope: 2	type: int
+                            IntegerLiteral	value: 0	type: const int
+                    WhileStmt
+                        BinaryExpr	 op: less	 DataType: int
+                            Id	name: i	scope: 2	type: int
+                            IntegerLiteral	value: 21	type: const int
+                        CompoundStmt
+                            Sequence
+                                WhileStmt
+                                    BinaryExpr	 op: less	 DataType: int
+                                        Id	name: j	scope: 2	type: int
+                                        BinaryExpr	 op: sub	 DataType: int
+                                            IntegerLiteral	value: 101	type: const int
+                                            Id	name: i	scope: 2	type: int
+                                    CompoundStmt
+                                        Sequence
+                                            Sequence
+                                                AssignStmt
+                                                    Id	name: k	scope: 2	type: int
+                                                    BinaryExpr	 op: sub	 DataType: int
+                                                        BinaryExpr	 op: sub	 DataType: int
+                                                            IntegerLiteral	value: 100	type: const int
+                                                            Id	name: i	scope: 2	type: int
+                                                        Id	name: j	scope: 2	type: int
+                                                IfStmt
+                                                    BinaryExpr	 op: eq	 DataType: int
+                                                        BinaryExpr	 op: add	 DataType: int
+                                                            BinaryExpr	 op: add	 DataType: int
+                                                                BinaryExpr	 op: star	 DataType: int
+                                                                    IntegerLiteral	value: 5	type: const int
+                                                                    Id	name: i	scope: 2	type: int
+                                                                BinaryExpr	 op: star	 DataType: int
+                                                                    IntegerLiteral	value: 1	type: const int
+                                                                    Id	name: j	scope: 2	type: int
+                                                            BinaryExpr	 op: slash	 DataType: int
+                                                                Id	name: k	scope: 2	type: int
+                                                                IntegerLiteral	value: 2	type: const int
+                                                        IntegerLiteral	value: 100	type: const int
+                                                    CompoundStmt
+                                                        Sequence
+                                                            Sequence
+                                                                Sequence
+                                                                    Sequence
+                                                                        ExpStmt
+                                                                            FuncCallNode	funcName: putint	 funcType: void(int)	scope: 0
+                                                                                FuncCallParamsNode
+                                                                                    Id	name: i	scope: 2	type: int
+                                                                        ExpStmt
+                                                                            FuncCallNode	funcName: putint	 funcType: void(int)	scope: 0
+                                                                                FuncCallParamsNode
+                                                                                    Id	name: j	scope: 2	type: int
+                                                                    ExpStmt
+                                                                        FuncCallNode	funcName: putint	 funcType: void(int)	scope: 0
+                                                                            FuncCallParamsNode
+                                                                                Id	name: k	scope: 2	type: int
+                                                                AssignStmt
+                                                                    Id	name: t	scope: 2	type: int
+                                                                    IntegerLiteral	value: 10	type: const int
+                                                            ExpStmt
+                                                                FuncCallNode	funcName: putch	 funcType: void(int)	scope: 0
+                                                                    FuncCallParamsNode
+                                                                        Id	name: t	scope: 2	type: int
+                                            AssignStmt
+                                                Id	name: j	scope: 2	type: int
+                                                BinaryExpr	 op: add	 DataType: int
+                                                    Id	name: j	scope: 2	type: int
+                                                    IntegerLiteral	value: 1	type: const int
+                                AssignStmt
+                                    Id	name: i	scope: 2	type: int
+                                    BinaryExpr	 op: add	 DataType: int
+                                        Id	name: i	scope: 2	type: int
+                                        IntegerLiteral	value: 1	type: const int
+                ReturnStmt
+                    IntegerLiteral	value: 0	type: const int

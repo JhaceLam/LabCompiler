@@ -1,0 +1,56 @@
+program
+    Sequence
+        Sequence
+            DeclStmt
+                DefNode -  Int  
+                    Id	name: k	scope: 0	type: int
+                    No initial value
+            DeclStmt
+                DefNode - Const Int  
+                    Const Id	name: n	scope: 0	type: const int
+                    ConstInitValNode
+                        IntegerLiteral	value: 10	type: const int
+        FunctionDefine Function name: main, Paramtype: int()
+            No Params
+            CompoundStmt
+                Sequence
+                    Sequence
+                        Sequence
+                            Sequence
+                                DeclStmt
+                                    DefNode -  Int  
+                                        Id	name: i	scope: 2	type: int
+                                        InitValNode
+                                            IntegerLiteral	value: 0	type: const int
+                                AssignStmt
+                                    Id	name: k	scope: 0	type: int
+                                    IntegerLiteral	value: 1	type: const int
+                            WhileStmt
+                                BinaryExpr	 op: lesseq	 DataType: int
+                                    Id	name: i	scope: 2	type: int
+                                    ConstBinaryExpr	 op: sub	 DataType: const int
+                                        Const Id	name: n	scope: 0	type: const int
+                                        IntegerLiteral	value: 1	type: const int
+                                CompoundStmt
+                                    Sequence
+                                        Sequence
+                                            AssignStmt
+                                                Id	name: i	scope: 2	type: int
+                                                BinaryExpr	 op: add	 DataType: int
+                                                    Id	name: i	scope: 2	type: int
+                                                    IntegerLiteral	value: 1	type: const int
+                                            ExpStmt
+                                                BinaryExpr	 op: add	 DataType: int
+                                                    Id	name: k	scope: 0	type: int
+                                                    IntegerLiteral	value: 1	type: const int
+                                        AssignStmt
+                                            Id	name: k	scope: 0	type: int
+                                            BinaryExpr	 op: add	 DataType: int
+                                                Id	name: k	scope: 0	type: int
+                                                Id	name: k	scope: 0	type: int
+                        ExpStmt
+                            FuncCallNode	funcName: putint	 funcType: void(int)	scope: 0
+                                FuncCallParamsNode
+                                    Id	name: k	scope: 0	type: int
+                    ReturnStmt
+                        Id	name: k	scope: 0	type: int

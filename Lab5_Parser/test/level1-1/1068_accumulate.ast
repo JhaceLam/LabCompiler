@@ -1,0 +1,46 @@
+program
+    FunctionDefine Function name: main, Paramtype: int()
+        No Params
+        CompoundStmt
+            Sequence
+                Sequence
+                    Sequence
+                        Sequence
+                            Sequence
+                                Sequence
+                                    DeclStmt
+                                        DefNode -  Int  
+                                            Id	name: i	scope: 2	type: int
+                                            No initial value
+                                    DeclStmt
+                                        DefNode -  Int  
+                                            Id	name: sum	scope: 2	type: int
+                                            No initial value
+                                AssignStmt
+                                    Id	name: sum	scope: 2	type: int
+                                    IntegerLiteral	value: 0	type: const int
+                            AssignStmt
+                                Id	name: i	scope: 2	type: int
+                                IntegerLiteral	value: 0	type: const int
+                        WhileStmt
+                            BinaryExpr	 op: less	 DataType: int
+                                Id	name: i	scope: 2	type: int
+                                IntegerLiteral	value: 21	type: const int
+                            CompoundStmt
+                                Sequence
+                                    AssignStmt
+                                        Id	name: sum	scope: 2	type: int
+                                        BinaryExpr	 op: add	 DataType: int
+                                            Id	name: sum	scope: 2	type: int
+                                            Id	name: i	scope: 2	type: int
+                                    AssignStmt
+                                        Id	name: i	scope: 2	type: int
+                                        BinaryExpr	 op: add	 DataType: int
+                                            Id	name: i	scope: 2	type: int
+                                            IntegerLiteral	value: 1	type: const int
+                    ExpStmt
+                        FuncCallNode	funcName: putint	 funcType: void(int)	scope: 0
+                            FuncCallParamsNode
+                                Id	name: sum	scope: 2	type: int
+                ReturnStmt
+                    IntegerLiteral	value: 0	type: const int

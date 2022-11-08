@@ -1,0 +1,131 @@
+program
+    Sequence
+        FunctionDefine Function name: palindrome, Paramtype: int(int)
+            FuncDefParamsNode
+                Id	name: n	scope: 1	type: int
+            CompoundStmt
+                Sequence
+                    Sequence
+                        Sequence
+                            Sequence
+                                Sequence
+                                    Sequence
+                                        DeclStmt
+                                            DefNode -  Int Array 
+                                                Id	name: a	scope: 2	type: int array [1 dimensions]
+                                                    ConstArrayIndexNode:
+                                                        IntegerLiteral	value: 4	type: const int
+                                                No initial value
+                                        DeclStmt
+                                            DefNode -  Int  
+                                                Id	name: j	scope: 2	type: int
+                                                No initial value
+                                    DeclStmt
+                                        DefNode -  Int  
+                                            Id	name: flag	scope: 2	type: int
+                                            No initial value
+                                AssignStmt
+                                    Id	name: j	scope: 2	type: int
+                                    IntegerLiteral	value: 0	type: const int
+                            WhileStmt
+                                BinaryExpr	 op: less	 DataType: int
+                                    Id	name: j	scope: 2	type: int
+                                    IntegerLiteral	value: 4	type: const int
+                                CompoundStmt
+                                    Sequence
+                                        Sequence
+                                            AssignStmt
+                                                Id	name: a	scope: 2	type: int array [1 dimensions]
+                                                    ArrayIndexNode:
+                                                        Id	name: j	scope: 2	type: int
+                                                BinaryExpr	 op: percent	 DataType: int
+                                                    Id	name: n	scope: 1	type: int
+                                                    IntegerLiteral	value: 10	type: const int
+                                            AssignStmt
+                                                Id	name: n	scope: 1	type: int
+                                                BinaryExpr	 op: slash	 DataType: int
+                                                    Id	name: n	scope: 1	type: int
+                                                    IntegerLiteral	value: 10	type: const int
+                                        AssignStmt
+                                            Id	name: j	scope: 2	type: int
+                                            BinaryExpr	 op: add	 DataType: int
+                                                Id	name: j	scope: 2	type: int
+                                                IntegerLiteral	value: 1	type: const int
+                        IfElseStmt
+                            BinaryExpr	 op: and	 DataType: int
+                                BinaryExpr	 op: eq	 DataType: int
+                                    Id	name: a	scope: 2	type: int array [1 dimensions]
+                                        ArrayIndexNode:
+                                            IntegerLiteral	value: 0	type: const int
+                                    Id	name: a	scope: 2	type: int array [1 dimensions]
+                                        ArrayIndexNode:
+                                            IntegerLiteral	value: 3	type: const int
+                                BinaryExpr	 op: eq	 DataType: int
+                                    Id	name: a	scope: 2	type: int array [1 dimensions]
+                                        ArrayIndexNode:
+                                            IntegerLiteral	value: 1	type: const int
+                                    Id	name: a	scope: 2	type: int array [1 dimensions]
+                                        ArrayIndexNode:
+                                            IntegerLiteral	value: 2	type: const int
+                            CompoundStmt
+                                AssignStmt
+                                    Id	name: flag	scope: 2	type: int
+                                    IntegerLiteral	value: 1	type: const int
+                            CompoundStmt
+                                AssignStmt
+                                    Id	name: flag	scope: 2	type: int
+                                    IntegerLiteral	value: 0	type: const int
+                    ReturnStmt
+                        Id	name: flag	scope: 2	type: int
+        FunctionDefine Function name: main, Paramtype: int()
+            No Params
+            CompoundStmt
+                Sequence
+                    Sequence
+                        Sequence
+                            Sequence
+                                Sequence
+                                    Sequence
+                                        Sequence
+                                            DeclStmt
+                                                DefNode -  Int  
+                                                    Id	name: test	scope: 2	type: int
+                                                    No initial value
+                                            AssignStmt
+                                                Id	name: test	scope: 2	type: int
+                                                IntegerLiteral	value: 1221	type: const int
+                                        DeclStmt
+                                            DefNode -  Int  
+                                                Id	name: flag	scope: 2	type: int
+                                                No initial value
+                                    AssignStmt
+                                        Id	name: flag	scope: 2	type: int
+                                        FuncCallNode	funcName: palindrome	 funcType: int(int)	scope: 0
+                                            FuncCallParamsNode
+                                                Id	name: test	scope: 2	type: int
+                                IfElseStmt
+                                    BinaryExpr	 op: eq	 DataType: int
+                                        Id	name: flag	scope: 2	type: int
+                                        IntegerLiteral	value: 1	type: const int
+                                    ExpStmt
+                                        FuncCallNode	funcName: putint	 funcType: void(int)	scope: 0
+                                            FuncCallParamsNode
+                                                Id	name: test	scope: 2	type: int
+                                    CompoundStmt
+                                        Sequence
+                                            AssignStmt
+                                                Id	name: flag	scope: 2	type: int
+                                                IntegerLiteral	value: 0	type: const int
+                                            ExpStmt
+                                                FuncCallNode	funcName: putint	 funcType: void(int)	scope: 0
+                                                    FuncCallParamsNode
+                                                        Id	name: flag	scope: 2	type: int
+                            AssignStmt
+                                Id	name: flag	scope: 2	type: int
+                                IntegerLiteral	value: 10	type: const int
+                        ExpStmt
+                            FuncCallNode	funcName: putch	 funcType: void(int)	scope: 0
+                                FuncCallParamsNode
+                                    Id	name: flag	scope: 2	type: int
+                    ReturnStmt
+                        IntegerLiteral	value: 0	type: const int

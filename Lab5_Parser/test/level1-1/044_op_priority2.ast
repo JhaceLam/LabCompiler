@@ -1,0 +1,42 @@
+program
+    FunctionDefine Function name: main, Paramtype: int()
+        No Params
+        CompoundStmt
+            Sequence
+                Sequence
+                    Sequence
+                        Sequence
+                            Sequence
+                                DeclStmt
+                                    DefNode -  Int  
+                                        Id	name: a	scope: 2	type: int
+                                        No initial value
+                                    DefNode -  Int  
+                                        Id	name: b	scope: 2	type: int
+                                        No initial value
+                                    DefNode -  Int  
+                                        Id	name: c	scope: 2	type: int
+                                        No initial value
+                                    DefNode -  Int  
+                                        Id	name: d	scope: 2	type: int
+                                        No initial value
+                                AssignStmt
+                                    Id	name: a	scope: 2	type: int
+                                    IntegerLiteral	value: 10	type: const int
+                            AssignStmt
+                                Id	name: b	scope: 2	type: int
+                                IntegerLiteral	value: 4	type: const int
+                        AssignStmt
+                            Id	name: c	scope: 2	type: int
+                            IntegerLiteral	value: 2	type: const int
+                    AssignStmt
+                        Id	name: d	scope: 2	type: int
+                        IntegerLiteral	value: 2	type: const int
+                ReturnStmt
+                    BinaryExpr	 op: star	 DataType: int
+                        BinaryExpr	 op: add	 DataType: int
+                            Id	name: c	scope: 2	type: int
+                            Id	name: a	scope: 2	type: int
+                        BinaryExpr	 op: sub	 DataType: int
+                            Id	name: b	scope: 2	type: int
+                            Id	name: d	scope: 2	type: int

@@ -68,6 +68,7 @@ Stmt
     | DeclStmt {$$=$1;}
     | FuncDef {$$=$1;}
     | Exp SEMICOLON {$$ = new ExpStmt($1);}
+    | SEMICOLON {$$ = new EmptyStmt();}
     ;
 LVal
     : ID {
@@ -125,6 +126,10 @@ ReturnStmt
     :
     RETURN Exp SEMICOLON{
         $$ = new ReturnStmt($2);
+    }
+    |
+    RETURN SEMICOLON {
+        $$ = new ReturnStmt((ExprNode *) nullptr);
     }
     ;
 WhileStmt
@@ -542,7 +547,13 @@ ConstInitValList
 ConstDef 
     : ID ASSIGN ConstInitVal {
         SymbolEntry *se;
-        se = new IdentifierSymbolEntry(declType, $1, identifiers->getLevel());
+        Type *type;
+        if (declType->isInt()) {
+            type = TypeSystem::constIntType;
+        } else {
+            type = TypeSystem::constFloatType;
+        }
+        se = new IdentifierSymbolEntry(type, $1, identifiers->getLevel());
         identifiers->install($1, se);
         $$ = new DefNode(new Id(se), (InitValNode *)$3 , true);
         delete []$1;
@@ -592,7 +603,14 @@ FuncParam //函数只有一个参数
     }
     |
     CONST Type ID {
-        SymbolEntry *se = new IdentifierSymbolEntry($2, $3, identifiers->getLevel());
+        Type *type;
+        if ($2->isInt()) {
+            type = TypeSystem::constIntType;
+        } else {
+            type = TypeSystem::constFloatType;
+        }
+
+        SymbolEntry *se = new IdentifierSymbolEntry(type, $3, identifiers->getLevel());
         identifiers->install($3, se);
         $$ = new DefNode(new Id(se), nullptr);
     }

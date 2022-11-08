@@ -19,9 +19,10 @@
 %}
 
 DECIMIAL ([1-9][0-9]*|0)
-FLOATNUM (([1-9][0-9]*|0)?(\.[0-9]*)((e|E)[+-]?[0-9]+)?)|(([1-9][0-9]*|0)(e|E)[+-]?[0-9]+)
+FLOATNUM ((([0-9]*[.][0-9]*([eE][+-]?[0-9]+)?)|([0-9]+[eE][+-]?[0-9]+)))
 OCTAL (0[1-7][0-7]*)
 HEX (0(x|X)[1-9a-fA-F][0-9a-fA-F]*)
+HEX_FLOAT (0[xX](([0-9A-Fa-f]*[.][0-9A-Fa-f]*([pP][+-]?[0-9]+)?)|([0-9A-Fa-f]+[pP][+-]?[0-9]+)))
 ID [[:alpha:]_][[:alpha:][:digit:]_]*
 EOL (\r\n|\n|\r)
 WHITE [\t ]
@@ -505,19 +506,35 @@ commentend (\*\/)
 }
 
 {OCTAL} {
-    char *endptr;
-    int decimalVal = strtol(yytext, &endptr, 8);
-    DEBUG_FOR_LAB4(to_string(decimalVal));
-    yylval.itype = atoi(yytext);
+    char* stop;
+    int dec = strtol(yytext, &stop, 8);
+
+    if(dump_tokens)
+        DEBUG_FOR_LAB4(to_string(dec));
+
+    yylval.itype = dec;
     return INTEGER;
 }
 
 {HEX} {
-    char *endptr;
-    int decimalVal = strtol(yytext, &endptr, 16);
-    DEBUG_FOR_LAB4(to_string(decimalVal));
-    yylval.itype = atoi(yytext);
+    char* stop;
+    int dec = strtol(yytext, &stop, 16);
+
+    if(dump_tokens)
+        DEBUG_FOR_LAB4(to_string(dec));
+
+    yylval.itype = dec;
     return INTEGER;
+}
+
+{HEX_FLOAT} {
+    if(dump_tokens)
+        DEBUG_FOR_LAB4(std::string(yytext));
+
+    float temp;
+    sscanf(yytext, "%f", &temp);
+    yylval.ftype = double(temp);
+    return FLOATNUM;
 }
 
 {ID} {

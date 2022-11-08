@@ -1,0 +1,400 @@
+program
+    Sequence
+        Sequence
+            Sequence
+                Sequence
+                    Sequence
+                        Sequence
+                            Sequence
+                                Sequence
+                                    Sequence
+                                        Sequence
+                                            Sequence
+                                                DeclStmt
+                                                    DefNode - Const Float  
+                                                        Const Id	name: RADIUS	scope: 0	type: const float
+                                                        ConstInitValNode
+                                                            FloatLiteral	value: 5.5	type: const float
+                                                    DefNode - Const Float  
+                                                        Const Id	name: PI	scope: 0	type: const float
+                                                        ConstInitValNode
+                                                            FloatLiteral	value: 3.14159	type: const float
+                                                    DefNode - Const Float  
+                                                        Const Id	name: EPS	scope: 0	type: const float
+                                                        ConstInitValNode
+                                                            FloatLiteral	value: 1e-06	type: const float
+                                                DeclStmt
+                                                    DefNode - Const Float  
+                                                        Const Id	name: PI_HEX	scope: 0	type: const float
+                                                        ConstInitValNode
+                                                            FloatLiteral	value: 3.14159	type: const float
+                                                    DefNode - Const Float  
+                                                        Const Id	name: HEX2	scope: 0	type: const float
+                                                        ConstInitValNode
+                                                            FloatLiteral	value: 0.078125	type: const float
+                                            DeclStmt
+                                                DefNode - Const Float  
+                                                    Const Id	name: FACT	scope: 0	type: const float
+                                                    ConstInitValNode
+                                                        ConstOneOpExpr	 op: minus	 DataType: const float
+                                                            FloatLiteral	value: 33000	type: const float
+                                                DefNode - Const Float  
+                                                    Const Id	name: EVAL1	scope: 0	type: const float
+                                                    ConstInitValNode
+                                                        ConstBinaryExpr	 op: star	 DataType: const float
+                                                            ConstBinaryExpr	 op: star	 DataType: const float
+                                                                Const Id	name: PI	scope: 0	type: const float
+                                                                Const Id	name: RADIUS	scope: 0	type: const float
+                                                            Const Id	name: RADIUS	scope: 0	type: const float
+                                                DefNode - Const Float  
+                                                    Const Id	name: EVAL2	scope: 0	type: const float
+                                                    ConstInitValNode
+                                                        ConstBinaryExpr	 op: star	 DataType: const float
+                                                            ConstBinaryExpr	 op: star	 DataType: const float
+                                                                IntegerLiteral	value: 2	type: const int
+                                                                Const Id	name: PI_HEX	scope: 0	type: const float
+                                                            Const Id	name: RADIUS	scope: 0	type: const float
+                                                DefNode - Const Float  
+                                                    Const Id	name: EVAL3	scope: 0	type: const float
+                                                    ConstInitValNode
+                                                        ConstBinaryExpr	 op: star	 DataType: const float
+                                                            ConstBinaryExpr	 op: star	 DataType: const float
+                                                                Const Id	name: PI	scope: 0	type: const float
+                                                                IntegerLiteral	value: 2	type: const int
+                                                            Const Id	name: RADIUS	scope: 0	type: const float
+                                        DeclStmt
+                                            DefNode - Const Float  
+                                                Const Id	name: CONV1	scope: 0	type: const float
+                                                ConstInitValNode
+                                                    IntegerLiteral	value: 233	type: const int
+                                            DefNode - Const Float  
+                                                Const Id	name: CONV2	scope: 0	type: const float
+                                                ConstInitValNode
+                                                    IntegerLiteral	value: 4095	type: const int
+                                    DeclStmt
+                                        DefNode - Const Int  
+                                            Const Id	name: MAX	scope: 0	type: const int
+                                            ConstInitValNode
+                                                FloatLiteral	value: 1e+09	type: const float
+                                        DefNode - Const Int  
+                                            Const Id	name: TWO	scope: 0	type: const int
+                                            ConstInitValNode
+                                                FloatLiteral	value: 2.9	type: const float
+                                        DefNode - Const Int  
+                                            Const Id	name: THREE	scope: 0	type: const int
+                                            ConstInitValNode
+                                                FloatLiteral	value: 3.2	type: const float
+                                        DefNode - Const Int  
+                                            Const Id	name: FIVE	scope: 0	type: const int
+                                            ConstInitValNode
+                                                ConstBinaryExpr	 op: add	 DataType: const int
+                                                    Const Id	name: TWO	scope: 0	type: const int
+                                                    Const Id	name: THREE	scope: 0	type: const int
+                                FunctionDefine Function name: float_abs, Paramtype: float(float)
+                                    FuncDefParamsNode
+                                        Id	name: x	scope: 1	type: float
+                                    CompoundStmt
+                                        Sequence
+                                            IfStmt
+                                                BinaryExpr	 op: less	 DataType: int
+                                                    Id	name: x	scope: 1	type: float
+                                                    IntegerLiteral	value: 0	type: const int
+                                                ReturnStmt
+                                                    OneOpExpr	 op: minus	 DataType: float
+                                                        Id	name: x	scope: 1	type: float
+                                            ReturnStmt
+                                                Id	name: x	scope: 1	type: float
+                            FunctionDefine Function name: circle_area, Paramtype: float(int)
+                                FuncDefParamsNode
+                                    Id	name: radius	scope: 1	type: int
+                                CompoundStmt
+                                    ReturnStmt
+                                        BinaryExpr	 op: slash	 DataType: float
+                                            BinaryExpr	 op: add	 DataType: float
+                                                BinaryExpr	 op: star	 DataType: float
+                                                    BinaryExpr	 op: star	 DataType: float
+                                                        Const Id	name: PI	scope: 0	type: const float
+                                                        Id	name: radius	scope: 1	type: int
+                                                    Id	name: radius	scope: 1	type: int
+                                                BinaryExpr	 op: star	 DataType: float
+                                                    BinaryExpr	 op: star	 DataType: int
+                                                        Id	name: radius	scope: 1	type: int
+                                                        Id	name: radius	scope: 1	type: int
+                                                    Const Id	name: PI	scope: 0	type: const float
+                                            IntegerLiteral	value: 2	type: const int
+                        FunctionDefine Function name: float_eq, Paramtype: int(float, float)
+                            FuncDefParamsNode
+                                Id	name: a	scope: 1	type: float
+                                Id	name: b	scope: 1	type: float
+                            CompoundStmt
+                                IfElseStmt
+                                    BinaryExpr	 op: less	 DataType: int
+                                        FuncCallNode	funcName: float_abs	 funcType: float(float)	scope: 0
+                                            FuncCallParamsNode
+                                                BinaryExpr	 op: sub	 DataType: float
+                                                    Id	name: a	scope: 1	type: float
+                                                    Id	name: b	scope: 1	type: float
+                                        Const Id	name: EPS	scope: 0	type: const float
+                                    CompoundStmt
+                                        ReturnStmt
+                                            ConstBinaryExpr	 op: slash	 DataType: const float
+                                                ConstBinaryExpr	 op: star	 DataType: const float
+                                                    IntegerLiteral	value: 1	type: const int
+                                                    FloatLiteral	value: 2	type: const float
+                                                IntegerLiteral	value: 2	type: const int
+                                    CompoundStmt
+                                        ReturnStmt
+                                            IntegerLiteral	value: 0	type: const int
+                    FunctionDefine Function name: error, Paramtype: void()
+                        No Params
+                        CompoundStmt
+                            Sequence
+                                Sequence
+                                    Sequence
+                                        Sequence
+                                            Sequence
+                                                ExpStmt
+                                                    FuncCallNode	funcName: putch	 funcType: void(int)	scope: 0
+                                                        FuncCallParamsNode
+                                                            IntegerLiteral	value: 101	type: const int
+                                                ExpStmt
+                                                    FuncCallNode	funcName: putch	 funcType: void(int)	scope: 0
+                                                        FuncCallParamsNode
+                                                            IntegerLiteral	value: 114	type: const int
+                                            ExpStmt
+                                                FuncCallNode	funcName: putch	 funcType: void(int)	scope: 0
+                                                    FuncCallParamsNode
+                                                        IntegerLiteral	value: 114	type: const int
+                                        ExpStmt
+                                            FuncCallNode	funcName: putch	 funcType: void(int)	scope: 0
+                                                FuncCallParamsNode
+                                                    IntegerLiteral	value: 111	type: const int
+                                    ExpStmt
+                                        FuncCallNode	funcName: putch	 funcType: void(int)	scope: 0
+                                            FuncCallParamsNode
+                                                IntegerLiteral	value: 114	type: const int
+                                ExpStmt
+                                    FuncCallNode	funcName: putch	 funcType: void(int)	scope: 0
+                                        FuncCallParamsNode
+                                            IntegerLiteral	value: 10	type: const int
+                FunctionDefine Function name: ok, Paramtype: void()
+                    No Params
+                    CompoundStmt
+                        Sequence
+                            Sequence
+                                ExpStmt
+                                    FuncCallNode	funcName: putch	 funcType: void(int)	scope: 0
+                                        FuncCallParamsNode
+                                            IntegerLiteral	value: 111	type: const int
+                                ExpStmt
+                                    FuncCallNode	funcName: putch	 funcType: void(int)	scope: 0
+                                        FuncCallParamsNode
+                                            IntegerLiteral	value: 107	type: const int
+                            ExpStmt
+                                FuncCallNode	funcName: putch	 funcType: void(int)	scope: 0
+                                    FuncCallParamsNode
+                                        IntegerLiteral	value: 10	type: const int
+            FunctionDefine Function name: assert, Paramtype: void(int)
+                FuncDefParamsNode
+                    Id	name: cond	scope: 1	type: int
+                CompoundStmt
+                    IfElseStmt
+                        OneOpExpr	 op: not	 DataType: int
+                            Id	name: cond	scope: 1	type: int
+                        CompoundStmt
+                            ExpStmt
+                                FuncCallNode	funcName: error	 funcType: void()	scope: 0
+                                    No Params
+                        CompoundStmt
+                            ExpStmt
+                                FuncCallNode	funcName: ok	 funcType: void()	scope: 0
+                                    No Params
+        FunctionDefine Function name: main, Paramtype: int()
+            No Params
+            CompoundStmt
+                Sequence
+                    Sequence
+                        Sequence
+                            Sequence
+                                Sequence
+                                    Sequence
+                                        Sequence
+                                            Sequence
+                                                Sequence
+                                                    Sequence
+                                                        Sequence
+                                                            Sequence
+                                                                Sequence
+                                                                    Sequence
+                                                                        ExpStmt
+                                                                            FuncCallNode	funcName: assert	 funcType: void(int)	scope: 0
+                                                                                FuncCallParamsNode
+                                                                                    OneOpExpr	 op: not	 DataType: int(float, float)
+                                                                                        FuncCallNode	funcName: float_eq	 funcType: int(float, float)	scope: 0
+                                                                                            FuncCallParamsNode
+                                                                                                Const Id	name: HEX2	scope: 0	type: const float
+                                                                                                Const Id	name: FACT	scope: 0	type: const float
+                                                                        ExpStmt
+                                                                            FuncCallNode	funcName: assert	 funcType: void(int)	scope: 0
+                                                                                FuncCallParamsNode
+                                                                                    OneOpExpr	 op: not	 DataType: int(float, float)
+                                                                                        FuncCallNode	funcName: float_eq	 funcType: int(float, float)	scope: 0
+                                                                                            FuncCallParamsNode
+                                                                                                Const Id	name: EVAL1	scope: 0	type: const float
+                                                                                                Const Id	name: EVAL2	scope: 0	type: const float
+                                                                    ExpStmt
+                                                                        FuncCallNode	funcName: assert	 funcType: void(int)	scope: 0
+                                                                            FuncCallParamsNode
+                                                                                FuncCallNode	funcName: float_eq	 funcType: int(float, float)	scope: 0
+                                                                                    FuncCallParamsNode
+                                                                                        Const Id	name: EVAL2	scope: 0	type: const float
+                                                                                        Const Id	name: EVAL3	scope: 0	type: const float
+                                                                ExpStmt
+                                                                    FuncCallNode	funcName: assert	 funcType: void(int)	scope: 0
+                                                                        FuncCallParamsNode
+                                                                            FuncCallNode	funcName: float_eq	 funcType: int(float, float)	scope: 0
+                                                                                FuncCallParamsNode
+                                                                                    FuncCallNode	funcName: circle_area	 funcType: float(int)	scope: 0
+                                                                                        FuncCallParamsNode
+                                                                                            Const Id	name: RADIUS	scope: 0	type: const float
+                                                                                    FuncCallNode	funcName: circle_area	 funcType: float(int)	scope: 0
+                                                                                        FuncCallParamsNode
+                                                                                            Const Id	name: FIVE	scope: 0	type: const int
+                                                            ExpStmt
+                                                                FuncCallNode	funcName: assert	 funcType: void(int)	scope: 0
+                                                                    FuncCallParamsNode
+                                                                        OneOpExpr	 op: not	 DataType: int(float, float)
+                                                                            FuncCallNode	funcName: float_eq	 funcType: int(float, float)	scope: 0
+                                                                                FuncCallParamsNode
+                                                                                    Const Id	name: CONV1	scope: 0	type: const float
+                                                                                    Const Id	name: CONV2	scope: 0	type: const float
+                                                        IfStmt
+                                                            FloatLiteral	value: 1.5	type: const float
+                                                            ExpStmt
+                                                                FuncCallNode	funcName: ok	 funcType: void()	scope: 0
+                                                                    No Params
+                                                    IfStmt
+                                                        ConstOneOpExpr	 op: not	 DataType: const float
+                                                            ConstOneOpExpr	 op: not	 DataType: const float
+                                                                FloatLiteral	value: 3.3	type: const float
+                                                        ExpStmt
+                                                            FuncCallNode	funcName: ok	 funcType: void()	scope: 0
+                                                                No Params
+                                                IfStmt
+                                                    ConstBinaryExpr	 op: and	 DataType: const int
+                                                        FloatLiteral	value: 0	type: const float
+                                                        IntegerLiteral	value: 3	type: const int
+                                                    ExpStmt
+                                                        FuncCallNode	funcName: error	 funcType: void()	scope: 0
+                                                            No Params
+                                            IfStmt
+                                                ConstBinaryExpr	 op: or	 DataType: const int
+                                                    IntegerLiteral	value: 0	type: const int
+                                                    FloatLiteral	value: 0.3	type: const float
+                                                ExpStmt
+                                                    FuncCallNode	funcName: ok	 funcType: void()	scope: 0
+                                                        No Params
+                                        DeclStmt
+                                            DefNode -  Int  
+                                                Id	name: i	scope: 2	type: int
+                                                InitValNode
+                                                    IntegerLiteral	value: 1	type: const int
+                                            DefNode -  Int  
+                                                Id	name: p	scope: 2	type: int
+                                                InitValNode
+                                                    IntegerLiteral	value: 0	type: const int
+                                    DeclStmt
+                                        DefNode -  Float Array 
+                                            Id	name: arr	scope: 2	type: float array [1 dimensions]
+                                                ConstArrayIndexNode:
+                                                    IntegerLiteral	value: 10	type: const int
+                                            InitValNode
+                                                InitValNode
+                                                    FloatLiteral	value: 1	type: const float
+                                                InitValNode
+                                                    IntegerLiteral	value: 2	type: const int
+                                DeclStmt
+                                    DefNode -  Int  
+                                        Id	name: len	scope: 2	type: int
+                                        InitValNode
+                                            FuncCallNode	funcName: getfarray	 funcType: int(float array [1 dimensions])	scope: 0
+                                                FuncCallParamsNode
+                                                    Id	name: arr	scope: 2	type: float array [1 dimensions]
+                            WhileStmt
+                                BinaryExpr	 op: less	 DataType: int
+                                    Id	name: i	scope: 2	type: int
+                                    Const Id	name: MAX	scope: 0	type: const int
+                                CompoundStmt
+                                    Sequence
+                                        Sequence
+                                            Sequence
+                                                Sequence
+                                                    Sequence
+                                                        Sequence
+                                                            Sequence
+                                                                Sequence
+                                                                    DeclStmt
+                                                                        DefNode -  Float  
+                                                                            Id	name: input	scope: 3	type: float
+                                                                            InitValNode
+                                                                                FuncCallNode	funcName: getfloat	 funcType: float()	scope: 0
+                                                                                    No Params
+                                                                    DeclStmt
+                                                                        DefNode -  Float  
+                                                                            Id	name: area	scope: 3	type: float
+                                                                            InitValNode
+                                                                                BinaryExpr	 op: star	 DataType: float
+                                                                                    BinaryExpr	 op: star	 DataType: float
+                                                                                        Const Id	name: PI	scope: 0	type: const float
+                                                                                        Id	name: input	scope: 3	type: float
+                                                                                    Id	name: input	scope: 3	type: float
+                                                                        DefNode -  Float  
+                                                                            Id	name: area_trunc	scope: 3	type: float
+                                                                            InitValNode
+                                                                                FuncCallNode	funcName: circle_area	 funcType: float(int)	scope: 0
+                                                                                    FuncCallParamsNode
+                                                                                        Id	name: input	scope: 3	type: float
+                                                                AssignStmt
+                                                                    Id	name: arr	scope: 2	type: float array [1 dimensions]
+                                                                        ArrayIndexNode:
+                                                                            Id	name: p	scope: 2	type: int
+                                                                    BinaryExpr	 op: add	 DataType: float
+                                                                        Id	name: arr	scope: 2	type: float array [1 dimensions]
+                                                                            ArrayIndexNode:
+                                                                                Id	name: p	scope: 2	type: int
+                                                                        Id	name: input	scope: 3	type: float
+                                                            ExpStmt
+                                                                FuncCallNode	funcName: putfloat	 funcType: void(float)	scope: 0
+                                                                    FuncCallParamsNode
+                                                                        Id	name: area	scope: 3	type: float
+                                                        ExpStmt
+                                                            FuncCallNode	funcName: putch	 funcType: void(int)	scope: 0
+                                                                FuncCallParamsNode
+                                                                    IntegerLiteral	value: 32	type: const int
+                                                    ExpStmt
+                                                        FuncCallNode	funcName: putint	 funcType: void(int)	scope: 0
+                                                            FuncCallParamsNode
+                                                                Id	name: area_trunc	scope: 3	type: float
+                                                ExpStmt
+                                                    FuncCallNode	funcName: putch	 funcType: void(int)	scope: 0
+                                                        FuncCallParamsNode
+                                                            IntegerLiteral	value: 10	type: const int
+                                            AssignStmt
+                                                Id	name: i	scope: 2	type: int
+                                                BinaryExpr	 op: star	 DataType: float
+                                                    Id	name: i	scope: 2	type: int
+                                                    ConstOneOpExpr	 op: minus	 DataType: const float
+                                                        ConstOneOpExpr	 op: minus	 DataType: const float
+                                                            FloatLiteral	value: 10	type: const float
+                                        AssignStmt
+                                            Id	name: p	scope: 2	type: int
+                                            BinaryExpr	 op: add	 DataType: int
+                                                Id	name: p	scope: 2	type: int
+                                                IntegerLiteral	value: 1	type: const int
+                        ExpStmt
+                            FuncCallNode	funcName: putfarray	 funcType: void(int, float array [1 dimensions])	scope: 0
+                                FuncCallParamsNode
+                                    Id	name: len	scope: 2	type: int
+                                    Id	name: arr	scope: 2	type: float array [1 dimensions]
+                    ReturnStmt
+                        IntegerLiteral	value: 0	type: const int

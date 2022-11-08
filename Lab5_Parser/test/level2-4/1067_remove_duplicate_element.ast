@@ -1,0 +1,153 @@
+program
+    Sequence
+        FunctionDefine Function name: removeElement, Paramtype: int(int array [1 dimensions], int, int)
+            FuncDefParamsNode
+                Id	name: nums	scope: 1	type: int array [1 dimensions]
+                    ArrayIndexNode:
+                        Not Given
+                Id	name: n	scope: 1	type: int
+                Id	name: val	scope: 1	type: int
+            CompoundStmt
+                Sequence
+                    Sequence
+                        Sequence
+                            DeclStmt
+                                DefNode -  Int  
+                                    Id	name: i	scope: 2	type: int
+                                    No initial value
+                            AssignStmt
+                                Id	name: i	scope: 2	type: int
+                                IntegerLiteral	value: 0	type: const int
+                        WhileStmt
+                            BinaryExpr	 op: less	 DataType: int
+                                Id	name: i	scope: 2	type: int
+                                Id	name: n	scope: 1	type: int
+                            CompoundStmt
+                                IfElseStmt
+                                    BinaryExpr	 op: eq	 DataType: int
+                                        Id	name: nums	scope: 1	type: int array [1 dimensions]
+                                            ArrayIndexNode:
+                                                Id	name: i	scope: 2	type: int
+                                        Id	name: val	scope: 1	type: int
+                                    CompoundStmt
+                                        Sequence
+                                            AssignStmt
+                                                Id	name: nums	scope: 1	type: int array [1 dimensions]
+                                                    ArrayIndexNode:
+                                                        Id	name: i	scope: 2	type: int
+                                                Id	name: nums	scope: 1	type: int array [1 dimensions]
+                                                    ArrayIndexNode:
+                                                        BinaryExpr	 op: sub	 DataType: int
+                                                            Id	name: n	scope: 1	type: int
+                                                            IntegerLiteral	value: 1	type: const int
+                                            AssignStmt
+                                                Id	name: n	scope: 1	type: int
+                                                BinaryExpr	 op: sub	 DataType: int
+                                                    Id	name: n	scope: 1	type: int
+                                                    IntegerLiteral	value: 1	type: const int
+                                    CompoundStmt
+                                        AssignStmt
+                                            Id	name: i	scope: 2	type: int
+                                            BinaryExpr	 op: add	 DataType: int
+                                                Id	name: i	scope: 2	type: int
+                                                IntegerLiteral	value: 1	type: const int
+                    ReturnStmt
+                        Id	name: n	scope: 1	type: int
+        FunctionDefine Function name: main, Paramtype: int()
+            No Params
+            CompoundStmt
+                Sequence
+                    Sequence
+                        Sequence
+                            Sequence
+                                Sequence
+                                    Sequence
+                                        Sequence
+                                            Sequence
+                                                Sequence
+                                                    Sequence
+                                                        Sequence
+                                                            Sequence
+                                                                Sequence
+                                                                    Sequence
+                                                                        Sequence
+                                                                            Sequence
+                                                                                DeclStmt
+                                                                                    DefNode -  Int  
+                                                                                        Id	name: res	scope: 2	type: int
+                                                                                        No initial value
+                                                                                DeclStmt
+                                                                                    DefNode -  Int Array 
+                                                                                        Id	name: a	scope: 2	type: int array [1 dimensions]
+                                                                                            ConstArrayIndexNode:
+                                                                                                IntegerLiteral	value: 10	type: const int
+                                                                                        No initial value
+                                                                            AssignStmt
+                                                                                Id	name: a	scope: 2	type: int array [1 dimensions]
+                                                                                    ArrayIndexNode:
+                                                                                        IntegerLiteral	value: 0	type: const int
+                                                                                IntegerLiteral	value: 3	type: const int
+                                                                        AssignStmt
+                                                                            Id	name: a	scope: 2	type: int array [1 dimensions]
+                                                                                ArrayIndexNode:
+                                                                                    IntegerLiteral	value: 1	type: const int
+                                                                            IntegerLiteral	value: 3	type: const int
+                                                                    AssignStmt
+                                                                        Id	name: a	scope: 2	type: int array [1 dimensions]
+                                                                            ArrayIndexNode:
+                                                                                IntegerLiteral	value: 2	type: const int
+                                                                        IntegerLiteral	value: 9	type: const int
+                                                                AssignStmt
+                                                                    Id	name: a	scope: 2	type: int array [1 dimensions]
+                                                                        ArrayIndexNode:
+                                                                            IntegerLiteral	value: 3	type: const int
+                                                                    IntegerLiteral	value: 0	type: const int
+                                                            AssignStmt
+                                                                Id	name: a	scope: 2	type: int array [1 dimensions]
+                                                                    ArrayIndexNode:
+                                                                        IntegerLiteral	value: 4	type: const int
+                                                                IntegerLiteral	value: 0	type: const int
+                                                        AssignStmt
+                                                            Id	name: a	scope: 2	type: int array [1 dimensions]
+                                                                ArrayIndexNode:
+                                                                    IntegerLiteral	value: 5	type: const int
+                                                            IntegerLiteral	value: 1	type: const int
+                                                    AssignStmt
+                                                        Id	name: a	scope: 2	type: int array [1 dimensions]
+                                                            ArrayIndexNode:
+                                                                IntegerLiteral	value: 6	type: const int
+                                                        IntegerLiteral	value: 1	type: const int
+                                                AssignStmt
+                                                    Id	name: a	scope: 2	type: int array [1 dimensions]
+                                                        ArrayIndexNode:
+                                                            IntegerLiteral	value: 7	type: const int
+                                                    IntegerLiteral	value: 5	type: const int
+                                            AssignStmt
+                                                Id	name: a	scope: 2	type: int array [1 dimensions]
+                                                    ArrayIndexNode:
+                                                        IntegerLiteral	value: 8	type: const int
+                                                IntegerLiteral	value: 7	type: const int
+                                        AssignStmt
+                                            Id	name: a	scope: 2	type: int array [1 dimensions]
+                                                ArrayIndexNode:
+                                                    IntegerLiteral	value: 9	type: const int
+                                            IntegerLiteral	value: 8	type: const int
+                                    AssignStmt
+                                        Id	name: res	scope: 2	type: int
+                                        IntegerLiteral	value: 10	type: const int
+                                DeclStmt
+                                    DefNode -  Int  
+                                        Id	name: val	scope: 2	type: int
+                                        No initial value
+                            AssignStmt
+                                Id	name: val	scope: 2	type: int
+                                IntegerLiteral	value: 3	type: const int
+                        AssignStmt
+                            Id	name: res	scope: 2	type: int
+                            FuncCallNode	funcName: removeElement	 funcType: int(int array [1 dimensions], int, int)	scope: 0
+                                FuncCallParamsNode
+                                    Id	name: a	scope: 2	type: int array [1 dimensions]
+                                    Id	name: res	scope: 2	type: int
+                                    Id	name: val	scope: 2	type: int
+                    ReturnStmt
+                        Id	name: res	scope: 2	type: int

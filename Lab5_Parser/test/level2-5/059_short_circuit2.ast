@@ -1,0 +1,86 @@
+program
+    Sequence
+        FunctionDefine Function name: func, Paramtype: int(int)
+            FuncDefParamsNode
+                Id	name: n	scope: 1	type: int
+            CompoundStmt
+                IfElseStmt
+                    BinaryExpr	 op: lesseq	 DataType: int
+                        Id	name: n	scope: 1	type: int
+                        IntegerLiteral	value: 50	type: const int
+                    CompoundStmt
+                        Sequence
+                            ExpStmt
+                                FuncCallNode	funcName: putint	 funcType: void(int)	scope: 0
+                                    FuncCallParamsNode
+                                        Id	name: n	scope: 1	type: int
+                            ReturnStmt
+                                IntegerLiteral	value: 1	type: const int
+                    CompoundStmt
+                        Sequence
+                            ExpStmt
+                                FuncCallNode	funcName: putint	 funcType: void(int)	scope: 0
+                                    FuncCallParamsNode
+                                        Id	name: n	scope: 1	type: int
+                            ReturnStmt
+                                IntegerLiteral	value: 0	type: const int
+        FunctionDefine Function name: main, Paramtype: int()
+            No Params
+            CompoundStmt
+                Sequence
+                    Sequence
+                        Sequence
+                            DeclStmt
+                                DefNode -  Int  
+                                    Id	name: i	scope: 2	type: int
+                                    No initial value
+                            IfElseStmt
+                                BinaryExpr	 op: or	 DataType: int
+                                    BinaryExpr	 op: eq	 DataType: int
+                                        FuncCallNode	funcName: func	 funcType: int(int)	scope: 0
+                                            FuncCallParamsNode
+                                                IntegerLiteral	value: 0	type: const int
+                                        IntegerLiteral	value: 1	type: const int
+                                    BinaryExpr	 op: and	 DataType: int
+                                        BinaryExpr	 op: eq	 DataType: int
+                                            FuncCallNode	funcName: func	 funcType: int(int)	scope: 0
+                                                FuncCallParamsNode
+                                                    IntegerLiteral	value: 50	type: const int
+                                            IntegerLiteral	value: 1	type: const int
+                                        BinaryExpr	 op: eq	 DataType: int
+                                            FuncCallNode	funcName: func	 funcType: int(int)	scope: 0
+                                                FuncCallParamsNode
+                                                    IntegerLiteral	value: 100	type: const int
+                                            IntegerLiteral	value: 0	type: const int
+                                AssignStmt
+                                    Id	name: i	scope: 2	type: int
+                                    IntegerLiteral	value: 0	type: const int
+                                AssignStmt
+                                    Id	name: i	scope: 2	type: int
+                                    IntegerLiteral	value: 1	type: const int
+                        IfElseStmt
+                            BinaryExpr	 op: or	 DataType: int
+                                BinaryExpr	 op: and	 DataType: int
+                                    BinaryExpr	 op: eq	 DataType: int
+                                        FuncCallNode	funcName: func	 funcType: int(int)	scope: 0
+                                            FuncCallParamsNode
+                                                IntegerLiteral	value: 50	type: const int
+                                        IntegerLiteral	value: 1	type: const int
+                                    BinaryExpr	 op: eq	 DataType: int
+                                        FuncCallNode	funcName: func	 funcType: int(int)	scope: 0
+                                            FuncCallParamsNode
+                                                IntegerLiteral	value: 40	type: const int
+                                        IntegerLiteral	value: 1	type: const int
+                                BinaryExpr	 op: eq	 DataType: int
+                                    FuncCallNode	funcName: func	 funcType: int(int)	scope: 0
+                                        FuncCallParamsNode
+                                            IntegerLiteral	value: 1	type: const int
+                                    IntegerLiteral	value: 1	type: const int
+                            AssignStmt
+                                Id	name: i	scope: 2	type: int
+                                IntegerLiteral	value: 0	type: const int
+                            AssignStmt
+                                Id	name: i	scope: 2	type: int
+                                IntegerLiteral	value: 1	type: const int
+                    ReturnStmt
+                        IntegerLiteral	value: 0	type: const int
