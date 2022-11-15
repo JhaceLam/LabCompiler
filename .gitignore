@@ -5,3 +5,6 @@ Lab4_Lexer/test
 Lab5_Parser/build
 Lab5_Parser/myTestFile
 Lab5_Parser/test
+Lab6_TypeChkCodeGnr/build
+Lab6_TypeChkCodeGnr/test
+Lab6_TypeChkCodeGnr/myTestFile
