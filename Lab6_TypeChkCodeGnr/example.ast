@@ -1,0 +1,174 @@
+program
+    DeclStmt
+        ConstDefNode
+            Const Id	name: a1	scope: 0	type: i32
+            IntegerLiteral	value: 10	type: i32
+    DeclStmt
+        DefNode
+            Id	name: a2	scope: 0	type: [5 x i32]
+                ConstArrayIndexNode:
+                    IntegerLiteral	value: 5	type: i32
+            ConstArrayInitValNode	type: [5 x i32]
+                Const Id	name: a1	scope: 0	type: i32
+                IntegerLiteral	value: 2	type: i32
+                IntegerLiteral	value: 3	type: i32
+                IntegerLiteral	value: 0	type: i32
+                IntegerLiteral	value: 0	type: i32
+    DeclStmt
+        DefNode
+            Id	name: a3	scope: 0	type: [5 x i32]
+                ConstArrayIndexNode:
+                    IntegerLiteral	value: 5	type: i32
+            ConstArrayInitValNode	type: [5 x i32]
+                IntegerLiteral	value: 0	type: i32
+                IntegerLiteral	value: 0	type: i32
+                IntegerLiteral	value: 0	type: i32
+                IntegerLiteral	value: 0	type: i32
+                IntegerLiteral	value: 0	type: i32
+    DeclStmt
+        DefNode
+            Id	name: a4	scope: 0	type: [2 x [3 x i32]]
+                ConstArrayIndexNode:
+                    IntegerLiteral	value: 2	type: i32
+                    IntegerLiteral	value: 3	type: i32
+            ConstArrayInitValNode	type: [2 x [3 x i32]]
+                ConstArrayInitValNode	type: [3 x i32]
+                    Id	name: a2	scope: 0	type: [5 x i32]
+                        ConstArrayIndexNode:
+                            IntegerLiteral	value: 1	type: i32
+                    IntegerLiteral	value: 2	type: i32
+                    IntegerLiteral	value: 0	type: i32
+                ConstArrayInitValNode	type: [3 x i32]
+                    IntegerLiteral	value: 0	type: i32
+                    IntegerLiteral	value: 0	type: i32
+                    IntegerLiteral	value: 0	type: i32
+    DeclStmt
+        ConstDefNode
+            Const Id	name: a5	scope: 0	type: [2 x [2 x [3 x i32]]]
+                ConstArrayIndexNode:
+                    IntegerLiteral	value: 2	type: i32
+                    IntegerLiteral	value: 2	type: i32
+                    IntegerLiteral	value: 3	type: i32
+            ConstArrayInitValNode	type: [2 x [2 x [3 x i32]]]
+                ConstArrayInitValNode	type: [2 x [3 x i32]]
+                    ConstArrayInitValNode	type: [3 x i32]
+                        IntegerLiteral	value: 0	type: i32
+                        IntegerLiteral	value: 0	type: i32
+                        IntegerLiteral	value: 0	type: i32
+                    ConstArrayInitValNode	type: [3 x i32]
+                        IntegerLiteral	value: 0	type: i32
+                        IntegerLiteral	value: 0	type: i32
+                        IntegerLiteral	value: 0	type: i32
+                ConstArrayInitValNode	type: [2 x [3 x i32]]
+                    ConstArrayInitValNode	type: [3 x i32]
+                        IntegerLiteral	value: 0	type: i32
+                        IntegerLiteral	value: 0	type: i32
+                        IntegerLiteral	value: 0	type: i32
+                    ConstArrayInitValNode	type: [3 x i32]
+                        IntegerLiteral	value: 0	type: i32
+                        IntegerLiteral	value: 0	type: i32
+                        IntegerLiteral	value: 0	type: i32
+    DeclStmt
+        DefNode
+            Id	name: a6	scope: 0	type: f32
+            Const Id	name: a5	scope: 0	type: [2 x [2 x [3 x i32]]]
+                ConstArrayIndexNode:
+                    IntegerLiteral	value: 0	type: i32
+                    IntegerLiteral	value: 1	type: i32
+                    IntegerLiteral	value: 2	type: i32
+    FunctionDefine function name: @fun1, type: void()
+        CompoundStmt
+            ReturnStmt
+    FunctionDefine function name: @fun2, type: i32(f32, i32, [10 x f32]*)
+        DeclStmt
+            DefNode
+                Id	name: %t9	scope: 1	type: f32
+            DefNode
+                Id	name: %t11	scope: 1	type: i32
+            DefNode
+                Id	name: %t13	scope: 1	type: [10 x f32]*
+        CompoundStmt
+            ExprStmt
+                FuncCallNode	funcName: @fun1	 funcType: void()	scope: 0
+            ReturnStmt
+                BinaryExpr	 op: sub	 DataType: f32
+                    BinaryExpr	 op: star	 DataType: f32
+                        Id	name: %t9	scope: 1	type: f32
+                        Id	name: %t11	scope: 1	type: i32
+                    Id	name: %t13	scope: 1	type: [10 x f32]*
+                        ConstArrayIndexNode:
+                            IntegerLiteral	value: 0	type: i32
+                            IntegerLiteral	value: 2	type: i32
+    FunctionDefine function name: @main, type: i32()
+        CompoundStmt
+            DeclStmt
+                DefNode
+                    Id	name: a	scope: 2	type: i32
+                    IntegerLiteral	value: 0	type: i32
+            DeclStmt
+                DefNode
+                    Id	name: b	scope: 2	type: i32
+                    IntegerLiteral	value: 0	type: i32
+            DeclStmt
+                DefNode
+                    Id	name: min	scope: 2	type: i32
+                    IntegerLiteral	value: 0	type: i32
+            AssignStmt
+                Id	name: a	scope: 2	type: i32
+                BinaryExpr	 op: add	 DataType: i32
+                    BinaryExpr	 op: add	 DataType: i32
+                        Id	name: a4	scope: 0	type: [2 x [3 x i32]]
+                            ConstArrayIndexNode:
+                                IntegerLiteral	value: 0	type: i32
+                                IntegerLiteral	value: 1	type: i32
+                        Id	name: a2	scope: 0	type: [5 x i32]
+                            ConstArrayIndexNode:
+                                IntegerLiteral	value: 0	type: i32
+                    IntegerLiteral	value: 3	type: i32
+            AssignStmt
+                Id	name: b	scope: 2	type: i32
+                ConstBinaryExpr	 op: add	 DataType: i32
+                    ConstBinaryExpr	 op: add	 DataType: i32
+                        Const Id	name: a5	scope: 0	type: [2 x [2 x [3 x i32]]]
+                            ConstArrayIndexNode:
+                                IntegerLiteral	value: 0	type: i32
+                                IntegerLiteral	value: 1	type: i32
+                                IntegerLiteral	value: 2	type: i32
+                        IntegerLiteral	value: 3	type: i32
+                    IntegerLiteral	value: 4	type: i32
+            IfElseStmt
+                BinaryExpr	 op: less	 DataType: i1
+                    Id	name: a	scope: 2	type: i32
+                    Id	name: b	scope: 2	type: i32
+                AssignStmt
+                    Id	name: min	scope: 2	type: i32
+                    Id	name: a	scope: 2	type: i32
+                AssignStmt
+                    Id	name: min	scope: 2	type: i32
+                    Id	name: b	scope: 2	type: i32
+            DeclStmt
+                DefNode
+                    Id	name: count	scope: 2	type: i32
+                    IntegerLiteral	value: 0	type: i32
+            WhileStmt
+                BinaryExpr	 op: less	 DataType: i1
+                    Id	name: count	scope: 2	type: i32
+                    IntegerLiteral	value: 100	type: i32
+                CompoundStmt
+                    IfStmt
+                        BinaryExpr	 op: less	 DataType: i1
+                            Id	name: count	scope: 2	type: i32
+                            IntegerLiteral	value: 10	type: i32
+                        ContinueStmt
+                    IfStmt
+                        BinaryExpr	 op: great	 DataType: i1
+                            Id	name: count	scope: 2	type: i32
+                            IntegerLiteral	value: 20	type: i32
+                        BreakStmt
+                    AssignStmt
+                        Id	name: count	scope: 2	type: i32
+                        BinaryExpr	 op: add	 DataType: i32
+                            Id	name: count	scope: 2	type: i32
+                            IntegerLiteral	value: 2	type: i32
+            ReturnStmt
+                Id	name: min	scope: 2	type: i32

@@ -19,7 +19,8 @@ class Function
 private:
     std::vector<BasicBlock *> block_list;
     SymbolEntry *sym_ptr;
-    BasicBlock *entry;
+    BasicBlock *entry; // 每个函数都有一个 entry 基本块，它是函数的入口结点。
+    // TODO: 建议设置 exit 基本块，作为函数的出口结点。
     Unit *parent;
 
 public:

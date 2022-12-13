@@ -7,13 +7,20 @@
 class Type;
 class Operand;
 
+typedef union {
+    double numValue;
+    void *arrayValue;
+} valueUnionType;
+
 class SymbolEntry
 {
 private:
-    int kind;
+    int kind; // one of {CONSTANT, VARIABLE, TEMPORARY}
 protected:
     enum {CONSTANT, VARIABLE, TEMPORARY};
-    Type *type;
+    bool sysy;
+    Type *type; // Date type
+    valueUnionType value;
 
 public:
     SymbolEntry(Type *type, int kind);
@@ -24,9 +31,34 @@ public:
     Type* getType() {return type;};
     void setType(Type *type) {this->type = type;};
     virtual std::string toStr() = 0;
+    void setValue(double val) {value.numValue = val; }
+    double getValue() {return value.numValue; }
+    void setArrayValue(void *val) {value.arrayValue = val; }
+    void *getArrayValue() {return value.arrayValue; }
     // You can add any function you need here.
 };
 
+// symbol table managing identifier symbol entries
+class SymbolTable
+{
+private:
+    std::map<std::string, SymbolEntry*> symbolTable;
+    SymbolTable *prev;
+    int level;
+    static int counter;
+public:
+    SymbolTable();
+    SymbolTable(SymbolTable *prev);
+    bool install(std::string name, SymbolEntry* entry);
+    SymbolEntry* lookup(std::string name);
+    SymbolTable* getPrev() {return prev;};
+    int getLevel() {return level;};
+    static int getLabel() {return counter++; };
+    static int getCounter() {return counter; }
+};
+
+extern SymbolTable *identifiers;
+extern SymbolTable *globals;
 
 /*  
     Symbol entry for literal constant. Example:
@@ -37,13 +69,10 @@ public:
 */
 class ConstantSymbolEntry : public SymbolEntry
 {
-private:
-    int value;
-
 public:
-    ConstantSymbolEntry(Type *type, int value);
+    ConstantSymbolEntry(Type *type, double value = 0);
+    ConstantSymbolEntry(Type *type, void *arrayValue);
     virtual ~ConstantSymbolEntry() {};
-    int getValue() const {return value;};
     std::string toStr();
     // You can add any function you need here.
 };
@@ -78,10 +107,17 @@ private:
     std::string name;
     int scope;
     Operand *addr;  // The address of the identifier.
+    int label;
+    int paramNo;             // Used when being FuncFParam, otherwise = -1
+    int commonParamNo;       // Used when being FuncFParam
+    int stackParamNo;        // Used when being FuncFParam
+    int intParamCount;       // Used when being FuncDef
+    int floatParamCount;     // Used when being FuncDef 
     // You can add any field you need here.
 
 public:
-    IdentifierSymbolEntry(Type *type, std::string name, int scope);
+    IdentifierSymbolEntry(Type *type, std::string name, int scope, int paramNo = -1);
+    IdentifierSymbolEntry(Type *type, std::string name, int scope, int paramNo, bool sysy);
     virtual ~IdentifierSymbolEntry() {};
     std::string toStr();
     bool isGlobal() const {return scope == GLOBAL;};
@@ -90,6 +126,17 @@ public:
     int getScope() const {return scope;};
     void setAddr(Operand *addr) {this->addr = addr;};
     Operand* getAddr() {return addr;};
+    int getLabel() {return label; }
+    void setLabel() {label = SymbolTable::getLabel(); }
+    int getParamNo() {return paramNo; }
+    int getCommonParamNo() {return commonParamNo; }
+    void setCommonParamNo(int no) {commonParamNo = no; }
+    int getStackParamNo() {return stackParamNo; }
+    void setStackParamNo(int no) {stackParamNo = no; }
+    int getIntParamCount() {return intParamCount; }
+    void setIntParamCount(int no) {intParamCount = no; }
+    int getFloatParamCount() {return floatParamCount; }
+    void setFloatParamCount(int no) {floatParamCount = no; }
     // You can add any function you need here.
 };
 
@@ -115,7 +162,7 @@ public:
 class TemporarySymbolEntry : public SymbolEntry
 {
 private:
-    int label;
+    int label; // the number following t, like '1' in 't1'
 public:
     TemporarySymbolEntry(Type *type, int label);
     virtual ~TemporarySymbolEntry() {};
@@ -123,26 +170,5 @@ public:
     int getLabel() const {return label;};
     // You can add any function you need here.
 };
-
-// symbol table managing identifier symbol entries
-class SymbolTable
-{
-private:
-    std::map<std::string, SymbolEntry*> symbolTable;
-    SymbolTable *prev;
-    int level;
-    static int counter;
-public:
-    SymbolTable();
-    SymbolTable(SymbolTable *prev);
-    void install(std::string name, SymbolEntry* entry);
-    SymbolEntry* lookup(std::string name);
-    SymbolTable* getPrev() {return prev;};
-    int getLevel() {return level;};
-    static int getLabel() {return counter++;};
-};
-
-extern SymbolTable *identifiers;
-extern SymbolTable *globals;
 
 #endif

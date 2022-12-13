@@ -1,13 +1,38 @@
+const int a1 = 10;
+int a2[5] = {a1, 2, 3};
+int a3[5];
+int a4[2][3] = {{a2[1], 2}, {}};
+const int a5[2][2][3] = {};
+float a6 = a5[0][1][2];
+
+void fun1()
+{
+    return;
+}
+
+int fun2(float x1, int x2, float x3[][10])
+{
+    fun1();
+    return x1 * x2 - x3[0][2];
+}
+
 int main()
 {
     int a;
     int b;
     int min;
-    a = 1 + 2 + 3;
-    b = 2 + 3 + 4;
+    a = a4[0][1] + a2[0] + 3;
+    b = a5[0][1][2] + 3 + 4;
     if (a < b)
         min = a;
     else
         min = b;
+    int count = 0;
+    while (count < 100)
+    {
+        if (count < 10) continue;
+        if (count > 20) break;
+        count = count + 2;
+    }
     return min;
 }

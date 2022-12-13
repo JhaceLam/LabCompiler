@@ -24,7 +24,7 @@ public:
 protected:
     unsigned instType;
     unsigned opcode;
-    Instruction *prev;
+    Instruction *prev; // 指令列表由双向循环链表来表示
     Instruction *next;
     BasicBlock *parent;
     std::vector<Operand*> operands;

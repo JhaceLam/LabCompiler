@@ -111,7 +111,7 @@ class SeqNode : public StmtNode
 private:
     StmtNode *stmt1, *stmt2;
 public:
-    SeqNode(StmtNode *stmt1, StmtNode *stmt2) : stmt1(stmt1), stmt2(stmt2){};
+    SeqNode(StmtNode *stmt1, StmtNode *stmt2) : stmt1( ), stmt2(stmt2){};
     void output(int level);
 };
 

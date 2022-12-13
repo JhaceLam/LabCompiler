@@ -12,7 +12,7 @@ class BasicBlock
 
 private:
     std::vector<BasicBlock *> pred, succ;
-    Instruction *head;
+    Instruction *head; // 基本块中的指令列表用双向循环链表来表示
     Function *parent;
     int no;
 

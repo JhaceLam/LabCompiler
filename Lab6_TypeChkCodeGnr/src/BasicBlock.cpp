@@ -88,9 +88,9 @@ BasicBlock::~BasicBlock()
         inst = inst->getNext();
         delete t;
     }
-    for(auto &bb:pred)
+    for(auto &bb : pred)
         bb->removeSucc(this);
-    for(auto &bb:succ)
+    for(auto &bb : succ)
         bb->removePred(this);
     parent->remove(this);
 }

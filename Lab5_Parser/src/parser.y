@@ -35,7 +35,7 @@
 %token RETURN
 
 %nterm <stmttype> Stmts Stmt AssignStmt BlockStmt IfStmt ReturnStmt DeclStmt
-%nterm <stmttype> FuncDef FuncParams FuncParam FuncRParams
+%nterm <stmttype> FuncDef FuncFParams FuncFParam FuncRParams
 %nterm <exprtype> Exp AddExp Cond LOrExp PrimaryExp LVal RelExp LAndExp StarExp UnaryExp
 %nterm <exprtype> ConstExp
 %nterm <type> Type
@@ -361,7 +361,7 @@ FuncDef //函数定义
         identifiers->install($2, se);
         identifiers = new SymbolTable(identifiers);
     }
-    LPAREN FuncParams {
+    LPAREN FuncFParams {
             SymbolEntry *se;
             se = identifiers->lookup($2);
             assert(se != nullptr);
@@ -594,7 +594,7 @@ ConstDefList
         $$ = node;
     }
     ;
-FuncParam //函数只有一个参数
+FuncFParam //函数只有一个参数
     :
     Type ID {
         SymbolEntry *se = new IdentifierSymbolEntry($1, $2, identifiers->getLevel());
@@ -691,15 +691,15 @@ FuncParam //函数只有一个参数
         $$ = new DefNode(id, nullptr, true);
     }
     ;
-FuncParams //函数有多个参数
+FuncFParams //函数有多个参数
     :
-    FuncParams COMMA FuncParam {
+    FuncFParams COMMA FuncFParam {
         FuncDefParamsNode* node = (FuncDefParamsNode*)$1;
         node->append( ( (DefNode*)$3 )->getId() );
         $$ = node;
     }
     |
-    FuncParam {
+    FuncFParam {
         FuncDefParamsNode* node = new FuncDefParamsNode();
         node->append( ( (DefNode*)$1 )->getId() );
         $$ = node;

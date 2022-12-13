@@ -1,4 +1,5 @@
 #include "SymbolTable.h"
+#include "Type.h"
 #include <iostream>
 #include <sstream>
 
@@ -6,29 +7,57 @@ SymbolEntry::SymbolEntry(Type *type, int kind)
 {
     this->type = type;
     this->kind = kind;
+    this->value.numValue = 0;
 }
 
-ConstantSymbolEntry::ConstantSymbolEntry(Type *type, int value) : SymbolEntry(type, SymbolEntry::CONSTANT)
+ConstantSymbolEntry::ConstantSymbolEntry(Type *type, double value) : SymbolEntry(type, SymbolEntry::CONSTANT)
 {
-    this->value = value;
+    this->value.numValue = value;
+}
+
+ConstantSymbolEntry::ConstantSymbolEntry(Type *type, void *arrayValue) : SymbolEntry(type, SymbolEntry::CONSTANT)
+{
+    this->value.arrayValue = arrayValue;
 }
 
 std::string ConstantSymbolEntry::toStr()
 {
     std::ostringstream buffer;
-    buffer << value;
+    if (type->isInt()) buffer << (int)value.numValue;
+    else if (type->isFloat()) buffer << value.numValue;
+    else buffer << value.arrayValue;
     return buffer.str();
 }
 
-IdentifierSymbolEntry::IdentifierSymbolEntry(Type *type, std::string name, int scope) : SymbolEntry(type, SymbolEntry::VARIABLE), name(name)
+IdentifierSymbolEntry::IdentifierSymbolEntry(Type *type, std::string name, int scope, int paramNo) 
+    : SymbolEntry(type, SymbolEntry::VARIABLE), name(name), paramNo(paramNo), commonParamNo(0), floatParamCount(0)
 {
     this->scope = scope;
+    this->paramNo = paramNo;
+    this->label = -1;
+    addr = nullptr;
+}
+
+IdentifierSymbolEntry::IdentifierSymbolEntry(Type *type, std::string name, int scope, int paramNo, bool sysy)
+    : SymbolEntry(type, SymbolEntry::VARIABLE), name(name), paramNo(paramNo)
+{
+    this->scope = scope;
+    this->label = -1;
     addr = nullptr;
 }
 
 std::string IdentifierSymbolEntry::toStr()
 {
-    return "@" + name;
+    std::ostringstream buffer;
+    if (label < 0) {
+        if (type->isFunc()) {
+            buffer << '@';
+        }
+        buffer << name;
+    } else {
+        buffer << "%t" << label;
+    }
+    return buffer.str();
 }
 
 TemporarySymbolEntry::TemporarySymbolEntry(Type *type, int label) : SymbolEntry(type, SymbolEntry::TEMPORARY)
@@ -71,13 +100,30 @@ SymbolTable::SymbolTable(SymbolTable *prev)
 SymbolEntry* SymbolTable::lookup(std::string name)
 {
     // Todo
-    return nullptr;
+    std::map<std::string, SymbolEntry*>::iterator findResult;
+    SymbolTable *current = this;
+    while ((findResult = current->symbolTable.find(name)) == current->symbolTable.end()) {
+        current = current->prev;
+        if (current == nullptr) {
+            break;
+        }
+    }
+
+    if (current == nullptr) {
+        return nullptr;
+    } else {
+        return findResult->second;
+    }
 }
 
 // install the entry into current symbol table.
-void SymbolTable::install(std::string name, SymbolEntry* entry)
+bool SymbolTable::install(std::string name, SymbolEntry* entry)
 {
+    if (symbolTable.find(name) != symbolTable.end()) {
+        return false;
+    } 
     symbolTable[name] = entry;
+    return true;
 }
 
 int SymbolTable::counter = 0;
