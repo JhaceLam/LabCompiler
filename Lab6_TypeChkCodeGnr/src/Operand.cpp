@@ -5,7 +5,11 @@
 
 std::string Operand::toStr() const
 {
-    return se->toStr();
+    std::string res = se->toStr();
+    if (se->isVariable() && dynamic_cast<IdentifierSymbolEntry *>(se)->isGlobal()) {
+        res = "@" + res;
+    }
+    return res;
 }
 
 void Operand::removeUse(Instruction *inst)

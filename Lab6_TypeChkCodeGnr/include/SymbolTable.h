@@ -3,13 +3,15 @@
 
 #include <string>
 #include <map>
+#include <iostream>
 
 class Type;
 class Operand;
+class Function;
 
 typedef union {
     double numValue;
-    void *arrayValue;
+    double *arrayValue;
 } valueUnionType;
 
 class SymbolEntry
@@ -18,9 +20,10 @@ private:
     int kind; // one of {CONSTANT, VARIABLE, TEMPORARY}
 protected:
     enum {CONSTANT, VARIABLE, TEMPORARY};
-    bool sysy;
     Type *type; // Date type
+    int label;
     valueUnionType value;
+    SymbolEntry *nextFuncSe; // For function overload
 
 public:
     SymbolEntry(Type *type, int kind);
@@ -31,10 +34,14 @@ public:
     Type* getType() {return type;};
     void setType(Type *type) {this->type = type;};
     virtual std::string toStr() = 0;
+    int getLabel() const {return label; }
     void setValue(double val) {value.numValue = val; }
     double getValue() {return value.numValue; }
-    void setArrayValue(void *val) {value.arrayValue = val; }
-    void *getArrayValue() {return value.arrayValue; }
+    void setArrayValue(double *val) {value.arrayValue = val; }
+    double *getArrayValue() {return value.arrayValue; }
+    bool setNextFuncSe(SymbolEntry *se);
+    SymbolEntry *getNextFuncSe() {return nextFuncSe; }
+    static std::string getHexString(double val);
     // You can add any function you need here.
 };
 
@@ -54,6 +61,7 @@ public:
     SymbolTable* getPrev() {return prev;};
     int getLevel() {return level;};
     static int getLabel() {return counter++; };
+    static void resetLabel() {counter = 0; };
     static int getCounter() {return counter; }
 };
 
@@ -71,7 +79,7 @@ class ConstantSymbolEntry : public SymbolEntry
 {
 public:
     ConstantSymbolEntry(Type *type, double value = 0);
-    ConstantSymbolEntry(Type *type, void *arrayValue);
+    ConstantSymbolEntry(Type *type, double *arrayValue);
     virtual ~ConstantSymbolEntry() {};
     std::string toStr();
     // You can add any function you need here.
@@ -107,17 +115,19 @@ private:
     std::string name;
     int scope;
     Operand *addr;  // The address of the identifier.
-    int label;
     int paramNo;             // Used when being FuncFParam, otherwise = -1
     int commonParamNo;       // Used when being FuncFParam
     int stackParamNo;        // Used when being FuncFParam
     int intParamCount;       // Used when being FuncDef
     int floatParamCount;     // Used when being FuncDef 
+    bool fromSysYLib;
+    bool useZeroinitializer;
+    int givenInitValNum;
+    Function *func = nullptr;
     // You can add any field you need here.
 
 public:
     IdentifierSymbolEntry(Type *type, std::string name, int scope, int paramNo = -1);
-    IdentifierSymbolEntry(Type *type, std::string name, int scope, int paramNo, bool sysy);
     virtual ~IdentifierSymbolEntry() {};
     std::string toStr();
     bool isGlobal() const {return scope == GLOBAL;};
@@ -126,7 +136,6 @@ public:
     int getScope() const {return scope;};
     void setAddr(Operand *addr) {this->addr = addr;};
     Operand* getAddr() {return addr;};
-    int getLabel() {return label; }
     void setLabel() {label = SymbolTable::getLabel(); }
     int getParamNo() {return paramNo; }
     int getCommonParamNo() {return commonParamNo; }
@@ -137,6 +146,14 @@ public:
     void setIntParamCount(int no) {intParamCount = no; }
     int getFloatParamCount() {return floatParamCount; }
     void setFloatParamCount(int no) {floatParamCount = no; }
+    void setFromSysYLib() {fromSysYLib = true; }
+    int getFromSysYLib() {return fromSysYLib; }
+    bool getUseZeroinitializer() {return useZeroinitializer; }
+    void setUseZeroinitializer(bool val = true) {useZeroinitializer = val; }
+    int getGivenInitValNum() {return givenInitValNum; }
+    void setGivenInitValNum(int val) {givenInitValNum = val; }
+    Function *getFunction() { return func; }
+    void setFunction(Function *func) { this->func = func; }
     // You can add any function you need here.
 };
 
@@ -162,13 +179,15 @@ public:
 class TemporarySymbolEntry : public SymbolEntry
 {
 private:
-    int label; // the number following t, like '1' in 't1'
+    
 public:
     TemporarySymbolEntry(Type *type, int label);
     virtual ~TemporarySymbolEntry() {};
     std::string toStr();
-    int getLabel() const {return label;};
     // You can add any function you need here.
 };
+
+void Marker(int val = 0);
+void Marker(std::string s);
 
 #endif

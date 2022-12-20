@@ -3,18 +3,22 @@
 
 IntType TypeSystem::commonInt = IntType(32, false);
 IntType TypeSystem::commonBool = IntType(1, false);
+IntType TypeSystem::commonInt8 = IntType(8, false);
 FloatType TypeSystem::commonFloat = FloatType(32, false);
 VoidType TypeSystem::commonVoid = VoidType();
 IntType TypeSystem::commonConstInt = IntType(32, true);
 IntType TypeSystem::commonConstBool = IntType(1, true);
+IntType TypeSystem::commonConstInt8 = IntType(8, true);
 FloatType TypeSystem::commonConstFloat = FloatType(32, true);
 
 Type* TypeSystem::intType = &commonInt;
 Type* TypeSystem::voidType = &commonVoid;
 Type* TypeSystem::boolType = &commonBool;
+Type* TypeSystem::int8Type = &commonInt8;
 Type* TypeSystem::floatType = &commonFloat;
 Type* TypeSystem::constIntType = &commonConstInt;
 Type* TypeSystem::constBoolType = &commonConstBool;
+Type* TypeSystem::constInt8Type = &commonConstInt8;
 Type* TypeSystem::constFloatType = &commonConstFloat;
 
 bool Type::isIntFamily()
@@ -26,6 +30,15 @@ bool Type::isIntFamily()
     return currentType->isInt();
 }
 
+bool Type::isFloatFamily()
+{
+    Type *currentType = this;
+    while (currentType != nullptr && currentType->isArray()) {
+        currentType = dynamic_cast<ArrayType *>(currentType)->getElementType();
+    }
+    return currentType->isFloat();
+}
+
 std::string IntType::toStr()
 {
     std::ostringstream buffer;
@@ -35,9 +48,7 @@ std::string IntType::toStr()
 
 std::string FloatType::toStr()
 {
-    std::ostringstream buffer;
-    buffer << "f" << size;
-    return buffer.str();
+    return "float";
 }
 
 int VoidType::getSize() {
@@ -176,4 +187,53 @@ std::string StringType::toStr() {
 Type *StringType::deepCopy() {
     fprintf(stderr, "Error : StringType::deepCopy() has not been implemented.\n");
     return new StringType(this->length);
+}
+
+bool IntType::sameType(Type *type) {
+    return type->isInt();
+}
+
+bool FloatType::sameType(Type *type) {
+    return type->isFloat();
+}
+
+bool VoidType::sameType(Type *type) {
+    return type->isVoid();
+}
+
+bool ArrayType::sameType(Type *type) {
+    if (!type->isArray()) {
+        return false;
+    }
+    return elementType->sameType(dynamic_cast<ArrayType *>(type)->getElementType());
+}
+
+bool PointerType::sameType(Type *type) {
+    if (!type->isPtr()) {
+        return false;
+    }
+    return valueType->sameType(dynamic_cast<PointerType *>(type)->getValueType());
+}
+
+bool FunctionType::sameParamsType(std::vector<Type *> cmpParamsType) {
+    if (paramsType.size() != cmpParamsType.size()) {
+        return false;
+    }
+    for (int i = 0; i < (int)paramsType.size(); i++) {
+        if (!paramsType[i]->sameType(cmpParamsType[i])) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool FunctionType::sameType(Type *type) {
+    if (!type->isFunc()) {
+        return false;
+    }
+    FunctionType *cmpType = dynamic_cast<FunctionType *>(type);
+    if (!returnType->sameType(cmpType->getRetType())) {
+        return false;
+    }
+    return sameParamsType(cmpType->getParamsType());
 }

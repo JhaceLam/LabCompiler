@@ -145,3 +145,14 @@ clean-test:
 clean-all:clean-test clean-app
 
 clean:clean-all
+
+myTestRun: myTestFile/test.cpp
+	g++ myTestFile/test.cpp -o myTestFile/test
+	myTestFile/test
+
+myTestGenLL: myTestFile/test.c
+	clang -S -emit-llvm myTestFile/test.c -o myTestFile/test.ll
+
+myTestRunLL: myTestFile/test.ll
+	clang myTestFile/test.ll -o myTestFile/test.out
+	myTestFile/test.out

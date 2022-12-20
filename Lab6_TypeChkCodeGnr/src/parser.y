@@ -13,10 +13,12 @@
     int lbraceCount = 0;
     int idx;
     double *initArrayValue; 
+    int givenInitValNum = 0;
     int intParamNo;
     int floatParamNo;
     int stackParamNo;
     std::stack<StmtNode *> whileStack;
+    FunctionType *lastDefFuncType;
 }
 
 %code requires {
@@ -85,7 +87,8 @@ VarDef
     ID {
         SymbolEntry *se = new IdentifierSymbolEntry(declType, $1, identifiers->getLevel());
         if (!identifiers->install($1, se)) {
-            fprintf(stderr, "Error: conflicting declaration of identifier %s\n", $1);
+            fprintf(stderr, "Error: conflicting declaration of identifier %s\n", (char*)$1);
+            assert(identifiers->install($1, se) != false);
         }
         ExprNode *initVal;
         if (declType->isInt()) {
@@ -102,9 +105,11 @@ VarDef
         SymbolEntry *se = new IdentifierSymbolEntry(declType, $1, identifiers->getLevel());
         if (!identifiers->install($1, se)) {
             fprintf(stderr, "Error: conflicting declaration of identifier %s\n", $1);
+            assert(identifiers->install($1, se) != false);
         }
+        se->setValue($3->getValue());
         $$ = new DefNode(new Id(se), $3);
-
+        
         delete []$1;
     }
     |
@@ -129,16 +134,18 @@ VarDef
         memset(initArrayValue, 0, initArrayType->getSize() / declType->getSize() * sizeof(double));
         SymbolEntry *seForInitVal = new ConstantSymbolEntry(initArrayType, initArrayValue);
         InitValNode *initValNode = new InitValNode(seForInitVal);
-        initValNode->fill();
+        // initValNode->fill();
+        initValNode->setUseZeroinitializer();
 
         Type *seType = initArrayType->deepCopy();
         SymbolEntry* se = new IdentifierSymbolEntry(seType, $1, identifiers->getLevel());
         se->setArrayValue(initArrayValue);
+        dynamic_cast<IdentifierSymbolEntry *>(se)->setUseZeroinitializer();
         if (!identifiers->install($1, se)) {
             fprintf(stderr, "Error: conflicting declaration of identifier %s\n", $1);
+            assert(identifiers->install($1, se) != false);
         }
-        Id *id = new Id(se, dynamic_cast<ArrayIndexNode *>($2));
-        $$ = new DefNode(id, initValNode);
+        $$ = new DefNode(new Id(se), initValNode);
   
         delete []$1;
     }
@@ -172,12 +179,19 @@ VarDef
         se->setArrayValue(initArrayValue);
         if (!identifiers->install($1, se)) {
             fprintf(stderr, "Error: conflicting declaration of identifier %s\n", $1);
+            assert(identifiers->install($1, se) != false);
         }
         $<se>$ = se;
+        givenInitValNum = 0;
     } 
     InitVal {
-        Id *id = new Id($<se>4, dynamic_cast<ArrayIndexNode *>($2));
-        $$ = new DefNode(id, $5);
+        $<se>4->setArrayValue(initArrayValue);
+        if (dynamic_cast<InitValNode *>($5)->getUseZeroinitializer()) {
+            dynamic_cast<IdentifierSymbolEntry *>($<se>4)->setUseZeroinitializer();
+        }
+        dynamic_cast<IdentifierSymbolEntry *>($<se>4)->setGivenInitValNum(givenInitValNum);
+
+        $$ = new DefNode(new Id($<se>4), $5);
 
         delete []$1;
     }
@@ -207,6 +221,7 @@ ConstDef
         if (!identifiers->install($1, se)) {
             fprintf(stderr, "Error: conflicting declaration of identifier %s\n", $1);
         }
+        se->setValue($3->getValue());
         $$ = new DefNode(new Id(se), $3);
 
         delete []$1;
@@ -244,14 +259,19 @@ ConstDef
             fprintf(stderr, "Error: conflicting declaration of identifier %s\n", $1);
         }
         $<se>$ = se;
+        givenInitValNum = 0;
     } 
     InitVal {
-        if (!($5->getType()->isConst())) {
+        if (!dynamic_cast<InitValNode *>($5)->getUseZeroinitializer() && !($5->getType()->isConst())) {
             fprintf(stderr, "Error in ConstDef -> ID ConstArrayIndex ASSIGN ConstInitVal : not ConstInitVal\n");
         }
 
-        Id *id = new Id($<se>4, dynamic_cast<ArrayIndexNode *>($2));
-        $$ = new DefNode(id, $5);
+        if (dynamic_cast<InitValNode *>($5)->getUseZeroinitializer()) {
+            dynamic_cast<IdentifierSymbolEntry *>($<se>4)->setUseZeroinitializer();
+        }
+        dynamic_cast<IdentifierSymbolEntry *>($<se>4)->setGivenInitValNum(givenInitValNum);
+
+        $$ = new DefNode(new Id($<se>4), $5);
 
         delete []$1;
     }
@@ -303,15 +323,20 @@ AssignStmt
     }
     ;
 BlockStmt
-    :   LBRACE 
-        {identifiers = new SymbolTable(identifiers);} 
-        Stmts RBRACE 
-        {
-            $$ = new CompoundStmt($3);
-            SymbolTable *top = identifiers;
-            identifiers = identifiers->getPrev();
-            delete top;
-        }
+    :
+    LBRACE {
+        identifiers = new SymbolTable(identifiers);
+    } 
+    Stmts RBRACE {
+        $$ = new CompoundStmt($3);
+        SymbolTable *top = identifiers;
+        identifiers = identifiers->getPrev();
+        delete top;
+    }
+    |
+    LBRACE RBRACE {
+        $$ = new EmptyStmt();
+    }
     ;
 IfStmt
     : IF LPAREN Cond RPAREN Stmt %prec THEN {
@@ -324,11 +349,33 @@ IfStmt
 ReturnStmt
     :
     RETURN Exp SEMICOLON{
-        $$ = new ReturnStmt($2);
+        if (lastDefFuncType->getRetType()->isVoid()) {
+            fprintf(stderr, "Error : return-statement with a value, in function returning \'void\'.\n");
+            $$ = new ReturnStmt(nullptr);
+        } else {
+            Type *exprType = $2->getFormedType();
+            if (exprType->sameType(lastDefFuncType->getRetType())) {
+                $$ = new ReturnStmt($2);
+            } else if ((exprType->isFloat() && lastDefFuncType->getRetType()->isInt()) ||
+                (exprType->isInt() && lastDefFuncType->getRetType()->isFloat())) {
+                    ImplicitCastExpr* tempExpr = new ImplicitCastExpr($2, lastDefFuncType->getRetType());
+                    $$ = new ReturnStmt(tempExpr);
+            } else {
+                fprintf(stderr, "Error : return-statement with type \'%s\', in function returning \'%s\'.\n", 
+                    exprType->toStr().c_str(), lastDefFuncType->getRetType()->toStr().c_str());
+                assert(false);
+            }
+            
+        }
     }
     |
     RETURN SEMICOLON {
-        $$ = new ReturnStmt(nullptr);
+        if (!lastDefFuncType->getRetType()->isVoid()) {
+            fprintf(stderr, "Error : return-statement with no value, in function returning \'%s\'.\n", lastDefFuncType->getRetType()->toStr().c_str());
+            assert(lastDefFuncType->getRetType()->isVoid());
+        } else {
+            $$ = new ReturnStmt(nullptr);
+        }
     }
     ;
 Exp
@@ -517,6 +564,7 @@ ConstDeclStmt
 FuncDef
     :
     Type ID {
+        SymbolTable::resetLabel();
         identifiers = new SymbolTable(identifiers);
 
         intParamNo = 0;
@@ -534,6 +582,7 @@ FuncDef
         }
         
         Type *funcType = new FunctionType($1, paramsType, paramsSe);
+        lastDefFuncType = dynamic_cast<FunctionType *>(funcType);
         SymbolEntry* se;
         se = new IdentifierSymbolEntry(funcType, $2, identifiers->getPrev()->getLevel());
         dynamic_cast<IdentifierSymbolEntry *>(se)->setIntParamCount(intParamNo);
@@ -573,14 +622,18 @@ UnaryExp
     ID LPAREN FuncRParams RPAREN {
         SymbolEntry *se;
         se = identifiers->lookup($1);
-        if(se == nullptr)
-        {
-            fprintf(stderr, "identifier \"%s\" is undefined\n", (char*)$1);
+        if(se == nullptr) {
+            fprintf(stderr, "identifier \"%s\" has not been defined.\n", (char*)$1);
+            delete [](char*)$1;
+            assert(se != nullptr);
+        }
+        if (!se->getType()->isFunc()) {
+            fprintf(stderr, "function \"%s\" has not been defined.\n", (char*)$1);
             delete [](char*)$1;
             assert(se != nullptr);
         }
 
-        $$ = new FuncCallNode(se, dynamic_cast<FuncCallParamsNode *>($3));
+        $$ = new FuncCallExpr(se, dynamic_cast<FuncCallParamsNode *>($3));
     }
     |
     ADD UnaryExp {
@@ -588,28 +641,28 @@ UnaryExp
     }
     |   
     SUB UnaryExp {
-        Type *type = $2->getType();
-        if (type->isInt() && dynamic_cast<IntType *>(type)->getSize() == 1) {
-            if (type->isConst()) {  
-                type = TypeSystem::constIntType;
-            } else {
-                type = TypeSystem::intType;
-            }
+        Type *type = $2->getFormedType();
+        Type *exprType;
+        if (type->isInt()) {
+            exprType = type->isConst() ? TypeSystem::constIntType : TypeSystem::intType;
+        } else if (type->isFloat()) {
+            exprType = type->isConst() ? TypeSystem::constFloatType : TypeSystem::floatType;
         }
-        SymbolEntry *tmp = new TemporarySymbolEntry(type, SymbolTable::getLabel());
+        SymbolEntry *tmp = new TemporarySymbolEntry(exprType, SymbolTable::getLabel());
         $$ = new UnaryExpr(tmp, UnaryExpr::SUB, $2);
     }
     |   
     NOT UnaryExp {
-        Type *type = $2->getType();
-        if (type->isInt()) {
+        Type *type = $2->getFormedType();
+        Type *exprType;
+        if (type->isInt() || type->isFloat()) {
             if (type->isConst()) {
-                type = TypeSystem::constBoolType;
+                exprType = TypeSystem::constBoolType;
             } else {
-                type = TypeSystem::boolType;
+                exprType = TypeSystem::boolType;
             }
         }
-        SymbolEntry *tmp = new TemporarySymbolEntry(type, SymbolTable::getLabel());
+        SymbolEntry *tmp = new TemporarySymbolEntry(exprType, SymbolTable::getLabel());
         $$ = new UnaryExpr(tmp, UnaryExpr::NOT, $2);
     }
     ;
@@ -624,9 +677,17 @@ InitVal
                 val = (int)val;
             }
             initArrayValue[idx++] = val;
+            givenInitValNum++;
 
             if (!initValNodeStack.top()->getType()->isArray()) {
-                initValNodeStack.top()->append($1);
+                ExprNode *temp = $1;
+                if (initValNodeStack.top()->getType()->isInt() && $1->getType()->isFloat()) {
+                    temp = ImplicitCastExpr::floatToInt(temp);
+                }
+                if (initValNodeStack.top()->getType()->isFloat() && $1->getType()->isInt()) {
+                    temp = ImplicitCastExpr::intToFloat(temp);
+                }
+                initValNodeStack.top()->append(temp);
             } else {
                 ArrayType *arrType = dynamic_cast<ArrayType *>(initValNodeStack.top()->getType());
                 while (arrType) {
@@ -637,7 +698,14 @@ InitVal
                         initValNodeStack.top()->append(node);
                         initValNodeStack.push(node);
                     } else {
-                        initValNodeStack.top()->append($1);
+                        ExprNode *temp = $1;
+                        if (arrType->getElementType()->isInt() && $1->getType()->isFloat()) {
+                            temp = ImplicitCastExpr::floatToInt(temp);
+                        }
+                        if (arrType->getElementType()->isFloat() && $1->getType()->isInt()) {
+                            temp = ImplicitCastExpr::intToFloat(temp);
+                        }
+                        initValNodeStack.top()->append(temp);
                         while (initValNodeStack.top()->isFull() && (int)initValNodeStack.size() != lbraceCount) {
                             initValNodeStack.pop();
                         }
@@ -667,6 +735,7 @@ InitVal
                 initValNodeStack.pop();
             }
         }
+        node->setUseZeroinitializer();
         $$ = node;
 
         if (lbraceCount == 0) {

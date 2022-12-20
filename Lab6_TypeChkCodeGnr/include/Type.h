@@ -25,8 +25,10 @@ public:
     bool isPtr() const { return kind == PTR; };
     bool isArray() const { return kind == ARRAY; };
     bool isIntFamily();
+    bool isFloatFamily();
     int getSize() {return size; }
     virtual Type *deepCopy() = 0;
+    virtual bool sameType(Type *type) = 0;
 };
 
 class IntType : public Type
@@ -38,6 +40,7 @@ public:
         Type(Type::INT, constant) {this->size = size; }
     std::string toStr();
     Type *deepCopy();
+    bool sameType(Type *type);
 };
 
 class FloatType : public Type {
@@ -48,6 +51,7 @@ public:
         Type(Type::FLOAT, constant) {this->size = size; }
     std::string toStr();
     Type *deepCopy();
+    bool sameType(Type *type);
 };
 
 class VoidType : public Type
@@ -57,6 +61,7 @@ public:
     std::string toStr();
     int getSize();
     Type *deepCopy();
+    bool sameType(Type *type);
 };
 
 class FunctionType : public Type
@@ -70,10 +75,12 @@ public:
         Type(Type::FUNC), returnType(returnType), paramsType(paramsType), paramsSe(paramsSe) {};
     Type *getRetType() {return returnType; };
     std::vector<Type *>& getParamsType() {return paramsType; };
-    std::vector<SymbolEntry*>& getParamsSe() {return paramsSe; };
+    std::vector<SymbolEntry *>& getParamsSe() {return paramsSe; };
     std::string toStr();
     int getSize();
     Type *deepCopy();
+    bool sameType(Type *type);
+    bool sameParamsType(std::vector<Type *> cmpParamsType);
 };
 
 class ArrayType : public Type
@@ -90,6 +97,7 @@ public:
     std::string toStr();
     Type *deepCopy();
     void deepSetConst(bool value = true);
+    bool sameType(Type *type);
 };
 
 class PointerType : public Type
@@ -101,6 +109,7 @@ public:
     Type *getValueType() {return valueType; }
     std::string toStr();
     Type *deepCopy();
+    bool sameType(Type *type);
 };
 
 class StringType : public Type {
@@ -112,6 +121,7 @@ public:
     int getLength() const { return length; };
     std::string toStr();
     Type *deepCopy();
+    bool sameType(Type *type) {return true; }
 };
 
 class TypeSystem
@@ -119,18 +129,22 @@ class TypeSystem
 private:
     static IntType commonInt;
     static IntType commonBool;
+    static IntType commonInt8;
     static VoidType commonVoid;
     static FloatType commonFloat;
     static IntType commonConstInt;
     static IntType commonConstBool;
+    static IntType commonConstInt8;
     static FloatType commonConstFloat;
 public:
     static Type *intType;
     static Type *voidType;
     static Type *boolType;
+    static Type* int8Type;
     static Type* floatType;
     static Type* constIntType;
     static Type* constBoolType;
+    static Type* constInt8Type;
     static Type* constFloatType;
 };
 

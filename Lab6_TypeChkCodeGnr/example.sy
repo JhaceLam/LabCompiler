@@ -1,38 +1,18 @@
-const int a1 = 10;
-int a2[5] = {a1, 2, 3};
-int a3[5];
-int a4[2][3] = {{a2[1], 2}, {}};
-const int a5[2][2][3] = {};
-float a6 = a5[0][1][2];
+float a = -3.14;
+int b[4][2][3] = {0, 1, 2, 3, 4, 5};
+float c[4] = {3.14, 4.13, 10};
 
-void fun1()
-{
-    return;
-}
 
-int fun2(float x1, int x2, float x3[][10])
+int idx1 = 3, idx2 = 1, idx3 = 2;
+
+void fun(int arr[][2][3])
 {
-    fun1();
-    return x1 * x2 - x3[0][2];
+	arr[idx1][idx2][idx3] = 20;
+    // int arr[2][3] = {1, 2, 3};
 }
 
 int main()
 {
-    int a;
-    int b;
-    int min;
-    a = a4[0][1] + a2[0] + 3;
-    b = a5[0][1][2] + 3 + 4;
-    if (a < b)
-        min = a;
-    else
-        min = b;
-    int count = 0;
-    while (count < 100)
-    {
-        if (count < 10) continue;
-        if (count > 20) break;
-        count = count + 2;
-    }
-    return min;
+    float temp = 0;
+    temp = temp * -3.14;
 }

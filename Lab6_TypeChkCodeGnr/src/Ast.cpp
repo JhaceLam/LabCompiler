@@ -5,24 +5,32 @@
 #include "IRBuilder.h"
 #include <string>
 #include "Type.h"
+#include <assert.h>
 
 extern FILE *yyout;
+extern Unit unit;
 int Node::counter = 0;
 IRBuilder* Node::builder = nullptr;
 
 Node::Node()
 {
     seq = counter++;
+    typeCheckDone = false;
 }
 
-void Node::backPatch(std::vector<Instruction*> &list, BasicBlock*bb)
+void Node::backPatch(std::vector<Instruction*> &list, BasicBlock* bb, bool setTrueBranch)
 {
-    for(auto &inst:list)
+    for(auto &inst : list)
     {
-        if(inst->isCond())
-            dynamic_cast<CondBrInstruction*>(inst)->setTrueBranch(bb);
-        else if(inst->isUncond())
-            dynamic_cast<UncondBrInstruction*>(inst)->setBranch(bb);
+        if (inst->isCond()) {
+            if (setTrueBranch) {
+                dynamic_cast<CondBrInstruction *>(inst)->setTrueBranch(bb);
+            } else {
+                dynamic_cast<CondBrInstruction *>(inst)->setFalseBranch(bb);
+            }
+        } else if (inst->isUncond()) {
+            dynamic_cast<UncondBrInstruction *>(inst)->setBranch(bb);
+        }
     }
 }
 
@@ -48,26 +56,84 @@ void FunctionDef::genCode()
     // set the insert point to the entry basicblock of this function.
     builder->setInsertBB(entry);
 
-    stmt->genCode();
-
+    if (paramsDecl) {
+        paramsDecl->genCode();
+    }
+    if (stmt) {
+        stmt->genCode();
+    }
+    
     /**
      * Construct control flow graph. You need do set successors and predecessors for each basic block.
      * Todo
     */
-   
-}
+    for (auto block = func->begin(); block != func->end(); block++) {
+        Instruction *rb = (*block)->rbegin(); //rb=head->getPrev()
 
-void UnaryExpr::genCode()
-{
+        // 删除基本块中除最后一条指令之外的跳转指令
+        Instruction *i = (*block)->begin();
+        while (i != rb)
+        {
+            if (i->isCond() || i->isUncond()) {
+                (*block)->remove(i);
+            }
+            i = i->getNext();
+        }
+        
+        bool foundRetInst = false;
+        // 删除返回指令后面的所有指令
+        for(Instruction *temp = (*block)->begin(); temp != (*block)->end(); temp = temp->getNext()) {
+            if (foundRetInst) {
+                (*block)->remove(temp);
+                continue;
+            } 
+            if (temp->isRet()) {
+                foundRetInst = true;
+            }
+        }
 
+        // 1.无条件跳转指令
+        if (rb->isUncond()) {
+            BasicBlock* dst = dynamic_cast<UncondBrInstruction*>(rb)->getBranch();
+            (*block)->addSucc(dst); //后继节点为跳转目标块
+            dst->addPred(*block);
+            continue;
+        }
+
+        // 2.有条件跳转指令
+        if (rb->isCond()) {
+            BasicBlock *truebb = dynamic_cast<CondBrInstruction*>(rb)->getTrueBranch();
+            BasicBlock *falsebb = dynamic_cast<CondBrInstruction*>(rb)->getFalseBranch();
+            (*block)->addSucc(truebb);
+            (*block)->addSucc(falsebb);
+            truebb->addPred(*block);
+            falsebb->addPred(*block);
+            continue;
+        }
+
+        // 3.函数返回指令
+        if (!rb->isRet()) {
+            // 若最后一条指令既不是跳转指令也不是返回指令，则添加一条返回指令
+            Type *retType = dynamic_cast<FunctionType *>(se->getType())->getRetType();
+            if (retType->isVoid()) {
+                new RetInstruction(nullptr, *block);
+            } else if (retType->isInt()) {
+                Operand *constZero = new Operand(new ConstantSymbolEntry(TypeSystem::constIntType, 0.0));
+                new RetInstruction(constZero, *block);
+            } else {
+                Operand *constZero = new Operand(new ConstantSymbolEntry(TypeSystem::constFloatType, 0.0));
+                new RetInstruction(constZero, *block);
+            }
+        }        
+    }
+    
 }
 
 void BinaryExpr::genCode()
 {
     BasicBlock *bb = builder->getInsertBB();
     Function *func = bb->getParent();
-    if (op == AND)
-    {
+    if (op == AND) {
         BasicBlock *trueBB = new BasicBlock(func);  // if the result of lhs is true, jump to the trueBB.
         expr1->genCode();
         backPatch(expr1->trueList(), trueBB);
@@ -76,15 +142,66 @@ void BinaryExpr::genCode()
         true_list = expr2->trueList();
         false_list = merge(expr1->falseList(), expr2->falseList());
     }
-    else if(op == OR)
+    else if(op == OR) {
+        // Todo
+        BasicBlock *falseBB = new BasicBlock(func);
+        expr1->genCode();
+        backPatch(expr1->falseList(), falseBB);
+        builder->setInsertBB(falseBB);
+        expr2->genCode();
+        true_list = merge(expr1->trueList(), expr2->trueList()); 
+        false_list = expr2->falseList();
+    }
+    else if(op >= LESS && op <= NEQ)
     {
         // Todo
+        expr1->genCode();
+        expr2->genCode();
+        Operand *src1 = expr1->getOperand();
+        Operand *src2 = expr2->getOperand();
+        if (src1->getType()->getSize() == 1) {
+            Operand *tempDst = new Operand(new TemporarySymbolEntry(TypeSystem::intType, SymbolTable::getLabel()));
+            new ZextInstruction(tempDst, src1, bb);
+            src1 = tempDst;
+        }
+        if (src2->getType()->getSize() == 1) {
+            Operand *tempDst = new Operand(new TemporarySymbolEntry(TypeSystem::intType, SymbolTable::getLabel()));
+            new ZextInstruction(tempDst, src2, bb);
+            src2 = tempDst;
+        }
+
+        int opcode;
+        switch (op)
+        {
+        case LESS:
+            opcode = CmpInstruction::L;
+            break;
+        case LESSEQ:
+            opcode = CmpInstruction::LE;
+            break;
+        case GREATER:
+            opcode = CmpInstruction::G;
+            break;
+        case GREATEQ:
+            opcode = CmpInstruction::GE;
+            break;
+        case EQ:
+            opcode = CmpInstruction::E;
+            break;
+        case NEQ:
+            opcode = CmpInstruction::NE;
+            break;
+        }
+        new CmpInstruction(opcode, dst, src1, src2, bb);
+
+        BasicBlock *truebb, *falsebb, *tempbb;
+        truebb = new BasicBlock(func);
+        falsebb = new BasicBlock(func);
+        tempbb = new BasicBlock(func);
+        true_list.push_back(new CondBrInstruction(truebb, tempbb, dst, bb));
+        false_list.push_back(new UncondBrInstruction(falsebb, tempbb));
     }
-    else if(op >= LESS && op <= GREATER)
-    {
-        // Todo
-    }
-    else if(op >= ADD && op <= SUB)
+    else if(op >= ADD && op <= PERCENT)
     {
         expr1->genCode();
         expr2->genCode();
@@ -99,8 +216,40 @@ void BinaryExpr::genCode()
         case SUB:
             opcode = BinaryInstruction::SUB;
             break;
+        case STAR:
+            opcode = BinaryInstruction::STAR;
+            break;
+        case SLASH:
+            opcode = BinaryInstruction::SLASH;
+            break;
+        case PERCENT:
+            opcode = BinaryInstruction::PERCENT;
+            break;
         }
         new BinaryInstruction(opcode, dst, src1, src2, bb);
+    }
+}
+
+void UnaryExpr::genCode()
+{
+    expr->genCode();
+    BasicBlock* bb = builder->getInsertBB();
+    Operand *src1;
+    Operand *src2;
+    if(op == NOT) {
+        src1 = expr->getOperand();
+        src2 = new Operand(new ConstantSymbolEntry(TypeSystem::constBoolType, 1));
+        new BinaryInstruction(BinaryInstruction::XOR, dst, src1, src2, bb);
+    } else if (op == SUB) {
+        Type *constantType = expr->getType()->isInt() ? TypeSystem::constIntType : TypeSystem::constFloatType;
+        src1 = new Operand(new ConstantSymbolEntry(constantType, 0.0));
+        src2 = expr->getOperand();
+        if (src2->getType()->getSize() == 1) {
+            Operand *tempDst = new Operand(new TemporarySymbolEntry(TypeSystem::intType, SymbolTable::getLabel()));
+            new ZextInstruction(tempDst, src2, bb);
+            src2 = tempDst;
+        }
+        new BinaryInstruction(BinaryInstruction::SUB, dst, src1, src2, bb);
     }
 }
 
@@ -113,7 +262,60 @@ void Id::genCode()
 {
     BasicBlock *bb = builder->getInsertBB();
     Operand *addr = dynamic_cast<IdentifierSymbolEntry*>(symbolEntry)->getAddr();
-    new LoadInstruction(dst, addr, bb);
+    if (getType()->isInt() || getType()->isFloat()) {
+        new LoadInstruction(dst, addr, bb);
+        return;
+    }
+    if (getType()->isArray()) {
+        if (index) {
+            Type *arrayType = getType();
+            Type *elementType = dynamic_cast<ArrayType *>(arrayType)->getElementType();
+            Operand* tempSrc = addr;
+            Operand* tempDst = dst;
+            std::vector<ExprNode *> indexExprList = index->getExprList();
+            for (ExprNode *indexExpr : indexExprList) {
+                bool isSpecialGep = false;
+                if (dynamic_cast<ArrayType *>(arrayType)->getLength() == -1) {
+                    isSpecialGep = true;
+                    // Extra load instruction
+                    Operand *loadDst = new Operand(new TemporarySymbolEntry(new PointerType(elementType), SymbolTable::getLabel()));
+                    new LoadInstruction(loadDst, addr, bb);
+                    tempSrc = loadDst;
+                }
+                // assert(tempSrc->getType()->isPtr());
+                indexExpr->genCode();
+                new GepInstruction(tempDst, tempSrc, indexExpr->getOperand(), bb, isSpecialGep);
+                if (!elementType->isArray()) {
+                    break;
+                } else {
+                    arrayType = dynamic_cast<ArrayType *>(arrayType)->getElementType();
+                    elementType = dynamic_cast<ArrayType *>(arrayType)->getElementType();
+                    tempSrc = tempDst;
+                    tempDst = new Operand(new TemporarySymbolEntry(new PointerType(elementType), SymbolTable::getLabel()));
+                }
+                // assert(dst->getType()->isPtr());
+            }
+            dst = tempDst;
+            // Extra load instruction when being RVal
+            if (!isLVal) {
+                Operand* loadDst = new Operand(new TemporarySymbolEntry(elementType, SymbolTable::getLabel()));
+                new LoadInstruction(loadDst, dst, bb);
+                dst = loadDst;
+            }
+        } else {
+            ArrayType *arrayType = dynamic_cast<ArrayType *>(getType());
+            Type *elementType = arrayType->getElementType();
+            if (arrayType->getLength() == -1) {
+                Operand *loadDst = new Operand(new TemporarySymbolEntry(new PointerType(elementType), SymbolTable::getLabel()));
+                new LoadInstruction(loadDst, addr, bb);
+                dst = loadDst;
+            } else {
+                Operand *zeroOperand = new Operand(new ConstantSymbolEntry(TypeSystem::constIntType, 0.0));
+                new GepInstruction(dst, addr, zeroOperand, bb);
+            }
+        }
+    }
+    
 }
 
 void IfStmt::genCode()
@@ -130,7 +332,9 @@ void IfStmt::genCode()
     backPatch(cond->falseList(), end_bb);
 
     builder->setInsertBB(then_bb);
-    thenStmt->genCode();
+    if (thenStmt) {
+        thenStmt->genCode();
+    }
     then_bb = builder->getInsertBB();
     new UncondBrInstruction(end_bb, then_bb);
 
@@ -140,6 +344,31 @@ void IfStmt::genCode()
 void IfElseStmt::genCode()
 {
     // Todo
+    Function *func;
+    BasicBlock *then_bb, *else_bb, *end_bb;
+
+    func = builder->getInsertBB()->getParent();
+    then_bb = new BasicBlock(func);
+    else_bb = new BasicBlock(func);
+    end_bb = new BasicBlock(func);
+
+    cond->genCode();
+    backPatch(cond->trueList(), then_bb);
+    backPatch(cond->falseList(), else_bb);
+
+    //then分支
+    builder->setInsertBB(then_bb);
+    thenStmt->genCode();
+    then_bb = builder->getInsertBB();
+    new UncondBrInstruction(end_bb, then_bb);
+
+    //else分支
+    builder->setInsertBB(else_bb);
+    elseStmt->genCode();
+    else_bb = builder->getInsertBB();
+    new UncondBrInstruction(end_bb, else_bb);
+
+    builder->setInsertBB(end_bb);
 }
 
 void InitValNode::genCode()
@@ -150,65 +379,283 @@ void InitValNode::genCode()
 void CompoundStmt::genCode()
 {
     // Todo
+    if (stmt) {
+        stmt->genCode();
+    }
 }
 
 void SeqNode::genCode()
 {
-    // Todo
+    if (stmt1) {
+        stmt1->genCode();
+    }
+    if (stmt2) {
+        stmt2->genCode();
+    }
 }
+
+bool DefNode::hasDeclareMemset = false;
+bool DefNode::hasDeclareMemcpy = false;
 
 void DefNode::genCode()
 {
-
+    IdentifierSymbolEntry *IdSe = dynamic_cast<IdentifierSymbolEntry *>(id->getSymPtr());
+    Unit *unit = builder->getUnit();
+    if (IdSe->isGlobal()) {
+        SymbolEntry *addrSe = new IdentifierSymbolEntry(*IdSe);
+        addrSe->setType(new PointerType(IdSe->getType(), true));
+        Operand *addr = new Operand(addrSe);
+        IdSe->setAddr(addr);
+        unit->insertGlobal(IdSe, initVal);
+    } else {
+        // Local or FuncParam
+        BasicBlock *bb = builder->getInsertBB();
+        Function *func = bb->getParent();
+        BasicBlock *entry = func->getEntry();
+        Type *addrSeType = new PointerType(IdSe->getType());
+        SymbolEntry *addrSe = new TemporarySymbolEntry(addrSeType, SymbolTable::getLabel());
+        Operand *addr = new Operand(addrSe);
+        Instruction *alloca = new AllocaInstruction(addr, IdSe, bb);
+        Operand *oldAddr = IdSe->getAddr();
+        IdSe->setAddr(addr);
+        entry->remove(alloca);
+        func->addAlloca(alloca);
+        if (IdSe->isParam()) {
+            new StoreInstruction(addr, oldAddr, bb);
+        }
+        
+        if (initVal && IdSe->getType()->isArray()) {
+            // %2 = bitcast [10 x i32]* %1 to i8*
+            PointerType *ptrInt8Type = new PointerType(TypeSystem::int8Type);
+            Operand *ptrInt8 = new Operand(new TemporarySymbolEntry(ptrInt8Type, SymbolTable::getLabel()));
+            new BitcastInstruction(ptrInt8, addr, bb);
+            // declare void @llvm.memset.p0i8.i32(i8* nocapture writeonly, i8, i64, i1 immarg)
+            std::string funcName = "llvm.memset.p0i8.i32";
+            SymbolEntry *funcSe;
+            if (!hasDeclareMemset) {
+                hasDeclareMemset = true;
+                std::vector<Type *> paramsType;
+                std::vector<SymbolEntry *> paramsSe;
+                paramsType.push_back(ptrInt8Type);
+                paramsType.push_back(TypeSystem::int8Type);
+                paramsType.push_back(TypeSystem::intType);
+                paramsType.push_back(TypeSystem::boolType);
+                Type *funcType = new FunctionType(TypeSystem::voidType, paramsType, paramsSe);
+                SymbolTable *rootSymbolTable = identifiers;
+                while (rootSymbolTable->getPrev()) {
+                    rootSymbolTable = rootSymbolTable->getPrev();
+                }
+                funcSe = new IdentifierSymbolEntry(funcType, funcName, rootSymbolTable->getLevel());
+                assert(rootSymbolTable->install(funcName, funcSe));
+                unit->insertDeclare(funcSe);
+            } else {
+                funcSe = identifiers->lookup(funcName);
+            }
+            // call void @llvm.memset.p0i8.i32(i8* %2, i8 0, i32 40, i1 false)
+            std::vector<Operand *> params;
+            params.push_back(ptrInt8);
+            params.push_back(new Operand(new ConstantSymbolEntry(TypeSystem::constInt8Type, 0.0)));
+            int len = IdSe->getType()->getSize() / TypeSystem::constInt8Type->getSize();
+            params.push_back(new Operand(new ConstantSymbolEntry(TypeSystem::constIntType, len)));
+            params.push_back(new Operand(new ConstantSymbolEntry(TypeSystem::constBoolType, 0.0)));
+            new CallInstruction(nullptr, funcSe, params, bb);
+        }
+        
+        if (initVal) {
+            if (!initVal->isInitValNode()) {
+                initVal->genCode();
+                new StoreInstruction(addr, initVal->getOperand(), bb);
+            } else {
+                ExprNode *currentInitVal = initVal;
+                std::stack<InitValNode *> initValNodeStack;
+                std::stack<int> hasGenNumStack;
+                std::vector<int> indexVector;
+                std::vector<ExprNode *> initValList;
+                while (currentInitVal) {
+                    if (currentInitVal->isInitValNode() && dynamic_cast<InitValNode *>(currentInitVal)->getUseZeroinitializer()) {
+                        if (initValNodeStack.empty()) {
+                            break;
+                        }
+                        hasGenNumStack.top()++;
+                        indexVector.back()++;
+                        InitValNode *topInitValNode = initValNodeStack.top();
+                        currentInitVal = topInitValNode->getInitValList()[hasGenNumStack.top()];
+                        continue;
+                    }
+                    if (currentInitVal->isInitValNode()) {
+                        initValNodeStack.push(dynamic_cast<InitValNode *>(currentInitVal));
+                        hasGenNumStack.push(0);
+                        indexVector.push_back(0);
+                        currentInitVal = dynamic_cast<InitValNode *>(currentInitVal)->getInitValList()[0];
+                        continue;
+                    }
+                    /*
+                    while (currentInitVal->isInitValNode()) {
+                        initValNodeStack.push(dynamic_cast<InitValNode *>(currentInitVal));
+                        hasGenNumStack.push(0);
+                        indexVector.push_back(0);
+                        currentInitVal = dynamic_cast<InitValNode *>(currentInitVal)->getInitValList()[0];
+                    }
+                    */
+                    currentInitVal->genCode();
+                    Type *tempElemType = dynamic_cast<ArrayType *>(IdSe->getType())->getElementType();
+                    Operand *tempSrc = addr;
+                    Operand *tempDst;
+                    Operand *index;
+                    int i = 0;
+                    while (true) {
+                        tempDst = new Operand(new TemporarySymbolEntry(new PointerType(tempElemType), SymbolTable::getLabel()));
+                        index = new Operand(new ConstantSymbolEntry(TypeSystem::intType, indexVector[i++]));
+                        new GepInstruction(tempDst, tempSrc, index, bb);
+                        if (!tempElemType->isArray()) {
+                            break;
+                        } else {
+                            tempElemType = dynamic_cast<ArrayType *>(tempElemType)->getElementType();
+                            tempSrc = tempDst;
+                        }
+                    }
+                    new StoreInstruction(tempDst, currentInitVal->getOperand(), bb);
+                    hasGenNumStack.top()++;
+                    while (true) {
+                        InitValNode *topInitValNode = initValNodeStack.top();
+                        if (hasGenNumStack.top() < static_cast<int>(topInitValNode->getInitValList().size())) {
+                            currentInitVal = topInitValNode->getInitValList()[hasGenNumStack.top()];
+                            indexVector.back()++;
+                            break;
+                        } else {
+                            currentInitVal = topInitValNode;
+                            initValNodeStack.pop();
+                            hasGenNumStack.pop();
+                            indexVector.pop_back();
+                            if (initValNodeStack.empty()) {
+                                break;
+                            }
+                            hasGenNumStack.top()++;
+                        }
+                    }
+                    if (initValNodeStack.empty()) {
+                        break;
+                    }
+                }
+                
+            }
+        }
+    }
 }
 
 void DeclStmt::genCode()
 {
-    /*
-    IdentifierSymbolEntry *se = dynamic_cast<IdentifierSymbolEntry *>(id->getSymPtr());
-    if(se->isGlobal())
-    {
-        Operand *addr;
-        SymbolEntry *addr_se;
-        addr_se = new IdentifierSymbolEntry(*se);
-        addr_se->setType(new PointerType(se->getType()));
-        addr = new Operand(addr_se);
-        se->setAddr(addr);
+    for (DefNode *node : defNodeList) {
+        if (node) {
+            node->genCode();
+        }
     }
-    else if(se->isLocal())
-    {
-        Function *func = builder->getInsertBB()->getParent();
-        BasicBlock *entry = func->getEntry();
-        Instruction *alloca;
-        Operand *addr;
-        SymbolEntry *addr_se;
-        Type *type;
-        type = new PointerType(se->getType());
-        addr_se = new TemporarySymbolEntry(type, SymbolTable::getLabel());
-        addr = new Operand(addr_se);
-        alloca = new AllocaInstruction(addr, se);                   // allocate space for local id in function stack.
-        entry->insertFront(alloca);                                 // allocate instructions should be inserted into the begin of the entry block.
-        se->setAddr(addr);                                          // set the addr operand in symbol entry so that we can use it in subsequent code generation.
-    }
-    */
 }
 
 void ReturnStmt::genCode()
 {
     // Todo
+    BasicBlock *bb = builder->getInsertBB();
+    Operand *src = nullptr;
+    //如果有返回值，src赋值为返回值
+    if (retValue) {
+        retValue->genCode();
+        src = retValue->getOperand(); //获取子树的结果即返回值
+    }
+    new RetInstruction(src, bb); //函数返回指令
+    bb->getParent()->setExit(bb);
 }
 
 void AssignStmt::genCode()
 {
     BasicBlock *bb = builder->getInsertBB();
+
     expr->genCode();
-    Operand *addr = dynamic_cast<IdentifierSymbolEntry*>(lval->getSymPtr())->getAddr();
     Operand *src = expr->getOperand();
-    /***
-     * We haven't implemented array yet, the lval can only be ID. So we just store the result of the `expr` to the addr of the id.
-     * If you want to implement array, you have to caculate the address first and then store the result into it.
-     */
+    Operand *addr;
+    if (!lval->getType()->isArray()) {
+        addr = dynamic_cast<IdentifierSymbolEntry*>(lval->getSymPtr())->getAddr();
+    } else {
+        dynamic_cast<Id *>(lval)->setIsLVal();
+        lval->genCode();
+        addr = lval->getOperand();
+    }
     new StoreInstruction(addr, src, bb);
+}
+
+void BreakStmt::genCode()
+{
+    BasicBlock* bb = builder->getInsertBB();
+    Function* func = bb->getParent();
+    //break跳转结束while循环，无条件跳转
+    WhileStmt* wstmt = (WhileStmt*)(this->whileStmt);
+    new UncondBrInstruction(wstmt->getendbb(), bb);
+
+    BasicBlock* next = new BasicBlock(func);
+    builder->setInsertBB(next);
+}
+
+void ContinueStmt::genCode()
+{
+    BasicBlock* bb = builder->getInsertBB();
+    Function* func = bb->getParent();
+    //continue跳转到while指令的下一轮循环中，即进行while循环条件判断
+    WhileStmt* wstmt = (WhileStmt*)(this->whileStmt); //当前while循环块
+    new UncondBrInstruction(wstmt->getcondbb(), bb); //初始化条件跳转指令
+
+    BasicBlock* next = new BasicBlock(func);
+    builder->setInsertBB(next);
+}
+
+void WhileStmt::genCode()
+{
+    //初始化变量赋值
+    BasicBlock* bb = builder->getInsertBB();
+    Function* func = bb->getParent();
+    BasicBlock* whilebb = new BasicBlock(func);
+    this->condbb = new BasicBlock(func);
+    this->endbb = new BasicBlock(func);
+    new UncondBrInstruction(condbb, bb);
+
+    //生成while循环条件判断的中间代码
+    builder->setInsertBB(condbb);
+    cond->genCode();
+    backPatch(cond->trueList(), whilebb); //正确继续while循环
+    backPatch(cond->falseList(), endbb); //错误结束
+
+    //生成while循环部分的中间代码
+    builder->setInsertBB(whilebb);
+    stmt->genCode();
+
+    //完成循环后跳转到while条件判断即condbb
+    whilebb = builder->getInsertBB();
+    new UncondBrInstruction(condbb, whilebb);
+    builder->setInsertBB(endbb);
+}
+
+void ExprStmt::genCode()
+{
+    expr->genCode();
+}
+
+void FuncCallParamsNode::genCode()
+{
+    
+}
+
+void FuncCallExpr::genCode()
+{  
+    BasicBlock* bb = builder->getInsertBB();
+    std::vector<Operand *> operands;
+    if (params) {
+        std::vector<ExprNode *> paramslist = params->getParamslist();
+        for(auto expr : paramslist)
+        {
+            expr->genCode();
+            operands.push_back(expr->getOperand());
+        }
+    }
+    new CallInstruction(dst, symbolEntry, operands, bb);
 }
 
 void Ast::typeCheck()
@@ -224,12 +671,147 @@ void FunctionDef::typeCheck()
 
 void UnaryExpr::typeCheck()
 {
-    // Todo
+    if (typeCheckDone) {
+        return;
+    }
+    typeCheckDone = true;
+
+    std::string op_str;
+    switch (op) {
+        case NOT:
+            op_str = "not";
+            break;
+        case SUB:
+            op_str = "minus";
+            break;
+    }
+
+    if (expr->getType()->isVoid()) {
+        fprintf(stderr, "Error : invalid operand with type \'void\' for unary opeartor\'%s\' \n", op_str.c_str());
+        return; 
+    }
+
+    Type *exprType = expr->getFormedType();
+    if (op == UnaryExpr::NOT) {
+        if (exprType->isFloat()) {
+            // float to bool
+            expr = ImplicitCastExpr::floatToBool(expr);
+        } else if (exprType->isInt()) {
+            // int to bool
+            expr = ImplicitCastExpr::intToBool(expr);
+        }
+    }
+
 }
 
 void BinaryExpr::typeCheck()
 {
-    // Todo
+    if (typeCheckDone) {
+        return;
+    }
+    typeCheckDone = true;
+
+    std::string op_str;
+    switch(op)
+    {
+        case ADD:
+            op_str = "add";
+            break;
+        case SUB:
+            op_str = "sub";
+            break;
+        case STAR:
+            op_str = "star";
+            break;
+        case SLASH:
+            op_str = "slash";
+            break;
+        case PERCENT:
+            op_str = "percent";
+            break;
+        case AND:
+            op_str = "and";
+            break;
+        case OR:
+            op_str = "or";
+            break;
+        case LESS:
+            op_str = "less";
+            break;
+        case EQ:
+            op_str = "eq";
+            break;
+        case NEQ:
+            op_str = "neq";
+            break;
+        case GREATER:
+            op_str = "great";
+            break;
+        case GREATEQ:
+            op_str = "greateq";
+            break;
+        case LESSEQ:
+            op_str = "lesseq";
+            break;
+    }
+
+    Type *expr1Type = expr1->getFormedType();
+    Type *expr2Type = expr2->getFormedType();
+    if (expr1->getType()->isVoid() || expr2->getType()->isVoid()) {
+        fprintf(stderr, "Error : invalid operand with type \'void\' for binary opeartor\'%s\' \n", op_str.c_str());
+        return; 
+    }
+
+    // Relational 
+    if (op >= BinaryExpr::AND && op <= BinaryExpr::NEQ) {
+        // int, float to bool
+        if (op == BinaryExpr::AND || op == BinaryExpr::OR) {
+            if (expr1Type->isInt() && expr1Type->getSize() > 1) {
+                expr1 = ImplicitCastExpr::intToBool(expr1);
+            } else if (expr1Type->isFloat()) {
+                expr1 = ImplicitCastExpr::floatToBool(expr1);
+            }
+            if (expr2Type->isInt() && expr2Type->getSize() > 1) {
+                expr2 = ImplicitCastExpr::intToBool(expr2);
+            } else if (expr2Type->isFloat()) {
+                expr2 = ImplicitCastExpr::floatToBool(expr2);
+            }
+        }
+
+        // int to float
+        if (op >= BinaryExpr::LESS && op <= BinaryExpr::NEQ) {
+            if (expr1Type->isFloat() && expr2Type->isInt()) {
+                expr2 = ImplicitCastExpr::intToFloat(expr2);
+            } else if (expr1Type->isInt() && expr2Type->isFloat()) {
+                expr1 = ImplicitCastExpr::intToFloat(expr1);
+            }
+        }
+
+        return;
+    }
+    
+    // Arithmetic
+    if (expr1Type->isFloat() && expr2Type->isInt()) {
+        if (op == BinaryExpr::PERCENT) {
+            fprintf(stderr, "Error : Operand of `mod` must be integer \n");
+            return;
+        }
+        expr2 = ImplicitCastExpr::intToFloat(expr2);
+    } else if (expr1Type->isInt() && expr2Type->isFloat()) {
+        if (op == BinaryExpr::PERCENT) {
+            fprintf(stderr, "Error : Operand of `mod` must be integer \n");
+            return;
+        }
+        expr1 = ImplicitCastExpr::intToFloat(expr1);
+    }
+}
+
+void FuncCallExpr::typeCheck()
+{
+    if (typeCheckDone) {
+        return;
+    }
+    typeCheckDone = true;
 }
 
 void Constant::typeCheck()
@@ -239,17 +821,73 @@ void Constant::typeCheck()
 
 void Id::typeCheck()
 {
-    // Todo
+    // Already done in Id::Id()
 }
 
 void IfStmt::typeCheck()
 {
-    // Todo
+    if (typeCheckDone) {
+        return;
+    }
+    typeCheckDone = true;
+
+    Type *condType = cond->getFormedType();
+    if (condType->isInt() && condType->getSize() == 32) {
+        // int to bool
+        cond = ImplicitCastExpr::intToBool(cond);
+    } else if (condType->isFloat()) {
+        // float to bool
+        cond = ImplicitCastExpr::floatToBool(cond);
+    }
+
+    if (thenStmt) {
+        thenStmt->typeCheck();
+    }
 }
 
 void IfElseStmt::typeCheck()
 {
-    // Todo
+    if (typeCheckDone) {
+        return;
+    }
+    typeCheckDone = true;
+
+    Type *condType = cond->getFormedType();
+    if (condType->isInt() && condType->getSize() == 32) {
+        // int to bool
+        cond = ImplicitCastExpr::intToBool(cond);
+    } else if (condType->isFloat()) {
+        // float to bool
+        cond = ImplicitCastExpr::floatToBool(cond);
+    }
+
+    if (thenStmt) {
+        thenStmt->typeCheck();
+    }
+    if (elseStmt) {
+        elseStmt->typeCheck();
+    }
+}
+
+void WhileStmt::typeCheck()
+{
+    if (typeCheckDone) {
+        return;
+    }
+    typeCheckDone = true;
+
+    Type *condType = cond->getFormedType();
+    if (condType->isInt() && condType->getSize() == 32) {
+        // int to bool
+        cond = ImplicitCastExpr::intToBool(cond);
+    } else if (condType->isFloat()) {
+        // float to bool
+        cond = ImplicitCastExpr::floatToBool(cond);
+    }
+
+    if (stmt) {
+        stmt->typeCheck();
+    }
 }
 
 void CompoundStmt::typeCheck()
@@ -264,7 +902,24 @@ void SeqNode::typeCheck()
 
 void DefNode::typeCheck()
 {
+    if (typeCheckDone) {
+        return;
+    }
+    typeCheckDone = true; 
 
+    if (!initVal) {
+        return;
+    }
+    Type *idType = id->getFormedType();
+    Type *exprType = initVal->getFormedType();
+    if (idType->isFloat() && exprType->isInt()) {
+        // int to float
+        initVal = ImplicitCastExpr::intToFloat(initVal);
+    }
+    if (idType->isInt() && exprType->isFloat()) {
+        // float to int
+        initVal = ImplicitCastExpr::floatToInt(initVal);
+    }
 }
 
 void DeclStmt::typeCheck()
@@ -272,14 +927,41 @@ void DeclStmt::typeCheck()
     // Todo
 }
 
-void ReturnStmt::typeCheck()
-{
-    // Todo
-}
-
 void AssignStmt::typeCheck()
 {
-    // Todo
+    if (typeCheckDone) {
+        return;
+    }
+    typeCheckDone = true;
+
+    Type *lvalType = lval->getFormedType();
+    Type *exprType = expr->getFormedType();
+    SymbolEntry *se = lval->getSymPtr();
+    if (lvalType->isConst()) {
+        fprintf(stderr, "Error : assignment of read-only variable \'%s\' \n", se->toStr().c_str());
+        assert(!lvalType->isConst());
+    }
+    if (lvalType->isArray()) {
+        fprintf(stderr, "Error : invalid array assignment \'%s %s\' \n", se->toStr().c_str(), lvalType->toStr().c_str());
+        assert(!lvalType->isArray());
+    }
+    if (!lvalType->sameType(exprType)) {
+        if (lvalType->isInt() && exprType->isFloat()) {
+            if (lvalType->getSize() == 1) {
+                // float to bool
+                expr = ImplicitCastExpr::floatToBool(expr);
+            } else {
+                // float to int
+                expr = ImplicitCastExpr::floatToInt(expr);
+            }
+        } else if (lvalType->isFloat() && exprType->isInt()) {
+            // int to float
+            expr = ImplicitCastExpr::intToFloat(expr);
+        } else {
+            fprintf(stderr, "Error : invalid conversion from \'%s\' to \'%s\' \n", exprType->toStr().c_str(), lvalType->toStr().c_str());
+            assert(lvalType->sameType(exprType));
+        }
+    }
 }
 
 void InitValNode::typeCheck()
@@ -287,16 +969,34 @@ void InitValNode::typeCheck()
 
 }
 
+UnaryExpr::UnaryExpr(SymbolEntry *se, int op, ExprNode* expr) : 
+    ExprNode(se), op(op), expr(expr)
+{
+    kind = ExprNode::UNARY;
+    dst = new Operand(se);
+    typeCheck();
+}
+
+BinaryExpr::BinaryExpr(SymbolEntry *se, int op, ExprNode*expr1, ExprNode*expr2) : 
+    ExprNode(se), op(op), expr1(expr1), expr2(expr2)
+{
+    kind = ExprNode::BINARY;
+    dst = new Operand(se);
+    typeCheck();
+}
+
 Type* BinaryExpr::getArithmeticResultType(ExprNode *expr1, ExprNode *expr2) {
     Type *exprType;
-    if (expr1->getType()->isIntFamily() && expr2->getType()->isIntFamily()) {
-        if (expr1->getType()->isConst() && expr2->getType()->isConst()) {
+    Type *expr1Type = expr1->getFormedType();
+    Type *expr2Type = expr2->getFormedType();
+    if (expr1Type->isInt() && expr2Type->isInt()) {
+        if (expr1Type->isConst() && expr2Type->isConst()) {
             exprType = TypeSystem::constIntType;
         } else {
             exprType = TypeSystem::intType;
         }
     } else {
-        if (expr1->getType()->isConst() && expr2->getType()->isConst()) {
+        if (expr1Type->isConst() && expr2Type->isConst()) {
             exprType = TypeSystem::constFloatType;
         } else {
             exprType = TypeSystem::floatType;
@@ -318,6 +1018,8 @@ Type* BinaryExpr::getRelationalResultType(ExprNode *expr1, ExprNode *expr2) {
 double BinaryExpr::getValue() {
     double val = 0;
     double val1 = expr1->getValue(), val2 = expr2->getValue();
+    Type *expr1Type = expr1->getFormedType();
+    Type *expr2Type = expr2->getFormedType();
     switch(op)
     {
         case ADD:
@@ -331,7 +1033,7 @@ double BinaryExpr::getValue() {
             break;
         case SLASH:
             if (val2 != 0) {
-                if (expr1->getType()->isIntFamily() && expr2->getType()->isIntFamily()) {
+                if (expr1Type->isInt() && expr2Type->isInt()) {
                     val = (int)val1 / (int)val2;
                 } else {
                     val = val1 / val2;
@@ -341,7 +1043,7 @@ double BinaryExpr::getValue() {
             }
             break;
         case PERCENT:
-            if (expr1->getType()->isIntFamily() && expr2->getType()->isIntFamily()) {
+            if (expr1Type->isInt() && expr2Type->isInt()) {
                 if (val2 != 0) {
                     val = (int)val1 % (int)val2;
                 } else {
@@ -426,13 +1128,9 @@ void BinaryExpr::output(int level)
     }
 
     std::string expType = symbolEntry->getType()->toStr();
-    if (symbolEntry->getType()->isConst()) {
-        fprintf(yyout, "%*cConstBinaryExpr\t op: %s\t DataType: %s\n", 
-            level, ' ', op_str.c_str(), expType.c_str());
-    } else {
-        fprintf(yyout, "%*cBinaryExpr\t op: %s\t DataType: %s\n", 
-            level, ' ', op_str.c_str(), expType.c_str());
-    }
+    std::string constStr = symbolEntry->getType()->isConst() ? "Const" : "";
+    fprintf(yyout, "%*c%sBinaryExpr\t op: %s\t Result: %s %s\n", 
+            level, ' ', constStr.c_str(), op_str.c_str(), expType.c_str(), symbolEntry->toStr().c_str());
     expr1->output(level + 4);
     expr2->output(level + 4);
 }
@@ -464,13 +1162,9 @@ void UnaryExpr::output(int level)
     }
 
     std::string expType = symbolEntry->getType()->toStr();
-    if (symbolEntry->getType()->isConst()) {
-        fprintf(yyout, "%*cConstOneOpExpr\t op: %s\t DataType: %s\n", 
-            level, ' ', op_str.c_str(), expType.c_str());
-    } else {
-        fprintf(yyout, "%*cOneOpExpr\t op: %s\t DataType: %s\n", 
-            level, ' ', op_str.c_str(), expType.c_str());
-    }
+    std::string constStr = symbolEntry->getType()->isConst() ? "Const" : "";
+    fprintf(yyout, "%*c%sUnaryExpr\t op: %s\t Result: %s %s\n", 
+            level, ' ', constStr.c_str(), op_str.c_str(), expType.c_str(), symbolEntry->toStr().c_str());
     expr->output(level + 4);
 }
 
@@ -497,11 +1191,42 @@ void Constant::output(int level)
 }
 
 double Id::getValue() {
-    return symbolEntry->getValue();
+    /*
+    if (!getType()->isConst()) {
+        fprintf(stderr, "Error in Id::getValue() : \'%s\' is not constant.\n", symbolEntry->toStr().c_str());
+        return 0;
+    }
+    */
+    if (dynamic_cast<IdentifierSymbolEntry *>(symbolEntry)->isParam()) {
+        return 0;
+    }
+
+    double val;
+    if (index == nullptr) {
+        val = symbolEntry->getValue();
+    } else {
+        int arrayValueIndex = 0;
+        std::vector<ExprNode *> indexList = index->getExprList();
+        Type *currentType = getType();
+        for (auto iter = indexList.begin(); iter != indexList.end(); iter++) {
+            if (!(*iter)->getType()->isConst()) {
+                return 0;
+            }
+            arrayValueIndex += (int)((*iter)->getValue());
+            if (iter + 1 != indexList.end()) {
+                currentType = dynamic_cast<ArrayType *>(currentType)->getElementType();
+                arrayValueIndex *= dynamic_cast<ArrayType *>(currentType)->getLength();
+            }
+        }
+        // std::cout << symbolEntry->toStr() << " " << arrayValueIndex << std::endl;
+        val = *(static_cast<double *>(symbolEntry->getArrayValue()) + arrayValueIndex);
+    }
+    return val;
 }
 
-Id::Id(SymbolEntry *se, ArrayIndexNode *idx) : ExprNode(se), index(idx) {
+Id::Id(SymbolEntry *se, ArrayIndexNode *idx) : ExprNode(se), index(idx), isLVal(false) {
     Type *dstType;
+    kind = ExprNode::ID;
     if (getType()->isInt()) {
         dstType = getType()->isConst() ? TypeSystem::constIntType : TypeSystem::intType;
     } else if (getType()->isFloat()) {
@@ -511,6 +1236,21 @@ Id::Id(SymbolEntry *se, ArrayIndexNode *idx) : ExprNode(se), index(idx) {
     }
     SymbolEntry *temp = new TemporarySymbolEntry(dstType, SymbolTable::getLabel()); 
     dst = new Operand(temp);
+
+    if (index) {
+        formedType = getType();
+        int d = (int)index->getExprList().size();
+        while (d--) {
+            if (formedType->isArray()) {
+                formedType = dynamic_cast<ArrayType *>(formedType)->getElementType();
+            } else {
+                fprintf(stderr, "Error : Deminsion exceeded.\n");
+                assert(d);
+            }
+        }
+    } else {
+        formedType = getType();
+    }
 };
 
 void Id::output(int level)
@@ -521,8 +1261,8 @@ void Id::output(int level)
     type = symbolEntry->getType()->toStr();
     scope = dynamic_cast<IdentifierSymbolEntry*>(symbolEntry)->getScope();
     std::string constStr = getType()->isConst() ? "Const " : "";
-    fprintf(yyout, "%*c%sId\tname: %s\tscope: %d\ttype: %s\n", level, ' ',
-        constStr.c_str(), name.c_str(), scope, type.c_str());
+    fprintf(yyout, "%*c%sId\tname: %s\tscope: %d\tsymbolEntryType: %s\tformedType:%s\n", level, ' ',
+        constStr.c_str(), name.c_str(), scope, type.c_str(), formedType->toStr().c_str());
     if (getType()->isArray() && index != nullptr) {
         index->output(level + 4);
     }
@@ -578,12 +1318,17 @@ void InitValNode::fill() {
         return;
     }
 
+    if (useZeroinitializer) {
+        return;
+    }
+
     Type *elementType = dynamic_cast<ArrayType *>(getType())->getElementType();
     if (elementType->isArray()) {
         ArrayType *elementArrayType = dynamic_cast<ArrayType *>(elementType);
         elementArrayType = new ArrayType(elementArrayType->getElementType(), elementArrayType->getLength(), true);
         while (!isFull()) {
             InitValNode *node = new InitValNode(new ConstantSymbolEntry(elementArrayType));
+            node->setUseZeroinitializer();
             append(node);
         }
         for (ExprNode *expr : initValList) {
@@ -615,9 +1360,12 @@ void InitValNode::output(int level)
     std::string constStr = getType()->isConst() ? "Const" : "";
     std::string typeStr = getType()->toStr();
     fprintf(yyout, "%*c%sArrayInitValNode\ttype: %s\n", level, ' ', constStr.c_str(), typeStr.c_str());
-
-    for (auto iter = initValList.begin(); iter != initValList.end(); iter++) {
-        (*iter)->output(level + 4);
+    if (useZeroinitializer) {
+        fprintf(yyout, "%*czeroinitializer\n", level + 4, ' ');
+    } else {
+        for (auto iter = initValList.begin(); iter != initValList.end(); iter++) {
+            (*iter)->output(level + 4);
+        }
     }
 }
 
@@ -633,12 +1381,13 @@ void SeqNode::output(int level)
     stmt2->output(level);
 }
 
-DefNode::DefNode(Id *id, ExprNode *initVal) : id(id)
+DefNode::DefNode(Id *id, ExprNode *initVal) : id(id), initVal(initVal)
 {
     if (initVal) {
-        this->initVal = initVal;
+        typeCheckDone = false;
+        typeCheck();
     } else {
-        this->initVal = nullptr;
+        typeCheckDone = true;
     }
 }
 
@@ -722,15 +1471,122 @@ void FuncCallParamsNode::output(int level)
     }
 }
 
-void FuncCallNode::output(int level)
+FuncCallExpr::FuncCallExpr(SymbolEntry *se, FuncCallParamsNode *params) : ExprNode(se), params(params)
+{
+    assert(se->getType()->isFunc() == true);
+    kind = ExprNode::CALL;
+    
+    typeCheckDone = true;
+    if (params) {
+        std::vector<Type *> rParamsFormedType;
+        std::vector<ExprNode *> &rParamsList = params->getParamslist();
+        for (ExprNode *param : rParamsList) {
+            Type *formedType = param->getFormedType();
+            rParamsFormedType.push_back(formedType);
+        }
+        
+        SymbolEntry *currentSe = se;
+        bool findMatchedFunc = false;
+        while(currentSe) {
+            FunctionType *currentFuncType = dynamic_cast<FunctionType *>(currentSe->getType());
+            if (currentFuncType->sameParamsType(rParamsFormedType)) {
+                this->symbolEntry = currentSe;
+                findMatchedFunc = true;
+                break;
+            }
+            if (currentSe->getNextFuncSe()) {
+                currentSe = currentSe->getNextFuncSe();
+            } else {
+                break;
+            }
+        }
+
+        if (!findMatchedFunc) {
+            currentSe = se;
+            while(currentSe) {
+                FunctionType *currentFuncType = dynamic_cast<FunctionType *>(currentSe->getType());
+                std::vector<Type *> currentParamsType = currentFuncType->getParamsType();
+                if (currentParamsType.size() == rParamsFormedType.size()) {
+                    this->symbolEntry = currentSe;
+                    findMatchedFunc = true;
+                    for (int i = 0; i < (int)rParamsFormedType.size(); i++) {
+                        if (currentParamsType[i]->sameType(rParamsFormedType[i])) {
+                            continue;
+                        }
+                        
+                        if (currentParamsType[i]->isFloat() && rParamsFormedType[i]->isInt()) {
+                            // int to float
+                            ImplicitCastExpr *tempExpr = new ImplicitCastExpr(rParamsList[i], currentParamsType[i]);
+                            rParamsList[i] = tempExpr;
+                            continue;
+                        }
+                        if (currentParamsType[i]->isInt() && rParamsFormedType[i]->isFloat()) {
+                            if (currentParamsType[i]->getSize() == 1) {
+                                // float to bool
+                                SymbolEntry *constZeroSe = new ConstantSymbolEntry(TypeSystem::constFloatType, 0.0);
+                                ExprNode *constZeroExpr = new Constant(constZeroSe);
+                                SymbolEntry* tempSe;
+                                if (rParamsList[i]->getType()->isConst()) {
+                                    tempSe = new TemporarySymbolEntry(TypeSystem::constBoolType, SymbolTable::getLabel());
+                                } else {
+                                    tempSe = new TemporarySymbolEntry(TypeSystem::boolType, SymbolTable::getLabel());
+                                }
+                                BinaryExpr* cmpZeroExpr = new BinaryExpr(tempSe, BinaryExpr::NEQ, rParamsList[i], constZeroExpr);
+                                rParamsList[i] = cmpZeroExpr;
+                            } else {
+                                // float to int
+                                ImplicitCastExpr *tempExpr = new ImplicitCastExpr(rParamsList[i], currentParamsType[i]);
+                                rParamsList[i] = tempExpr;
+                            }
+                            continue;
+                        }
+                        // can not convert
+                        findMatchedFunc = false; 
+                        break; 
+                    }
+                }
+                if (findMatchedFunc) break;
+                if (currentSe->getNextFuncSe()) {
+                    currentSe = currentSe->getNextFuncSe();
+                } else {
+                    break;
+                }
+            }
+            if (!findMatchedFunc) {
+                fprintf(stderr, "Error : call %s with params(", getType()->toStr().c_str());
+                for (Type *formedType : rParamsFormedType) {
+                    fprintf(stderr, "%s, ", formedType->toStr().c_str());
+                }
+                fprintf(stderr, ")\n");
+            }
+        }
+    }
+
+    Type *returnType = dynamic_cast<FunctionType *>(symbolEntry->getType())->getRetType();
+    if (returnType->isVoid()) {
+        dst = nullptr;
+    } else {
+        SymbolEntry* se = new TemporarySymbolEntry(returnType, SymbolTable::getLabel());
+        dst = new Operand(se);
+    }
+
+    formedType = returnType;
+
+    if (dynamic_cast<IdentifierSymbolEntry *>(se)->getFromSysYLib()) {
+        unit.insertDeclare(se);
+    }
+}
+
+void FuncCallExpr::output(int level)
 {
     std::string name, type;
     int scope;
     name = symbolEntry->toStr();
     type = symbolEntry->getType()->toStr();
+    std::string fromSysYLib = dynamic_cast<IdentifierSymbolEntry*>(symbolEntry)->getFromSysYLib() ? "SysYLibFunc" : "";
     scope = dynamic_cast<IdentifierSymbolEntry *>(symbolEntry)->getScope();
-    fprintf(yyout, "%*cFuncCallNode\tfuncName: %s\t funcType: %s\tscope: %d\n", 
-            level, ' ', name.c_str(), type.c_str(), scope);
+    fprintf(yyout, "%*cFuncCallExpr\tfuncName: %s\t funcType: %s\tscope: %d\t%s\n", 
+            level, ' ', name.c_str(), type.c_str(), scope, fromSysYLib.c_str());
     
     if(params != nullptr){
         params->output(level + 4);
@@ -760,4 +1616,91 @@ void ExprStmt::output(int level) {
 
 void EmptyStmt::output(int level) {
     fprintf(yyout, "%*cEmptyStmt\n", level, ' ');
+}
+
+ImplicitCastExpr::ImplicitCastExpr(ExprNode *expr, Type *castType) : 
+    ExprNode(nullptr), expr(expr), castType(castType) {
+        kind = ExprNode::CAST;
+        symbolEntry = new TemporarySymbolEntry(castType, SymbolTable::getLabel());
+        dst = new Operand(symbolEntry);
+    }
+
+void ImplicitCastExpr::output(int level) {
+    Type *srcType = expr->getFormedType();
+    fprintf(yyout, "%*cImplicitCastExpr\ttype: %s to %s\n", level, ' ',
+            srcType->toStr().c_str(), castType->toStr().c_str());
+    expr->output(level + 4);
+}
+
+double ImplicitCastExpr::getValue() {
+    Type* srcType = expr->getType();
+    double val = expr->getValue();
+    if (castType == TypeSystem::boolType) {
+        return val ? 1 : 0;
+    }
+    if (castType->isInt() && srcType->isFloat()) {
+        return (int)val;
+    } else if (castType->isFloat() && srcType->isInt()) {
+        return (float)val;
+    } else {
+        fprintf(stderr, "Error in ImplicitCastExpr::getValue : %s -> %s\n", 
+            srcType->toStr().c_str(), castType->toStr().c_str());
+        return -1;
+    }
+}
+
+ExprNode *ImplicitCastExpr::floatToBool(ExprNode *srcExpr) {
+    SymbolEntry *constZeroSe = new ConstantSymbolEntry(TypeSystem::constFloatType, 0.0);
+    ExprNode *constZeroExpr = new Constant(constZeroSe);
+    Type *srcExprType = srcExpr->getFormedType();
+    SymbolEntry *tempSe;
+    if (srcExprType->isConst()) {
+        tempSe = new TemporarySymbolEntry(TypeSystem::constBoolType, SymbolTable::getLabel());
+    } else {
+        tempSe = new TemporarySymbolEntry(TypeSystem::boolType, SymbolTable::getLabel());
+    }
+    BinaryExpr *cmpZeroExpr = new BinaryExpr(tempSe, BinaryExpr::NEQ, srcExpr, constZeroExpr);
+    return cmpZeroExpr;
+}
+
+ExprNode *ImplicitCastExpr::intToBool(ExprNode *srcExpr) {
+
+    /*
+    Type *tempExprType = srcExpr->getType()->isConst() ? TypeSystem::constBoolType : TypeSystem::boolType;
+    ImplicitCastExpr* tempExpr = new ImplicitCastExpr(srcExpr, tempExprType);
+    return tempExpr;
+    */
+    SymbolEntry *constZeroSe = new ConstantSymbolEntry(TypeSystem::constIntType, 0.0);
+    ExprNode *constZeroExpr = new Constant(constZeroSe);
+    Type *srcExprType = srcExpr->getFormedType();
+    SymbolEntry *tempSe;
+    if (srcExprType->isConst()) {
+        tempSe = new TemporarySymbolEntry(TypeSystem::constBoolType, SymbolTable::getLabel());
+    } else {
+        tempSe = new TemporarySymbolEntry(TypeSystem::boolType, SymbolTable::getLabel());
+    }
+    BinaryExpr *cmpZeroExpr = new BinaryExpr(tempSe, BinaryExpr::NEQ, srcExpr, constZeroExpr);
+    return cmpZeroExpr;
+}
+
+ExprNode *ImplicitCastExpr::intToFloat(ExprNode *srcExpr) {
+    Type *tempExprType = srcExpr->getType()->isConst() ? TypeSystem::constFloatType : TypeSystem::floatType;
+    ImplicitCastExpr* tempExpr = new ImplicitCastExpr(srcExpr, tempExprType);
+    return tempExpr;
+}
+
+ExprNode *ImplicitCastExpr::floatToInt(ExprNode *srcExpr) {
+    Type *tempExprType = srcExpr->getType()->isConst() ? TypeSystem::constIntType : TypeSystem::intType;
+    ImplicitCastExpr* tempExpr = new ImplicitCastExpr(srcExpr, tempExprType);
+    return tempExpr;
+}
+
+void ImplicitCastExpr::genCode() {
+    expr->genCode();
+    BasicBlock *bb = builder->getInsertBB();
+    if (expr->getType()->isInt() && castType->isFloat()) {
+        new ItoFInstruction(dst, expr->getOperand(), bb);
+    } else {
+        new FtoIInstruction(dst, expr->getOperand(), bb);
+    }
 }

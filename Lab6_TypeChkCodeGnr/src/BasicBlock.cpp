@@ -19,7 +19,12 @@ void BasicBlock::insertBack(Instruction *inst)
 // insert the instruction dst before src.
 void BasicBlock::insertBefore(Instruction *dst, Instruction *src)
 {
-    // Todo
+    // Todo    
+    Instruction* srcp = src->getPrev(); //src的前一个节点
+    srcp->setNext(dst); //插入dst
+    dst->setPrev(srcp);
+    dst->setNext(src);
+    src->setPrev(dst);
 
     dst->setParent(this);
 }
@@ -42,8 +47,11 @@ void BasicBlock::output() const
             fprintf(yyout, ", %%B%d", (*i)->getNo());
     }
     fprintf(yyout, "\n");
-    for (auto i = head->getNext(); i != head; i = i->getNext())
+    for (auto i = head->getNext(); i != head; i = i->getNext()) {
+        // Marker(i->getInstType());
         i->output();
+        // Marker(i->getInstType());
+    }
 }
 
 void BasicBlock::addSucc(BasicBlock *bb)
@@ -54,7 +62,10 @@ void BasicBlock::addSucc(BasicBlock *bb)
 // remove the successor basicclock bb.
 void BasicBlock::removeSucc(BasicBlock *bb)
 {
-    succ.erase(std::find(succ.begin(), succ.end(), bb));
+    auto iter = std::find(succ.begin(), succ.end(), bb);
+    if (iter != succ.end()) {
+        succ.erase(iter);
+    }
 }
 
 void BasicBlock::addPred(BasicBlock *bb)
@@ -65,7 +76,10 @@ void BasicBlock::addPred(BasicBlock *bb)
 // remove the predecessor basicblock bb.
 void BasicBlock::removePred(BasicBlock *bb)
 {
-    pred.erase(std::find(pred.begin(), pred.end(), bb));
+    auto iter = std::find(pred.begin(), pred.end(), bb);
+    if (iter != pred.end()) {
+        pred.erase(iter);
+    }
 }
 
 BasicBlock::BasicBlock(Function *f)

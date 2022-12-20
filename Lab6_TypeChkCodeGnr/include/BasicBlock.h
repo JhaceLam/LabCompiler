@@ -12,7 +12,7 @@ class BasicBlock
 
 private:
     std::vector<BasicBlock *> pred, succ;
-    Instruction *head; // »ù±¾¿éÖĞµÄÖ¸ÁîÁĞ±íÓÃË«ÏòÑ­»·Á´±íÀ´±íÊ¾
+    Instruction *head; // åŸºæœ¬å—ä¸­çš„æŒ‡ä»¤åˆ—è¡¨ç”¨åŒå‘å¾ªç¯é“¾è¡¨æ¥è¡¨ç¤º
     Function *parent;
     int no;
 
@@ -43,6 +43,7 @@ public:
     bb_iterator pred_end() { return pred.end(); };
     int getNumOfPred() const { return pred.size(); };
     int getNumOfSucc() const { return succ.size(); };
+    void addAlloca(Instruction *inst);
 };
 
 #endif

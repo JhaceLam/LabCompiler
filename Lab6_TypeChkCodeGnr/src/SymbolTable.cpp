@@ -3,11 +3,41 @@
 #include <iostream>
 #include <sstream>
 
+std::string SymbolEntry::getHexString(double val) {
+    std::ostringstream ss;
+    double val_valid = static_cast<float>(val);
+    uint64_t hexVal = reinterpret_cast<uint64_t&>(val_valid);
+    ss << "0x" << std::hex << std::uppercase << hexVal;
+    return ss.str();
+}
+
 SymbolEntry::SymbolEntry(Type *type, int kind) 
 {
     this->type = type;
     this->kind = kind;
-    this->value.numValue = 0;
+    value.numValue = 0;
+    nextFuncSe = nullptr;
+}
+
+bool SymbolEntry::setNextFuncSe(SymbolEntry *se)
+{
+    if (!se->getType()->isFunc()) {
+        return false;
+    }
+
+    SymbolEntry *currentSe = this;
+    while (currentSe) {
+        if (currentSe->getType()->sameType(se->getType())) {
+            return false;
+        }
+        if (currentSe->getNextFuncSe()) {
+            currentSe = currentSe->getNextFuncSe();
+        } else {
+            break;
+        }
+    }
+    currentSe->nextFuncSe = se;
+    return true;
 }
 
 ConstantSymbolEntry::ConstantSymbolEntry(Type *type, double value) : SymbolEntry(type, SymbolEntry::CONSTANT)
@@ -15,7 +45,7 @@ ConstantSymbolEntry::ConstantSymbolEntry(Type *type, double value) : SymbolEntry
     this->value.numValue = value;
 }
 
-ConstantSymbolEntry::ConstantSymbolEntry(Type *type, void *arrayValue) : SymbolEntry(type, SymbolEntry::CONSTANT)
+ConstantSymbolEntry::ConstantSymbolEntry(Type *type, double *arrayValue) : SymbolEntry(type, SymbolEntry::CONSTANT)
 {
     this->value.arrayValue = arrayValue;
 }
@@ -30,20 +60,15 @@ std::string ConstantSymbolEntry::toStr()
 }
 
 IdentifierSymbolEntry::IdentifierSymbolEntry(Type *type, std::string name, int scope, int paramNo) 
-    : SymbolEntry(type, SymbolEntry::VARIABLE), name(name), paramNo(paramNo), commonParamNo(0), floatParamCount(0)
+    : SymbolEntry(type, SymbolEntry::VARIABLE), name(name)
 {
     this->scope = scope;
     this->paramNo = paramNo;
     this->label = -1;
     addr = nullptr;
-}
-
-IdentifierSymbolEntry::IdentifierSymbolEntry(Type *type, std::string name, int scope, int paramNo, bool sysy)
-    : SymbolEntry(type, SymbolEntry::VARIABLE), name(name), paramNo(paramNo)
-{
-    this->scope = scope;
-    this->label = -1;
-    addr = nullptr;
+    fromSysYLib = false;
+    useZeroinitializer = false;
+    givenInitValNum = 0;
 }
 
 std::string IdentifierSymbolEntry::toStr()
@@ -120,7 +145,12 @@ SymbolEntry* SymbolTable::lookup(std::string name)
 bool SymbolTable::install(std::string name, SymbolEntry* entry)
 {
     if (symbolTable.find(name) != symbolTable.end()) {
-        return false;
+        SymbolEntry *se = symbolTable[name];
+        if (se->getType()->isFunc() && entry->getType()->isFunc()) {
+            return se->setNextFuncSe(entry); // Function overload
+        } else {
+            return false;
+        }
     } 
     symbolTable[name] = entry;
     return true;
@@ -130,3 +160,11 @@ int SymbolTable::counter = 0;
 static SymbolTable t;
 SymbolTable *identifiers = &t;
 SymbolTable *globals = &t;
+
+void Marker(int val) {
+    fprintf(stderr, "Marker: %d\n", val);
+}
+
+void Marker(std::string s) {
+    fprintf(stderr, "Marker: %s\n", s.c_str());
+}

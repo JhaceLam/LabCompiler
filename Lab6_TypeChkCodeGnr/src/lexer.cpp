@@ -1247,7 +1247,7 @@ YY_RULE_SETUP
         // int getint()
         Type* funcType = new FunctionType(TypeSystem::intType, {}, {});
         SymbolEntry* entry = new IdentifierSymbolEntry(funcType, yytext, 0); 
-        // dynamic_cast<IdentifierSymbolEntry *>(entry)->setSysy();
+        dynamic_cast<IdentifierSymbolEntry *>(entry)->setFromSysYLib();
         dynamic_cast<IdentifierSymbolEntry *>(entry)->setIntParamCount(0);
         dynamic_cast<IdentifierSymbolEntry *>(entry)->setFloatParamCount(0);
         globalTable->install(yytext, entry);
@@ -1273,7 +1273,7 @@ YY_RULE_SETUP
         // int getch()
         Type* funcType = new FunctionType(TypeSystem::intType, {}, {});
         SymbolEntry* entry = new IdentifierSymbolEntry(funcType, yytext, 0); 
-        // dynamic_cast<IdentifierSymbolEntry *>(entry)->setSysy();
+        dynamic_cast<IdentifierSymbolEntry *>(entry)->setFromSysYLib();
         dynamic_cast<IdentifierSymbolEntry *>(entry)->setIntParamCount(0);
         dynamic_cast<IdentifierSymbolEntry *>(entry)->setFloatParamCount(0);
         globalTable->install(yytext, entry);
@@ -1299,7 +1299,7 @@ YY_RULE_SETUP
         // float getfloat()
         Type* funcType = new FunctionType(TypeSystem::floatType, {}, {});
         SymbolEntry* entry = new IdentifierSymbolEntry(funcType, yytext, 0); 
-        // dynamic_cast<IdentifierSymbolEntry *>(entry)->setSysy();
+        dynamic_cast<IdentifierSymbolEntry *>(entry)->setFromSysYLib();
         dynamic_cast<IdentifierSymbolEntry *>(entry)->setIntParamCount(0);
         dynamic_cast<IdentifierSymbolEntry *>(entry)->setFloatParamCount(0);
         globalTable->install(yytext, entry);
@@ -1328,7 +1328,7 @@ YY_RULE_SETUP
 		paramsType.push_back(arrayType);		
 		FunctionType *funcType = new FunctionType(TypeSystem::intType, paramsType, {});
 		SymbolEntry *entry = new IdentifierSymbolEntry(funcType, yytext, 0);
-        // dynamic_cast<IdentifierSymbolEntry *>(entry)->setSysy();
+        dynamic_cast<IdentifierSymbolEntry *>(entry)->setFromSysYLib();
         dynamic_cast<IdentifierSymbolEntry *>(entry)->setIntParamCount(1);
         dynamic_cast<IdentifierSymbolEntry *>(entry)->setFloatParamCount(0);
         globalTable->install(yytext, entry);
@@ -1357,7 +1357,7 @@ YY_RULE_SETUP
 		paramsType.push_back(arrayType);		
 		FunctionType *funcType = new FunctionType(TypeSystem::intType, paramsType, {});
 		SymbolEntry *entry = new IdentifierSymbolEntry(funcType, yytext, 0);
-        // dynamic_cast<IdentifierSymbolEntry *>(entry)->setSysy();
+        dynamic_cast<IdentifierSymbolEntry *>(entry)->setFromSysYLib();
         dynamic_cast<IdentifierSymbolEntry *>(entry)->setIntParamCount(1);
         dynamic_cast<IdentifierSymbolEntry *>(entry)->setFloatParamCount(0);
         globalTable->install(yytext, entry);
@@ -1385,7 +1385,7 @@ YY_RULE_SETUP
 		paramsType.push_back(TypeSystem::intType);		
 		FunctionType *funcType = new FunctionType(TypeSystem::voidType, paramsType, {});
 		SymbolEntry *entry = new IdentifierSymbolEntry(funcType, yytext, 0);
-        // dynamic_cast<IdentifierSymbolEntry *>(entry)->setSysy();
+        dynamic_cast<IdentifierSymbolEntry *>(entry)->setFromSysYLib();
         dynamic_cast<IdentifierSymbolEntry *>(entry)->setIntParamCount(1);
         dynamic_cast<IdentifierSymbolEntry *>(entry)->setFloatParamCount(0);
         globalTable->install(yytext, entry);
@@ -1413,7 +1413,7 @@ YY_RULE_SETUP
 		paramsType.push_back(TypeSystem::intType);		
 		FunctionType *funcType = new FunctionType(TypeSystem::voidType, paramsType, {});
 		SymbolEntry *entry = new IdentifierSymbolEntry(funcType, yytext, 0);
-        // dynamic_cast<IdentifierSymbolEntry *>(entry)->setSysy();
+        dynamic_cast<IdentifierSymbolEntry *>(entry)->setFromSysYLib();
         dynamic_cast<IdentifierSymbolEntry *>(entry)->setIntParamCount(1);
         dynamic_cast<IdentifierSymbolEntry *>(entry)->setFloatParamCount(0);
         globalTable->install(yytext, entry);
@@ -1441,7 +1441,7 @@ YY_RULE_SETUP
 		paramsType.push_back(TypeSystem::floatType);		
 		FunctionType *funcType = new FunctionType(TypeSystem::voidType, paramsType, {});
 		SymbolEntry *entry = new IdentifierSymbolEntry(funcType, yytext, 0);
-        // dynamic_cast<IdentifierSymbolEntry *>(entry)->setSysy();
+        dynamic_cast<IdentifierSymbolEntry *>(entry)->setFromSysYLib();
         dynamic_cast<IdentifierSymbolEntry *>(entry)->setIntParamCount(1);
         dynamic_cast<IdentifierSymbolEntry *>(entry)->setFloatParamCount(0);
         globalTable->install(yytext, entry);
@@ -1471,7 +1471,7 @@ YY_RULE_SETUP
 		paramsType.push_back(arrayType);	
 		FunctionType *funcType = new FunctionType(TypeSystem::voidType, paramsType, {});
 		SymbolEntry *entry = new IdentifierSymbolEntry(funcType, yytext, 0);
-        // dynamic_cast<IdentifierSymbolEntry *>(entry)->setSysy();
+        dynamic_cast<IdentifierSymbolEntry *>(entry)->setFromSysYLib();
         dynamic_cast<IdentifierSymbolEntry *>(entry)->setIntParamCount(2);
         dynamic_cast<IdentifierSymbolEntry *>(entry)->setFloatParamCount(0);
         globalTable->install(yytext, entry);
@@ -1501,7 +1501,7 @@ YY_RULE_SETUP
 		paramsType.push_back(arrayType);	
 		FunctionType *funcType = new FunctionType(TypeSystem::voidType, paramsType, {});
 		SymbolEntry *entry = new IdentifierSymbolEntry(funcType, yytext, 0);
-        // dynamic_cast<IdentifierSymbolEntry *>(entry)->setSysy();
+        dynamic_cast<IdentifierSymbolEntry *>(entry)->setFromSysYLib();
         dynamic_cast<IdentifierSymbolEntry *>(entry)->setIntParamCount(2);
         dynamic_cast<IdentifierSymbolEntry *>(entry)->setFloatParamCount(0);
         globalTable->install(yytext, entry);
@@ -1530,7 +1530,7 @@ YY_RULE_SETUP
 		paramsType.push_back(str);	
 		FunctionType *funcType = new FunctionType(TypeSystem::voidType, paramsType, {});
 		SymbolEntry *entry = new IdentifierSymbolEntry(funcType, yytext, 0);
-        // dynamic_cast<IdentifierSymbolEntry *>(entry)->setSysy();
+        dynamic_cast<IdentifierSymbolEntry *>(entry)->setFromSysYLib();
         // dynamic_cast<IdentifierSymbolEntry *>(entry)->setIntParamCount(0);
         // dynamic_cast<IdentifierSymbolEntry *>(entry)->setFloatParamCount(0);
         globalTable->install(yytext, entry);

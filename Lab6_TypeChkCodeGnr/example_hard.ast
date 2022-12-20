@@ -1,0 +1,477 @@
+program
+    DeclStmt
+        ConstDefNode
+            Const Id	name: a1	scope: 0	symbolEntryType: i32	formedType:i32
+            ImplicitCastExpr	type: float to i32
+                FloatLiteral	value: 10	type: float
+    DeclStmt
+        DefNode
+            Id	name: a2	scope: 0	symbolEntryType: [5 x i32]	formedType:i32
+                ConstArrayIndexNode:
+                    IntegerLiteral	value: 5	type: i32
+            ConstArrayInitValNode	type: [5 x i32]
+                Const Id	name: a1	scope: 0	symbolEntryType: i32	formedType:i32
+                ImplicitCastExpr	type: float to i32
+                    FloatLiteral	value: 2	type: float
+                IntegerLiteral	value: 3	type: i32
+                IntegerLiteral	value: 0	type: i32
+                IntegerLiteral	value: 0	type: i32
+    DeclStmt
+        DefNode
+            Id	name: a3	scope: 0	symbolEntryType: [5 x i32]	formedType:i32
+                ConstArrayIndexNode:
+                    IntegerLiteral	value: 5	type: i32
+            ConstArrayInitValNode	type: [5 x i32]
+                IntegerLiteral	value: 0	type: i32
+                IntegerLiteral	value: 0	type: i32
+                IntegerLiteral	value: 0	type: i32
+                IntegerLiteral	value: 0	type: i32
+                IntegerLiteral	value: 0	type: i32
+    DeclStmt
+        DefNode
+            Id	name: a4	scope: 0	symbolEntryType: [2 x [3 x i32]]	formedType:i32
+                ConstArrayIndexNode:
+                    IntegerLiteral	value: 2	type: i32
+                    IntegerLiteral	value: 3	type: i32
+            ConstArrayInitValNode	type: [2 x [3 x i32]]
+                ConstArrayInitValNode	type: [3 x i32]
+                    Id	name: a2	scope: 0	symbolEntryType: [5 x i32]	formedType:i32
+                        ConstArrayIndexNode:
+                            IntegerLiteral	value: 1	type: i32
+                    IntegerLiteral	value: 2	type: i32
+                    IntegerLiteral	value: 0	type: i32
+                ConstArrayInitValNode	type: [3 x i32]
+                    IntegerLiteral	value: 0	type: i32
+                    IntegerLiteral	value: 0	type: i32
+                    IntegerLiteral	value: 0	type: i32
+    DeclStmt
+        ConstDefNode
+            Const Id	name: a5	scope: 0	symbolEntryType: [2 x [2 x [3 x i32]]]	formedType:i32
+                ConstArrayIndexNode:
+                    IntegerLiteral	value: 2	type: i32
+                    IntegerLiteral	value: 2	type: i32
+                    IntegerLiteral	value: 3	type: i32
+            ConstArrayInitValNode	type: [2 x [2 x [3 x i32]]]
+                ConstArrayInitValNode	type: [2 x [3 x i32]]
+                    ConstArrayInitValNode	type: [3 x i32]
+                        IntegerLiteral	value: 0	type: i32
+                        IntegerLiteral	value: 1	type: i32
+                        IntegerLiteral	value: 2	type: i32
+                    ConstArrayInitValNode	type: [3 x i32]
+                        IntegerLiteral	value: 3	type: i32
+                        IntegerLiteral	value: 4	type: i32
+                        IntegerLiteral	value: 5	type: i32
+                ConstArrayInitValNode	type: [2 x [3 x i32]]
+                    ConstArrayInitValNode	type: [3 x i32]
+                        IntegerLiteral	value: 6	type: i32
+                        IntegerLiteral	value: 7	type: i32
+                        IntegerLiteral	value: 8	type: i32
+                    ConstArrayInitValNode	type: [3 x i32]
+                        IntegerLiteral	value: 0	type: i32
+                        IntegerLiteral	value: 0	type: i32
+                        IntegerLiteral	value: 0	type: i32
+    DeclStmt
+        DefNode
+            Id	name: a6	scope: 0	symbolEntryType: float	formedType:float
+            ImplicitCastExpr	type: i32 to float
+                Const Id	name: a5	scope: 0	symbolEntryType: [2 x [2 x [3 x i32]]]	formedType:i32
+                    ConstArrayIndexNode:
+                        IntegerLiteral	value: 0	type: i32
+                        IntegerLiteral	value: 1	type: i32
+                        IntegerLiteral	value: 2	type: i32
+    DeclStmt
+        ConstDefNode
+            Const Id	name: a7	scope: 0	symbolEntryType: [3 x [10 x float]]	formedType:float
+                ConstArrayIndexNode:
+                    IntegerLiteral	value: 3	type: i32
+                    IntegerLiteral	value: 10	type: i32
+            ConstArrayInitValNode	type: [3 x [10 x float]]
+                ConstArrayInitValNode	type: [10 x float]
+                    ImplicitCastExpr	type: i32 to float
+                        IntegerLiteral	value: 1	type: i32
+                    ImplicitCastExpr	type: i32 to float
+                        IntegerLiteral	value: 2	type: i32
+                    FloatLiteral	value: 0	type: float
+                    FloatLiteral	value: 0	type: float
+                    FloatLiteral	value: 0	type: float
+                    FloatLiteral	value: 0	type: float
+                    FloatLiteral	value: 0	type: float
+                    FloatLiteral	value: 0	type: float
+                    FloatLiteral	value: 0	type: float
+                    FloatLiteral	value: 0	type: float
+                ConstArrayInitValNode	type: [10 x float]
+                    FloatLiteral	value: 0	type: float
+                    FloatLiteral	value: 0	type: float
+                    FloatLiteral	value: 0	type: float
+                    FloatLiteral	value: 0	type: float
+                    FloatLiteral	value: 0	type: float
+                    FloatLiteral	value: 0	type: float
+                    FloatLiteral	value: 0	type: float
+                    FloatLiteral	value: 0	type: float
+                    FloatLiteral	value: 0	type: float
+                    FloatLiteral	value: 0	type: float
+                ConstArrayInitValNode	type: [10 x float]
+                    FloatLiteral	value: 0	type: float
+                    FloatLiteral	value: 0	type: float
+                    FloatLiteral	value: 0	type: float
+                    FloatLiteral	value: 0	type: float
+                    FloatLiteral	value: 0	type: float
+                    FloatLiteral	value: 0	type: float
+                    FloatLiteral	value: 0	type: float
+                    FloatLiteral	value: 0	type: float
+                    FloatLiteral	value: 0	type: float
+                    FloatLiteral	value: 0	type: float
+    DeclStmt
+        ConstDefNode
+            Const Id	name: a8	scope: 0	symbolEntryType: [4 x [3 x [10 x float]]]	formedType:float
+                ConstArrayIndexNode:
+                    IntegerLiteral	value: 4	type: i32
+                    IntegerLiteral	value: 3	type: i32
+                    IntegerLiteral	value: 10	type: i32
+            ConstArrayInitValNode	type: [4 x [3 x [10 x float]]]
+                ConstArrayInitValNode	type: [3 x [10 x float]]
+                    ConstArrayInitValNode	type: [10 x float]
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                    ConstArrayInitValNode	type: [10 x float]
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                    ConstArrayInitValNode	type: [10 x float]
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                ConstArrayInitValNode	type: [3 x [10 x float]]
+                    ConstArrayInitValNode	type: [10 x float]
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                    ConstArrayInitValNode	type: [10 x float]
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                    ConstArrayInitValNode	type: [10 x float]
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                ConstArrayInitValNode	type: [3 x [10 x float]]
+                    ConstArrayInitValNode	type: [10 x float]
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                    ConstArrayInitValNode	type: [10 x float]
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                    ConstArrayInitValNode	type: [10 x float]
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                ConstArrayInitValNode	type: [3 x [10 x float]]
+                    ConstArrayInitValNode	type: [10 x float]
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                    ConstArrayInitValNode	type: [10 x float]
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                    ConstArrayInitValNode	type: [10 x float]
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+                        FloatLiteral	value: 0	type: float
+    DeclStmt
+        DefNode
+            Id	name: testArr	scope: 0	symbolEntryType: [12 x i32]	formedType:i32
+                ConstArrayIndexNode:
+                    ConstBinaryExpr	 op: add	 DataType: i32
+                        Const Id	name: a5	scope: 0	symbolEntryType: [2 x [2 x [3 x i32]]]	formedType:i32
+                            ConstArrayIndexNode:
+                                IntegerLiteral	value: 1	type: i32
+                                IntegerLiteral	value: 0	type: i32
+                                IntegerLiteral	value: 2	type: i32
+                        IntegerLiteral	value: 4	type: i32
+            ConstArrayInitValNode	type: [12 x i32]
+                IntegerLiteral	value: 0	type: i32
+                IntegerLiteral	value: 0	type: i32
+                IntegerLiteral	value: 0	type: i32
+                IntegerLiteral	value: 0	type: i32
+                IntegerLiteral	value: 0	type: i32
+                IntegerLiteral	value: 0	type: i32
+                IntegerLiteral	value: 0	type: i32
+                IntegerLiteral	value: 0	type: i32
+                IntegerLiteral	value: 0	type: i32
+                IntegerLiteral	value: 0	type: i32
+                IntegerLiteral	value: 0	type: i32
+                IntegerLiteral	value: 0	type: i32
+    FunctionDefine function name: @fun1, type: void()
+        CompoundStmt
+            ReturnStmt
+    FunctionDefine function name: @fun2, type: float(float, i32, [10 x float]*)
+        DeclStmt
+            DefNode
+                Id	name: %t19	scope: 1	symbolEntryType: float	formedType:float
+            DefNode
+                Id	name: %t21	scope: 1	symbolEntryType: i32	formedType:i32
+            DefNode
+                Id	name: %t23	scope: 1	symbolEntryType: [10 x float]*	formedType:[10 x float]*
+        CompoundStmt
+            ExprStmt
+                FuncCallExpr	funcName: @fun1	 funcType: void()	scope: 0	
+            ReturnStmt
+                BinaryExpr	 op: sub	 DataType: float
+                    BinaryExpr	 op: star	 DataType: float
+                        Id	name: %t19	scope: 1	symbolEntryType: float	formedType:float
+                        ImplicitCastExpr	type: i32 to float
+                            Id	name: %t21	scope: 1	symbolEntryType: i32	formedType:i32
+                    Id	name: %t23	scope: 1	symbolEntryType: [10 x float]*	formedType:float
+                        ConstArrayIndexNode:
+                            IntegerLiteral	value: 0	type: i32
+                            IntegerLiteral	value: 2	type: i32
+    FunctionDefine function name: @fun2, type: i32(float, i32)
+        DeclStmt
+            DefNode
+                Id	name: %t31	scope: 1	symbolEntryType: float	formedType:float
+            DefNode
+                Id	name: %t33	scope: 1	symbolEntryType: i32	formedType:i32
+        CompoundStmt
+            ReturnStmt
+                ImplicitCastExpr	type: float to i32
+                    BinaryExpr	 op: sub	 DataType: float
+                        Id	name: %t31	scope: 1	symbolEntryType: float	formedType:float
+                        ImplicitCastExpr	type: i32 to float
+                            Id	name: %t33	scope: 1	symbolEntryType: i32	formedType:i32
+    FunctionDefine function name: @main, type: i32()
+        CompoundStmt
+            DeclStmt
+                DefNode
+                    Id	name: a	scope: 2	symbolEntryType: i32	formedType:i32
+                    IntegerLiteral	value: 0	type: i32
+            DeclStmt
+                DefNode
+                    Id	name: b	scope: 2	symbolEntryType: i32	formedType:i32
+                    IntegerLiteral	value: 0	type: i32
+            DeclStmt
+                DefNode
+                    Id	name: min	scope: 2	symbolEntryType: i32	formedType:i32
+                    IntegerLiteral	value: 0	type: i32
+            AssignStmt
+                Id	name: a	scope: 2	symbolEntryType: i32	formedType:i32
+                ImplicitCastExpr	type: float to i32
+                    BinaryExpr	 op: add	 DataType: float
+                        ImplicitCastExpr	type: i32 to float
+                            BinaryExpr	 op: add	 DataType: i32
+                                BinaryExpr	 op: add	 DataType: i32
+                                    Id	name: a4	scope: 0	symbolEntryType: [2 x [3 x i32]]	formedType:i32
+                                        ConstArrayIndexNode:
+                                            IntegerLiteral	value: 0	type: i32
+                                            IntegerLiteral	value: 1	type: i32
+                                    Id	name: a2	scope: 0	symbolEntryType: [5 x i32]	formedType:i32
+                                        ConstArrayIndexNode:
+                                            IntegerLiteral	value: 0	type: i32
+                                IntegerLiteral	value: 3	type: i32
+                        Id	name: a6	scope: 0	symbolEntryType: float	formedType:float
+            AssignStmt
+                Id	name: b	scope: 2	symbolEntryType: i32	formedType:i32
+                ConstBinaryExpr	 op: add	 DataType: i32
+                    ConstBinaryExpr	 op: add	 DataType: i32
+                        Const Id	name: a5	scope: 0	symbolEntryType: [2 x [2 x [3 x i32]]]	formedType:i32
+                            ConstArrayIndexNode:
+                                IntegerLiteral	value: 0	type: i32
+                                IntegerLiteral	value: 1	type: i32
+                                IntegerLiteral	value: 2	type: i32
+                        IntegerLiteral	value: 3	type: i32
+                    IntegerLiteral	value: 4	type: i32
+            AssignStmt
+                Id	name: b	scope: 2	symbolEntryType: i32	formedType:i32
+                ImplicitCastExpr	type: float to i32
+                    BinaryExpr	 op: add	 DataType: float
+                        ImplicitCastExpr	type: i32 to float
+                            Id	name: b	scope: 2	symbolEntryType: i32	formedType:i32
+                        FuncCallExpr	funcName: @fun2	 funcType: float(float, i32, [10 x float]*)	scope: 0	
+                            FuncCallParamsNode
+                                ImplicitCastExpr	type: i32 to float
+                                    Id	name: a2	scope: 0	symbolEntryType: [5 x i32]	formedType:i32
+                                        ConstArrayIndexNode:
+                                            IntegerLiteral	value: 1	type: i32
+                                Id	name: b	scope: 2	symbolEntryType: i32	formedType:i32
+                                Const Id	name: a8	scope: 0	symbolEntryType: [4 x [3 x [10 x float]]]	formedType:[3 x [10 x float]]
+                                    ConstArrayIndexNode:
+                                        IntegerLiteral	value: 0	type: i32
+            AssignStmt
+                Id	name: b	scope: 2	symbolEntryType: i32	formedType:i32
+                BinaryExpr	 op: add	 DataType: i32
+                    Id	name: b	scope: 2	symbolEntryType: i32	formedType:i32
+                    FuncCallExpr	funcName: @fun2	 funcType: i32(float, i32)	scope: 0	
+                        FuncCallParamsNode
+                            Id	name: a6	scope: 0	symbolEntryType: float	formedType:float
+                            ImplicitCastExpr	type: float to i32
+                                Const Id	name: a7	scope: 0	symbolEntryType: [3 x [10 x float]]	formedType:float
+                                    ConstArrayIndexNode:
+                                        IntegerLiteral	value: 2	type: i32
+                                        IntegerLiteral	value: 3	type: i32
+            IfStmt
+                BinaryExpr	 op: and	 DataType: i1
+                    ImplicitCastExpr	type: i32 to i1
+                        Id	name: a4	scope: 0	symbolEntryType: [2 x [3 x i32]]	formedType:i32
+                            ConstArrayIndexNode:
+                                IntegerLiteral	value: 1	type: i32
+                                IntegerLiteral	value: 3	type: i32
+                    ConstBinaryExpr	 op: neq	 DataType: i1
+                        Const Id	name: a7	scope: 0	symbolEntryType: [3 x [10 x float]]	formedType:float
+                            ConstArrayIndexNode:
+                                IntegerLiteral	value: 5	type: i32
+                                IntegerLiteral	value: 4	type: i32
+                        FloatLiteral	value: 0	type: float
+                EmptyStmt
+            IfStmt
+                BinaryExpr	 op: great	 DataType: i1
+                    ImplicitCastExpr	type: i32 to float
+                        Id	name: a4	scope: 0	symbolEntryType: [2 x [3 x i32]]	formedType:i32
+                            ConstArrayIndexNode:
+                                IntegerLiteral	value: 1	type: i32
+                                IntegerLiteral	value: 3	type: i32
+                    BinaryExpr	 op: add	 DataType: float
+                        Const Id	name: a7	scope: 0	symbolEntryType: [3 x [10 x float]]	formedType:float
+                            ConstArrayIndexNode:
+                                IntegerLiteral	value: 5	type: i32
+                                IntegerLiteral	value: 4	type: i32
+                        ImplicitCastExpr	type: i32 to float
+                            Id	name: a	scope: 2	symbolEntryType: i32	formedType:i32
+                EmptyStmt
+            IfStmt
+                BinaryExpr	 op: or	 DataType: i1
+                    ConstOneOpExpr	 op: not	 DataType: i1
+                        ConstBinaryExpr	 op: neq	 DataType: i1
+                            Const Id	name: a7	scope: 0	symbolEntryType: [3 x [10 x float]]	formedType:float
+                                ConstArrayIndexNode:
+                                    IntegerLiteral	value: 2	type: i32
+                                    IntegerLiteral	value: 9	type: i32
+                            FloatLiteral	value: 0	type: float
+                    OneOpExpr	 op: not	 DataType: i1
+                        ImplicitCastExpr	type: i32 to i1
+                            Id	name: a2	scope: 0	symbolEntryType: [5 x i32]	formedType:i32
+                                ConstArrayIndexNode:
+                                    IntegerLiteral	value: 0	type: i32
+                EmptyStmt
+            IfElseStmt
+                BinaryExpr	 op: less	 DataType: i1
+                    Id	name: a	scope: 2	symbolEntryType: i32	formedType:i32
+                    Id	name: b	scope: 2	symbolEntryType: i32	formedType:i32
+                AssignStmt
+                    Id	name: min	scope: 2	symbolEntryType: i32	formedType:i32
+                    Id	name: a	scope: 2	symbolEntryType: i32	formedType:i32
+                AssignStmt
+                    Id	name: min	scope: 2	symbolEntryType: i32	formedType:i32
+                    Id	name: b	scope: 2	symbolEntryType: i32	formedType:i32
+            DeclStmt
+                DefNode
+                    Id	name: count	scope: 2	symbolEntryType: i32	formedType:i32
+                    IntegerLiteral	value: 0	type: i32
+            WhileStmt
+                BinaryExpr	 op: less	 DataType: i1
+                    Id	name: count	scope: 2	symbolEntryType: i32	formedType:i32
+                    IntegerLiteral	value: 100	type: i32
+                CompoundStmt
+                    IfStmt
+                        BinaryExpr	 op: less	 DataType: i1
+                            Id	name: count	scope: 2	symbolEntryType: i32	formedType:i32
+                            IntegerLiteral	value: 10	type: i32
+                        ContinueStmt
+                    IfStmt
+                        BinaryExpr	 op: great	 DataType: i1
+                            Id	name: count	scope: 2	symbolEntryType: i32	formedType:i32
+                            IntegerLiteral	value: 20	type: i32
+                        BreakStmt
+                    AssignStmt
+                        Id	name: count	scope: 2	symbolEntryType: i32	formedType:i32
+                        BinaryExpr	 op: add	 DataType: i32
+                            Id	name: count	scope: 2	symbolEntryType: i32	formedType:i32
+                            IntegerLiteral	value: 2	type: i32
+            ReturnStmt
+                Id	name: min	scope: 2	symbolEntryType: i32	formedType:i32

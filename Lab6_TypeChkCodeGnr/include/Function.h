@@ -19,15 +19,17 @@ class Function
 private:
     std::vector<BasicBlock *> block_list;
     SymbolEntry *sym_ptr;
-    BasicBlock *entry; // 每个函数都有一个 entry 基本块，它是函数的入口结点。
-    // TODO: 建议设置 exit 基本块，作为函数的出口结点。
+    BasicBlock *entry, *exit;
     Unit *parent;
+    Instruction* lastAlloca;
 
 public:
     Function(Unit *, SymbolEntry *);
     ~Function();
     void insertBlock(BasicBlock *bb) { block_list.push_back(bb); };
     BasicBlock *getEntry() { return entry; };
+    void setEntry(BasicBlock *entry) {this->entry = entry; };
+    void setExit(BasicBlock *exit) {this->exit = exit; };
     void remove(BasicBlock *bb);
     void output() const;
     std::vector<BasicBlock *> &getBlockList(){return block_list;};
@@ -36,6 +38,7 @@ public:
     reverse_iterator rbegin() { return block_list.rbegin(); };
     reverse_iterator rend() { return block_list.rend(); };
     SymbolEntry *getSymPtr() { return sym_ptr; };
+    void addAlloca(Instruction *inst);
 };
 
 #endif
