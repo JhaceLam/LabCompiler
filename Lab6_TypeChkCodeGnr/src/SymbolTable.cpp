@@ -160,6 +160,38 @@ int SymbolTable::counter = 0;
 static SymbolTable t;
 SymbolTable *identifiers = &t;
 SymbolTable *globals = &t;
+bool SymbolTable::activateMapping = true;
+int SymbolTable::mappedCounter = 0;
+std::map<int, int> SymbolTable::labelMap;
+
+
+void SymbolTable::resetLabelMap() {
+    mappedCounter = 0;
+    labelMap.clear(); 
+}
+
+int SymbolTable::getMappedLabel(int oldLabel) {
+    auto iter = labelMap.find(oldLabel);
+    if (iter == labelMap.end()) {
+        labelMap[oldLabel] = mappedCounter;
+        return mappedCounter++;
+    } else {
+        return iter->second;
+    }
+}
+
+std::string SymbolTable::getMappedLabelStr(std::string oldLabelStr) {
+    if (!activateMapping) {
+        return oldLabelStr;
+    }
+
+    if (oldLabelStr.substr(0, 2) == "%t") {
+        int oldLabel = std::stoi(oldLabelStr.substr(2));
+        return "%t" + std::to_string(getMappedLabel(oldLabel));
+    } else {
+        return oldLabelStr;
+    }
+}
 
 void Marker(int val) {
     fprintf(stderr, "Marker: %d\n", val);

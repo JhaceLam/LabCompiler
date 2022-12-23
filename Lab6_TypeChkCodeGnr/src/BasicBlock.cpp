@@ -38,7 +38,7 @@ void BasicBlock::remove(Instruction *inst)
 
 void BasicBlock::output() const
 {
-    fprintf(yyout, "B%d:", no);
+    fprintf(yyout, "B%d:", SymbolTable::activateMapping ? SymbolTable::getMappedLabel(no) : no);
 
     if (!pred.empty())
     {

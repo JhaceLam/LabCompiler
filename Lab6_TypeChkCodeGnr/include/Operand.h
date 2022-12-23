@@ -26,6 +26,7 @@ public:
     int usersNum() const {return uses.size();};
     std::vector<Instruction *> &getUse() { return uses; }
     Type* getType() {return se->getType();};
+    void setType(Type *type) {se->setType(type); }
     std::string toStr() const;
     SymbolEntry *getSymbolEntry() { return se; }
 

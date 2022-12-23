@@ -150,6 +150,7 @@ void Unit::output() const
             }
         }
     }
+    
     fprintf(yyout, "\n");
     for (auto &func : func_list) {
         func->output();

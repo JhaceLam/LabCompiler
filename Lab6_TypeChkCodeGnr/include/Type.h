@@ -27,6 +27,7 @@ public:
     bool isIntFamily();
     bool isFloatFamily();
     int getSize() {return size; }
+    int getKind() {return kind; }
     virtual Type *deepCopy() = 0;
     virtual bool sameType(Type *type) = 0;
 };

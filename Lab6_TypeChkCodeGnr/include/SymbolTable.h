@@ -53,6 +53,11 @@ private:
     SymbolTable *prev;
     int level;
     static int counter;
+
+    // for modifying %t# in llvm output
+    static int mappedCounter;
+    static std::map<int, int> labelMap;
+
 public:
     SymbolTable();
     SymbolTable(SymbolTable *prev);
@@ -63,6 +68,12 @@ public:
     static int getLabel() {return counter++; };
     static void resetLabel() {counter = 0; };
     static int getCounter() {return counter; }
+
+    // for modifying %t# in llvm output
+    static bool activateMapping;
+    static void resetLabelMap();
+    static int getMappedLabel(int oldLabel);
+    static std::string getMappedLabelStr(std::string oldLabelStr);
 };
 
 extern SymbolTable *identifiers;

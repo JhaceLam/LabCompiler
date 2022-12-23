@@ -165,23 +165,6 @@ commentend (\*\/)
         return NOT;
     #endif
 }
-
-"==" {
-    #ifdef ONLY_FOR_LEX
-        DEBUG_FOR_LAB4("EQ", "==");
-        offset += yyleng;
-    #else
-        return EQ;
-    #endif
-}
-"!=" {
-    #ifdef ONLY_FOR_LEX
-        DEBUG_FOR_LAB4("NEQ", "!=");
-        offset += yyleng;
-    #else
-        return NEQ;
-    #endif
-}
 "<" {
     #ifdef ONLY_FOR_LEX
         DEBUG_FOR_LAB4("LESS", "<");
@@ -212,6 +195,22 @@ commentend (\*\/)
         offset += yyleng;
     #else
         return GREATEQ;
+    #endif
+}
+"==" {
+    #ifdef ONLY_FOR_LEX
+        DEBUG_FOR_LAB4("EQ", "==");
+        offset += yyleng;
+    #else
+        return EQ;
+    #endif
+}
+"!=" {
+    #ifdef ONLY_FOR_LEX
+        DEBUG_FOR_LAB4("NEQ", "!=");
+        offset += yyleng;
+    #else
+        return NEQ;
     #endif
 }
 

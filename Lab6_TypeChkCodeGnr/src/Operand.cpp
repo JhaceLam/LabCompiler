@@ -9,7 +9,7 @@ std::string Operand::toStr() const
     if (se->isVariable() && dynamic_cast<IdentifierSymbolEntry *>(se)->isGlobal()) {
         res = "@" + res;
     }
-    return res;
+    return SymbolTable::getMappedLabelStr(res);
 }
 
 void Operand::removeUse(Instruction *inst)

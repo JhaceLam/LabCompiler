@@ -234,12 +234,24 @@ void UnaryExpr::genCode()
 {
     expr->genCode();
     BasicBlock* bb = builder->getInsertBB();
+    Function *func = bb->getParent();
     Operand *src1;
     Operand *src2;
     if(op == NOT) {
         src1 = expr->getOperand();
         src2 = new Operand(new ConstantSymbolEntry(TypeSystem::constBoolType, 1));
-        new BinaryInstruction(BinaryInstruction::XOR, dst, src1, src2, bb);
+        Operand *tempDst = new Operand(new TemporarySymbolEntry(TypeSystem::intType, SymbolTable::getLabel()));
+        new BinaryInstruction(BinaryInstruction::XOR, tempDst, src1, src2, bb);
+
+        src2 = new Operand(new ConstantSymbolEntry(TypeSystem::constIntType, 0.0));
+        new CmpInstruction(CmpInstruction::NE, dst, tempDst, src2, bb);
+        
+        BasicBlock *truebb, *falsebb, *tempbb;
+        truebb = new BasicBlock(func);
+        falsebb = new BasicBlock(func);
+        tempbb = new BasicBlock(func);
+        true_list.push_back(new CondBrInstruction(truebb, tempbb, dst, bb));
+        false_list.push_back(new UncondBrInstruction(falsebb, tempbb));
     } else if (op == SUB) {
         Type *constantType = expr->getType()->isInt() ? TypeSystem::constIntType : TypeSystem::constFloatType;
         src1 = new Operand(new ConstantSymbolEntry(constantType, 0.0));
@@ -273,6 +285,7 @@ void Id::genCode()
             Operand* tempSrc = addr;
             Operand* tempDst = dst;
             std::vector<ExprNode *> indexExprList = index->getExprList();
+            bool getPtr = false;
             for (ExprNode *indexExpr : indexExprList) {
                 bool isSpecialGep = false;
                 if (dynamic_cast<ArrayType *>(arrayType)->getLength() == -1) {
@@ -287,17 +300,23 @@ void Id::genCode()
                 new GepInstruction(tempDst, tempSrc, indexExpr->getOperand(), bb, isSpecialGep);
                 if (!elementType->isArray()) {
                     break;
-                } else {
-                    arrayType = dynamic_cast<ArrayType *>(arrayType)->getElementType();
-                    elementType = dynamic_cast<ArrayType *>(arrayType)->getElementType();
-                    tempSrc = tempDst;
-                    tempDst = new Operand(new TemporarySymbolEntry(new PointerType(elementType), SymbolTable::getLabel()));
+                }
+                arrayType = dynamic_cast<ArrayType *>(arrayType)->getElementType();
+                elementType = dynamic_cast<ArrayType *>(arrayType)->getElementType();
+                tempSrc = tempDst;
+                tempDst = new Operand(new TemporarySymbolEntry(new PointerType(elementType), SymbolTable::getLabel()));
+                if (indexExpr == *(indexExprList.rbegin())) {
+                    getPtr = true;
+                    Operand *zeroOperand = new Operand(new ConstantSymbolEntry(TypeSystem::constIntType, 0.0));
+                    new GepInstruction(tempDst, tempSrc, zeroOperand, bb);
+                    break;
                 }
                 // assert(dst->getType()->isPtr());
             }
             dst = tempDst;
+
             // Extra load instruction when being RVal
-            if (!isLVal) {
+            if (!isLVal && !getPtr) {
                 Operand* loadDst = new Operand(new TemporarySymbolEntry(elementType, SymbolTable::getLabel()));
                 new LoadInstruction(loadDst, dst, bb);
                 dst = loadDst;
@@ -415,6 +434,7 @@ void DefNode::genCode()
         Type *addrSeType = new PointerType(IdSe->getType());
         SymbolEntry *addrSe = new TemporarySymbolEntry(addrSeType, SymbolTable::getLabel());
         Operand *addr = new Operand(addrSe);
+        // fprintf(stderr, "IdSe: %s %s\n", IdSe->toStr().c_str(), IdSe->getType()->toStr().c_str());
         Instruction *alloca = new AllocaInstruction(addr, IdSe, bb);
         Operand *oldAddr = IdSe->getAddr();
         IdSe->setAddr(addr);
@@ -647,13 +667,24 @@ void FuncCallExpr::genCode()
 {  
     BasicBlock* bb = builder->getInsertBB();
     std::vector<Operand *> operands;
+    FunctionType *funcType = dynamic_cast<FunctionType *>(getSymPtr()->getType());
+    std::vector<Type *> fParamsType = funcType->getParamsType();
+    int fParamsIdx = 0;
     if (params) {
         std::vector<ExprNode *> paramslist = params->getParamslist();
         for(auto expr : paramslist)
         {
             expr->genCode();
-            operands.push_back(expr->getOperand());
+            Operand *src = expr->getOperand();
+            if (fParamsType[fParamsIdx]->isInt() && fParamsType[fParamsIdx]->getSize() > 1
+                && src->getType()->isInt() && src->getType()->getSize() == 1) {
+                Operand *tempDst = new Operand(new TemporarySymbolEntry(TypeSystem::intType, SymbolTable::getLabel()));
+                new ZextInstruction(tempDst, src, bb);
+                src = tempDst;  
+            }
+            operands.push_back(src);
         }
+        fParamsIdx++;
     }
     new CallInstruction(dst, symbolEntry, operands, bb);
 }
@@ -1684,13 +1715,13 @@ ExprNode *ImplicitCastExpr::intToBool(ExprNode *srcExpr) {
 }
 
 ExprNode *ImplicitCastExpr::intToFloat(ExprNode *srcExpr) {
-    Type *tempExprType = srcExpr->getType()->isConst() ? TypeSystem::constFloatType : TypeSystem::floatType;
+    Type *tempExprType = srcExpr->getFormedType()->isConst() ? TypeSystem::constFloatType : TypeSystem::floatType;
     ImplicitCastExpr* tempExpr = new ImplicitCastExpr(srcExpr, tempExprType);
     return tempExpr;
 }
 
 ExprNode *ImplicitCastExpr::floatToInt(ExprNode *srcExpr) {
-    Type *tempExprType = srcExpr->getType()->isConst() ? TypeSystem::constIntType : TypeSystem::intType;
+    Type *tempExprType = srcExpr->getFormedType()->isConst() ? TypeSystem::constIntType : TypeSystem::intType;
     ImplicitCastExpr* tempExpr = new ImplicitCastExpr(srcExpr, tempExprType);
     return tempExpr;
 }
@@ -1698,9 +1729,9 @@ ExprNode *ImplicitCastExpr::floatToInt(ExprNode *srcExpr) {
 void ImplicitCastExpr::genCode() {
     expr->genCode();
     BasicBlock *bb = builder->getInsertBB();
-    if (expr->getType()->isInt() && castType->isFloat()) {
+    if (expr->getFormedType()->isInt() && castType->isFloat()) {
         new ItoFInstruction(dst, expr->getOperand(), bb);
-    } else {
+    } else {        
         new FtoIInstruction(dst, expr->getOperand(), bb);
     }
 }

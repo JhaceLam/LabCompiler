@@ -19,6 +19,7 @@
     int stackParamNo;
     std::stack<StmtNode *> whileStack;
     FunctionType *lastDefFuncType;
+    StmtNode *lastReturnStmt = nullptr;
 }
 
 %code requires {
@@ -49,7 +50,7 @@
 
 %type <stmttype> Stmts Stmt AssignStmt BlockStmt IfStmt ReturnStmt DeclStmt FuncDef VarDeclStmt
 %type <stmttype> ExprStmt EmptyStmt WhileStmt BreakStmt ContinueStmt
-%type <exprtype> Exp AddExp Cond LOrExp PrimaryExp LVal RelExp LAndExp StarExp UnaryExp
+%type <exprtype> Exp AddExp Cond LOrExp PrimaryExp LVal RelExp EqExp LAndExp StarExp UnaryExp
 %type <type> Type
 %type <stmttype> ArrayIndex VarDef VarDefList ConstDeclStmt ConstDefList ConstDef
 %type <stmttype> FuncArrayIndex FuncFParam FuncFParams FuncRParams
@@ -107,7 +108,8 @@ VarDef
             fprintf(stderr, "Error: conflicting declaration of identifier %s\n", $1);
             assert(identifiers->install($1, se) != false);
         }
-        se->setValue($3->getValue());
+        double val = declType->isInt() ? static_cast<int>($3->getValue()) : $3->getValue();
+        se->setValue(val);
         $$ = new DefNode(new Id(se), $3);
         
         delete []$1;
@@ -221,7 +223,8 @@ ConstDef
         if (!identifiers->install($1, se)) {
             fprintf(stderr, "Error: conflicting declaration of identifier %s\n", $1);
         }
-        se->setValue($3->getValue());
+        double val = declType->isInt() ? static_cast<int>($3->getValue()) : $3->getValue();
+        se->setValue(val);
         $$ = new DefNode(new Id(se), $3);
 
         delete []$1;
@@ -367,6 +370,7 @@ ReturnStmt
             }
             
         }
+        lastReturnStmt = $$;
     }
     |
     RETURN SEMICOLON {
@@ -376,6 +380,7 @@ ReturnStmt
         } else {
             $$ = new ReturnStmt(nullptr);
         }
+        lastReturnStmt = $$;
     }
     ;
 Exp
@@ -477,26 +482,30 @@ RelExp
         SymbolEntry *se = new TemporarySymbolEntry(expType, SymbolTable::getLabel());
         $$ = new BinaryExpr(se, BinaryExpr::GREATEQ, $1, $3);
     }
+    ;   
+EqExp
+    :
+    RelExp {
+        $$ = $1;
+    }
     |
-    RelExp EQ AddExp
-    {
+    EqExp EQ RelExp {
         Type *expType = BinaryExpr::getRelationalResultType($1, $3);
         SymbolEntry *se = new TemporarySymbolEntry(expType, SymbolTable::getLabel());
         $$ = new BinaryExpr(se, BinaryExpr::EQ, $1, $3);
     }
     |
-    RelExp NEQ AddExp 
-    {
+    EqExp NEQ RelExp {
         Type *expType = BinaryExpr::getRelationalResultType($1, $3);
         SymbolEntry *se = new TemporarySymbolEntry(expType, SymbolTable::getLabel());
         $$ = new BinaryExpr(se, BinaryExpr::NEQ, $1, $3);
     }
-    ;   
+    ;
 LAndExp
     :
-    RelExp {$$ = $1;}
+    EqExp {$$ = $1;}
     |
-    LAndExp AND RelExp
+    LAndExp AND EqExp
     {
         Type *expType = BinaryExpr::getRelationalResultType($1, $3);
         SymbolEntry *se = new TemporarySymbolEntry(expType, SymbolTable::getLabel());
@@ -564,12 +573,14 @@ ConstDeclStmt
 FuncDef
     :
     Type ID {
-        SymbolTable::resetLabel();
+        // SymbolTable::resetLabel();
         identifiers = new SymbolTable(identifiers);
 
         intParamNo = 0;
         floatParamNo = 0;
         stackParamNo = 0;
+
+        lastReturnStmt = nullptr;
     }
     LPAREN FuncFParams RPAREN {
         std::vector<Type*> paramsType;
@@ -599,6 +610,10 @@ FuncDef
         identifiers = identifiers->getPrev();
         delete top;
         delete []$2;
+
+        if (!lastDefFuncType->getRetType()->isVoid() && !lastReturnStmt) {
+            fprintf(stderr, "Error: non-void function \'%s\' does not return a value\n", $<se>7->toStr().substr(1).c_str());
+        }
     }
     ;
 ArrayIndex
@@ -654,16 +669,19 @@ UnaryExp
     |   
     NOT UnaryExp {
         Type *type = $2->getFormedType();
+        SymbolEntry *constZeroSe;
         Type *exprType;
-        if (type->isInt() || type->isFloat()) {
-            if (type->isConst()) {
-                exprType = TypeSystem::constBoolType;
-            } else {
-                exprType = TypeSystem::boolType;
-            }
+        if (type->isInt()) {
+            exprType = type->isConst() ? TypeSystem::constBoolType : TypeSystem::boolType;
+            constZeroSe = new ConstantSymbolEntry(TypeSystem::constIntType, 0.0);
+        } else if (type->isFloat()) {
+            exprType = type->isConst() ? TypeSystem::constBoolType : TypeSystem::boolType;
+            constZeroSe = new ConstantSymbolEntry(TypeSystem::constFloatType, 0.0);
         }
+        ExprNode *constZeroExpr = new Constant(constZeroSe);
+
         SymbolEntry *tmp = new TemporarySymbolEntry(exprType, SymbolTable::getLabel());
-        $$ = new UnaryExpr(tmp, UnaryExpr::NOT, $2);
+        $$ = new BinaryExpr(tmp, BinaryExpr::EQ, $2, constZeroExpr);
     }
     ;
 InitVal

@@ -86,7 +86,7 @@ private:
     int op;
     ExprNode *expr;
 public:
-    enum {SUB, NOT};
+    enum {SUB, NOT}; // NOT is not used, cause in parser.y 'NOT UnaryExp' in converted into BinaryExpr::EQ
     UnaryExpr(SymbolEntry *se, int op, ExprNode* expr);
     ExprNode *getExpr() {return expr; }
     void output(int level);

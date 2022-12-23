@@ -34,6 +34,8 @@ void Function::remove(BasicBlock *bb)
 
 void Function::output() const
 {
+    SymbolTable::resetLabelMap();
+
     FunctionType *funcType = dynamic_cast<FunctionType *>(sym_ptr->getType());
     Type *retType = funcType->getRetType();
     std::vector<Type *> paramsType = funcType->getParamsType();
@@ -46,7 +48,8 @@ void Function::output() const
             if (i) {
                 fprintf(yyout, ", ");
             }
-            fprintf(yyout, "%s %s", paramsType[i]->toStr().c_str(), paramsSe[i]->toStr().c_str());
+            std::string labelStr = SymbolTable::getMappedLabelStr(paramsSe[i]->toStr());
+            fprintf(yyout, "%s %s", paramsType[i]->toStr().c_str(), labelStr.c_str());
         }
         fprintf(yyout, ") {\n");
     }

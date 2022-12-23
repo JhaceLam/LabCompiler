@@ -68,6 +68,10 @@ int Instruction::getAlignNum(Type *type) {
         return sizeof(void *);
     }
     if (type->isArray()) {
+        if (dynamic_cast<ArrayType *>(type)->getLength() == -1) {
+            return sizeof(void *);
+        }
+
         if (dynamic_cast<ArrayType *>(type)->getSize() / 4 < 4) {
             return 4;
         } else {
@@ -165,13 +169,13 @@ CmpInstruction::~CmpInstruction()
 
 void CmpInstruction::output() const
 {
-    Type *type = operands[0]->getType();
+    Type *type = operands[1]->getType()->isFloat() || operands[2]->getType()->isFloat() ? TypeSystem::floatType : TypeSystem::intType;
     std::string cmpStr, dstStr, src1Str, src2Str, op, typeStr;
     cmpStr = type->isInt() ? "icmp" : "fcmp";
     dstStr = operands[0]->toStr();
     src1Str = operands[1]->toStr();
     src2Str = operands[2]->toStr();
-    typeStr = operands[1]->getType()->toStr();
+    typeStr = type->toStr();
     switch (opcode)
     {
     case E:
@@ -197,6 +201,13 @@ void CmpInstruction::output() const
         break;
     }
 
+    if (operands[1]->getSymbolEntry()->isConstant() && operands[1]->getType()->isFloat()) {
+        src1Str = SymbolEntry::getHexString(operands[1]->getSymbolEntry()->getValue());
+    }
+    if (operands[2]->getSymbolEntry()->isConstant() && operands[2]->getType()->isFloat()) {
+        src2Str = SymbolEntry::getHexString(operands[2]->getSymbolEntry()->getValue());
+    }
+
     fprintf(yyout, "  %s = %s %s %s %s, %s\n", dstStr.c_str(), cmpStr.c_str(), op.c_str(), typeStr.c_str(), src1Str.c_str(), src2Str.c_str());
 }
 
@@ -207,7 +218,8 @@ UncondBrInstruction::UncondBrInstruction(BasicBlock *to, BasicBlock *insert_bb) 
 
 void UncondBrInstruction::output() const
 {
-    fprintf(yyout, "  br label %%B%d\n", branch->getNo());
+    int branchNo = SymbolTable::activateMapping ? SymbolTable::getMappedLabel(branch->getNo()) : branch->getNo();
+    fprintf(yyout, "  br label %%B%d\n", branchNo);
 }
 
 void UncondBrInstruction::setBranch(BasicBlock *bb)
@@ -236,8 +248,8 @@ void CondBrInstruction::output() const
 {
     std::string cond, type;
     cond = operands[0]->toStr();
-    int true_label = true_branch->getNo();
-    int false_label = false_branch->getNo();
+    int true_label = SymbolTable::activateMapping ? SymbolTable::getMappedLabel(true_branch->getNo()) : true_branch->getNo();
+    int false_label = SymbolTable::activateMapping ? SymbolTable::getMappedLabel(false_branch->getNo()) : false_branch->getNo();
     // br i1 <cond>, label <iftrue>, label <iffalse>
     fprintf(yyout, "  br i1 %s, label %%B%d, label %%B%d\n", cond.c_str(), true_label, false_label);
 }
@@ -286,7 +298,11 @@ void RetInstruction::output() const
     else
     {
         std::string ret, type;
-        ret = operands[0]->toStr();
+        if (operands[0]->getSymbolEntry()->isConstant() && operands[0]->getType()->isFloat()) {
+            ret = SymbolEntry::getHexString(operands[0]->getSymbolEntry()->getValue());
+        } else {
+            ret = operands[0]->toStr();
+        }
         type = operands[0]->getType()->toStr();
         fprintf(yyout, "  ret %s %s\n", type.c_str(), ret.c_str());
     }
@@ -311,7 +327,7 @@ void AllocaInstruction::output() const
     std::string dst, type;
     dst = operands[0]->toStr();
     type = se->getType()->toStr();
-    int alignNum = getAlignNum(operands[0]->getType());
+    int alignNum = getAlignNum(se->getType());
     // %2 = alloca [4 x [2 x [3 x i32]]], align 16
     fprintf(yyout, "  %s = alloca %s, align %d\n", dst.c_str(), type.c_str(), alignNum);
 }
@@ -417,7 +433,12 @@ void CallInstruction::output() const
     {
         if(i != 1)
             fprintf(yyout, ", ");
-        std::string pname = operands[i]->toStr();
+        std::string pname;
+        if (operands[i]->getSymbolEntry()->isConstant() && operands[i]->getType()->isFloat()) {
+            pname = SymbolEntry::getHexString(operands[i]->getSymbolEntry()->getValue());
+        } else {
+            pname = operands[i]->toStr();
+        }
         std::string ptype = operands[i]->getType()->toStr();
         fprintf(yyout, "%s %s", ptype.c_str(), pname.c_str());
     }
